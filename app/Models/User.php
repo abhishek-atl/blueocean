@@ -6,43 +6,59 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, HasRoles;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
     protected $fillable = [
         'name',
         'email',
         'password',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
-     */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
+    public function user_profile()
+    {
+        return $this->hasOne(UserProfile::class);
+    }
+
+    public function therapist_profile()
+    {
+        return $this->hasOne(TherapistProfile::class);
+    }
+
+    public function treatments()
+    {
+        return $this->belongsToMany(Treatment::class, 'therapists_treatments', 'user_id', 'treatment_id');
+    }
+
+    public function postcodes()
+    {
+        return $this->belongsToMany(Postcode::class, 'therapists_postcodes', 'user_id', 'postcode_id');
+    }
+
+    public function schedule()
+    {
+        return $this->hasOne(TherapistSchedule::class);
+    }
+
+
     protected function casts(): array
     {
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function isDisabled(): bool
+    {
+        return $this->disabled;
     }
 }
