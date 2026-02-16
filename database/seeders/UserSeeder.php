@@ -25,7 +25,7 @@ class UserSeeder extends Seeder
         $user->assignRole('Administrator');
 
         User::factory()
-            ->count(20)
+            ->count(100)
             ->has(UserProfile::factory(), 'user_profile')
             ->create();
     }

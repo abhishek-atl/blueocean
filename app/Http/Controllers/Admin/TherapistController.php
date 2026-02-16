@@ -13,20 +13,22 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Services\BookingService;
 use App\Services\UploadService;
-
-
+use App\Services\UserService;
 
 class TherapistController extends Controller
 {
     protected $uploadService;
     protected $bookingService;
+    protected $userService;
 
     public function __construct(
         UploadService $uploadService,
-        BookingService $bookingService
+        BookingService $bookingService,
+        UserService $userService
     ) {
         $this->uploadService = $uploadService;
         $this->bookingService = $bookingService;
+        $this->userService = $userService;
     }
 
     public function index()
@@ -54,19 +56,27 @@ class TherapistController extends Controller
 
     public function store(Request $request)
     {
-        $params = $request->except('_token');
+        $params = $request->except(['_token', 'image']);
+
+        $user = $this->userService->save($params);
+        $this->userService->saveUserProfile($user, $params);
+
+        if ($request->has('image')) {
+            $file = $request->file('image');
+            $uploadPath = config('custom.upload.user_path');
+            $path = $this->uploadService->upload($file, $uploadPath);
+            $this->userService->saveUserImage($user, $path);
+        }
+        $user->assignRole('Therapist');
 
         if (isset($params['id'])) {
-            $therapist = User::findOrFail($params['id']);
-            $therapist->update($params);
             $message = 'Therapist updated successfully.';
         } else {
-            $therapist = User::create($params);
             $message = 'Therapist added successfully.';
         }
 
         return redirect()
-            ->route('admin.therapists.edit', ['id' => $therapist->id])
+            ->route('admin.therapists.edit', ['id' => $user->id])
             ->with('status', $message);
     }
 
@@ -78,6 +88,33 @@ class TherapistController extends Controller
         return redirect()
             ->back()
             ->with('status', 'Therapist deleted successfully.');
+    }
+
+    public function therapistProfile($id)
+    {
+        $isEdit = false;
+        if ($id) {
+            $user = User::findOrFail($id);
+            $user->load(['user_profile', 'therapist_profile']);
+            $isEdit = true;
+        }
+
+        return view('admin.modules.therapist.profile', [
+            'user' => $user ?? null,
+            'isEdit' => $isEdit,
+        ]);
+    }
+
+    public function therapistProfileStore(Request $request)
+    {
+        $params = $request->except(['_token', 'image']);
+
+        $user = $this->userService->get($params['id']);
+        $this->userService->saveTherapistProfile($user, $params);
+
+        return redirect()
+            ->back()
+            ->with('status', 'Therapist updated successfully.');
     }
 
     public function treatments($id)
@@ -94,7 +131,12 @@ class TherapistController extends Controller
         ]);
     }
 
-    public function treatmentsStore() {}
+    public function treatmentsStore(Request $request)
+    {
+        $therapist = $this->userService->get(request('id'));
+        $therapist->treatments()->sync($request->treatments);
+        return redirect()->back()->with('status', 'Treatments updated successfully');
+    }
 
     public function postcodes($id)
     {
@@ -113,7 +155,12 @@ class TherapistController extends Controller
         ]);
     }
 
-    public function postcodesStore() {}
+    public function postcodesStore(Request $request)
+    {
+        $therapist = $this->userService->get(request('id'));
+        $therapist->postcodes()->sync($request->postcodes);
+        return redirect()->back()->with('status', 'Postcodes updated successfully');
+    }
 
     public function schedules($id)
     {
@@ -140,7 +187,17 @@ class TherapistController extends Controller
         ]);
     }
 
-    public function schedulesStore() {}
+    public function schedulesStore(Request $request)
+    {
+        $user = $this->userService->get(request('id'));
+        $days = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
+        $daysSchedule = $request->only($days);
+        foreach ($days as $day) {
+            $newSchedules[$day] = isset($daysSchedule[$day]) ? implode(',', $daysSchedule[$day]) : null;
+        }
+        $this->userService->saveSchedule($user, $newSchedules);
+        return redirect()->back()->with('status', 'Schedule saved successfully');
+    }
 
     public function fees($id)
     {
@@ -151,6 +208,18 @@ class TherapistController extends Controller
             'isEdit' => $isEdit,
             'user' => $user
         ]);
+    }
+
+    public function feesStore(Request $request)
+    {
+        $params = $request->except(['_token']);
+
+        $user = $this->userService->get($params['id']);
+        $this->userService->saveTherapistProfile($user, $params);
+
+        return redirect()
+            ->back()
+            ->with('status', 'Fees saved successfully.');
     }
 
     public function holidays($id)

@@ -33,7 +33,7 @@ return new class extends Migration
             $table->boolean('massage_table')->default(false);
             $table->boolean('gender')->default(false);
             $table->decimal('avg_rating', 2, 1)->nullable();
-            $table->boolean('is_bonus_eligible')->nullable();
+            $table->boolean('bonus_eligible')->nullable();
             $table->decimal('bonus_amount', 8, 2)->nullable();
             $table->string('image_alt');
             $table->string('url');

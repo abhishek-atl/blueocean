@@ -19,6 +19,9 @@
 
     <ul class="nav nav-tabs">
         <li class="nav-item">
+            <a class="nav-link" href="{{ route('admin.therapists.edit') }}">User Profile</a>
+        </li>
+        <li class="nav-item">
             <a class="nav-link" href="{{ route('admin.therapists.edit', ['id' => $user->id]) }}">Therapist Information</a>
         </li>
         <li class="nav-item">
@@ -82,7 +85,7 @@
                         <div class="col-md-2">
                             <div class="form-check my-2">
                                 @php $class = ''; @endphp
-                                @if($user->therapist_profile && $user->therapist_profile->postcodes && $user->therapist_profile->postcodes->contains('postcode',$postcode->postcode))
+                                @if($user && $user->postcodes && $user->postcodes->contains('postcode',$postcode->postcode))
                                 @php $class = 'checked="checked"'; @endphp
                                 @endif
                                 <input class="form-check-input" type="checkbox" name="postcodes[]" value="{{$postcode->id}}" id="{{$postcode->id}}" data-zone="{{ $postcode->zone ? $postcode->zone->shortcust_id : 0 }}" {{ $class }}>
@@ -95,14 +98,18 @@
                     </div>
                     @endforeach
 
-                    <div class="form-group row">
-                        <div class="col-lg-8">
-                            <button type="submit" class="btn btn-primary">Submit</button>
-                        </div>
-                    </div>
-
                 </div>
             </div>
+
+            <div class="col-lg-12">
+                <div class="card-style mb-30">
+                    <div class="mb-3">
+                        <button type="submit" class="btn btn-primary">Save</button>
+                        <a href="{{ route('admin.treatments.index') }}" class="btn btn-secondary">Cancel</a>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </form>
 
@@ -125,8 +132,8 @@
             $('input:checkbox[data-zone="' + id + '"]').prop('checked', this.checked);
         });
 
-        @if (Session:: has('success_msg'))
-    toastr.success("{{ Session::get('success_msg') }}")
+        @if (Session:: has('status'))
+    toastr.success("{{ Session::get('status') }}")
     @endif
     });
 </script>

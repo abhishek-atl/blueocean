@@ -11,6 +11,32 @@ use App\Http\Controllers\Admin\TreatmentController;
 
 Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
 
+
+Route::get('/therapists', [TherapistController::class, 'index'])->name('therapists.index');
+Route::get('/therapist/create', [TherapistController::class, 'addEdit'])->name('therapists.create');
+Route::get('/therapist/edit/{id?}', [TherapistController::class, 'addEdit'])->name('therapists.edit');
+Route::post('/therapist/store', [TherapistController::class, 'store'])->name('therapists.store');
+Route::get('/therapist/destroy/{id}', [TherapistController::class, 'destroy'])->name('therapists.destroy');
+
+Route::get('/therapists/profile/{id?}', [TherapistController::class, 'therapistProfile'])->name('therapists.profile');
+Route::post('/therapists/profile', [TherapistController::class, 'therapistProfileStore'])->name('therapists.profileStore');
+
+Route::get('/therapists/treatments/{id?}', [TherapistController::class, 'treatments'])->name('therapists.treatments');
+Route::post('/therapists/treatments/{id?}', [TherapistController::class, 'treatmentsStore'])->name('therapists.treatmentsStore');
+
+Route::get('/therapists/postcodes/{id?}', [TherapistController::class, 'postcodes'])->name('therapists.postcodes');
+Route::post('/therapists/postcodes/{id?}', [TherapistController::class, 'postcodesStore'])->name('therapists.postcodesStore');
+
+Route::get('/therapists/schedules/{id?}', [TherapistController::class, 'schedules'])->name('therapists.schedules');
+Route::post('therapists/schedules/{id?}', [TherapistController::class, 'schedulesStore'])->name('therapists.schedulesStore');
+
+Route::get('/therapists/fees/{id?}', [TherapistController::class, 'fees'])->name('therapists.fees');
+Route::post('/therapists/fees/{id?}', [TherapistController::class, 'feesStore'])->name('therapists.feesStore');
+
+Route::get('/holidays/{id}', [TherapistController::class, 'holidays'])->name('therapists.holidays');
+
+
+
 // role permission route
 Route::get('/roles', [RoleController::class, 'index'])->name('roles.index');
 Route::get('/role/create', [RoleController::class, 'create'])->name('roles.create');
@@ -28,28 +54,6 @@ Route::get('/postcode-zones/add', [PostcodeController::class, 'postcodeZoneAdd']
 Route::get('/postcode-zones/edit/{id?}', [PostcodeController::class, 'postcodeZoneAdd'])->name('postcodes.zones.edit');
 Route::post('/postcode-zones/store', [PostcodeController::class, 'postcodeZoneStore'])->name('postcodes.zones.store');
 Route::delete('/postcode-zones/delete/{id}', [PostcodeController::class, 'postcodeZoneDelete'])->name('postcodes.zones.delete');
-
-
-Route::get('/therapists', [TherapistController::class, 'index'])->name('therapists.index');
-Route::get('/therapist/create', [TherapistController::class, 'addEdit'])->name('therapists.create');
-Route::get('/therapist/edit/{id}', [TherapistController::class, 'addEdit'])->name('therapists.edit');
-Route::post('/therapist/store', [TherapistController::class, 'store'])->name('therapists.store');
-Route::get('/therapist/destroy/{id}', [TherapistController::class, 'destroy'])->name('therapists.destroy');
-
-Route::get('/therapists/treatments/{id}', [TherapistController::class, 'treatments'])->name('therapists.treatments');
-Route::post('/therapists/treatments/{id?}', [TherapistController::class, 'treatmentsStore'])->name('therapists.treatmentsStore');
-
-Route::get('/therapists/postcodes/{id}', [TherapistController::class, 'postcodes'])->name('therapists.postcodes');
-Route::post('/therapists/postcodes/{id?}', [TherapistController::class, 'postcodesStore'])->name('therapists.postcodesStore');
-
-Route::get('/therapists/schedules/{id}', [TherapistController::class, 'schedules'])->name('therapists.schedules');
-Route::post('therapists/schedules/{id?}', [TherapistController::class, 'schedulesStore'])->name('therapists.schedulesStore');
-
-Route::get('/therapists/fees/{id}', [TherapistController::class, 'fees'])->name('therapists.fees');
-Route::post('/therapists/fees/{id?}', [TherapistController::class, 'feesStore'])->name('therapists.feesStore');
-
-Route::get('/holidays/{id}', [TherapistController::class, 'holidays'])->name('therapists.holidays');
-
 
 
 Route::get('/treatments', [TreatmentController::class, 'index'])->name('treatments.index');

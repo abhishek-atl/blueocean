@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('password');
             $table->string('ip_address')->nullable();
             $table->rememberToken();
-            $table->boolean('disabled')->default(false);
+            $table->boolean('active')->default(true);
             $table->timestamp('last_login_at')->nullable();
             $table->timestamps();
         });

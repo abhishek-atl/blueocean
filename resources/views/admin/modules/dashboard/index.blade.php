@@ -2,8 +2,6 @@
 
 @section('content')
 
-<!-- ========== section start ========== -->
-
 <div class="container-fluid">
 
     <div class="row py-4">
@@ -92,7 +90,7 @@
             <div class="card-style mb-30">
                 <div class="title d-flex flex-wrap align-items-center justify-content-between">
                     <div class="left">
-                        <h6 class="text-medium mb-30">Sales History</h6>
+                        <h6 class="text-medium mb-30">Recent Bookings</h6>
                     </div>
                     <div class="right">
                         <div class="select-style-1">
@@ -111,24 +109,10 @@
                     <table class="table top-selling-table">
                         <thead>
                             <tr>
-                                <th>
-                                    <h6 class="text-sm text-medium">Products</h6>
-                                </th>
-                                <th class="min-width">
-                                    <h6 class="text-sm text-medium">
-                                        Category <i class="lni lni-arrows-vertical"></i>
-                                    </h6>
-                                </th>
-                                <th class="min-width">
-                                    <h6 class="text-sm text-medium">
-                                        Revenue <i class="lni lni-arrows-vertical"></i>
-                                    </h6>
-                                </th>
-                                <th class="min-width">
-                                    <h6 class="text-sm text-medium">
-                                        Status <i class="lni lni-arrows-vertical"></i>
-                                    </h6>
-                                </th>
+                                <th>Customer Name</th>
+                                <th>Therapist Name</th>
+                                <th>Treatment</th>
+                                <th>Status</th>
                                 <th>
                                     <h6 class="text-sm text-medium text-end">
                                         Actions <i class="lni lni-arrows-vertical"></i>
@@ -138,30 +122,17 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td>
-                                    <div class="product">
-                                        <div class="image">
-                                            <img src="assets/images/products/product-mini-1.jpg" alt="" />
-                                        </div>
-                                        <p class="text-sm">Bedroom</p>
-                                    </div>
-                                </td>
-                                <td>
-                                    <p class="text-sm">Interior</p>
-                                </td>
-                                <td>
-                                    <p class="text-sm">$345</p>
-                                </td>
-                                <td>
-                                    <span class="status-btn close-btn">Pending</span>
-                                </td>
+                                <td>John Doe</td>
+                                <td>Jenniffer</td>
+                                <td>Classic Swwedish Massage</td>
+                                <td><span class="status-btn success-btn">Completed</span></td>
                                 <td>
                                     <div class="action justify-content-end">
                                         <button class="edit">
-                                            <i class="lni lni-pencil"></i>
+                                            <i class="fa fa-pencil"></i>
                                         </button>
                                         <button class="more-btn ml-10 dropdown-toggle" id="moreAction1" data-bs-toggle="dropdown" aria-expanded="false">
-                                            <i class="lni lni-more-alt"></i>
+                                            <i class="fa fa-eye"></i>
                                         </button>
                                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="moreAction1">
                                             <li class="dropdown-item">
@@ -175,30 +146,17 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td>
-                                    <div class="product">
-                                        <div class="image">
-                                            <img src="assets/images/products/product-mini-2.jpg" alt="" />
-                                        </div>
-                                        <p class="text-sm">Arm Chair</p>
-                                    </div>
-                                </td>
-                                <td>
-                                    <p class="text-sm">Interior</p>
-                                </td>
-                                <td>
-                                    <p class="text-sm">$345</p>
-                                </td>
-                                <td>
-                                    <span class="status-btn warning-btn">Refund</span>
-                                </td>
+                                <td>John Doe</td>
+                                <td>Jenniffer</td>
+                                <td>Classic Swwedish Massage</td>
+                                <td><span class="status-btn success-btn">Completed</span></td>
                                 <td>
                                     <div class="action justify-content-end">
                                         <button class="edit">
-                                            <i class="lni lni-pencil"></i>
+                                            <i class="fa fa-pencil"></i>
                                         </button>
                                         <button class="more-btn ml-10 dropdown-toggle" id="moreAction1" data-bs-toggle="dropdown" aria-expanded="false">
-                                            <i class="lni lni-more-alt"></i>
+                                            <i class="fa fa-eye"></i>
                                         </button>
                                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="moreAction1">
                                             <li class="dropdown-item">
@@ -212,67 +170,17 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td>
-                                    <div class="product">
-                                        <div class="image">
-                                            <img src="assets/images/products/product-mini-3.jpg" alt="" />
-                                        </div>
-                                        <p class="text-sm">Sofa</p>
-                                    </div>
-                                </td>
-                                <td>
-                                    <p class="text-sm">Interior</p>
-                                </td>
-                                <td>
-                                    <p class="text-sm">$345</p>
-                                </td>
-                                <td>
-                                    <span class="status-btn success-btn">Completed</span>
-                                </td>
+                                <td>John Doe</td>
+                                <td>Jenniffer</td>
+                                <td>Classic Swwedish Massage</td>
+                                <td><span class="status-btn success-btn">Completed</span></td>
                                 <td>
                                     <div class="action justify-content-end">
                                         <button class="edit">
-                                            <i class="lni lni-pencil"></i>
+                                            <i class="fa fa-pencil"></i>
                                         </button>
                                         <button class="more-btn ml-10 dropdown-toggle" id="moreAction1" data-bs-toggle="dropdown" aria-expanded="false">
-                                            <i class="lni lni-more-alt"></i>
-                                        </button>
-                                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="moreAction1">
-                                            <li class="dropdown-item">
-                                                <a href="#0" class="text-gray">Remove</a>
-                                            </li>
-                                            <li class="dropdown-item">
-                                                <a href="#0" class="text-gray">Edit</a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="product">
-                                        <div class="image">
-                                            <img src="assets/images/products/product-mini-4.jpg" alt="" />
-                                        </div>
-                                        <p class="text-sm">Kitchen</p>
-                                    </div>
-                                </td>
-                                <td>
-                                    <p class="text-sm">Interior</p>
-                                </td>
-                                <td>
-                                    <p class="text-sm">$345</p>
-                                </td>
-                                <td>
-                                    <span class="status-btn close-btn">Canceled</span>
-                                </td>
-                                <td>
-                                    <div class="action justify-content-end">
-                                        <button class="edit">
-                                            <i class="lni lni-pencil"></i>
-                                        </button>
-                                        <button class="more-btn ml-10 dropdown-toggle" id="moreAction1" data-bs-toggle="dropdown" aria-expanded="false">
-                                            <i class="lni lni-more-alt"></i>
+                                            <i class="fa fa-eye"></i>
                                         </button>
                                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="moreAction1">
                                             <li class="dropdown-item">
@@ -287,7 +195,6 @@
                             </tr>
                         </tbody>
                     </table>
-                    <!-- End Table -->
                 </div>
             </div>
         </div>
@@ -295,7 +202,5 @@
 
 
 </div>
-<!-- end container -->
 
-<!-- ========== section end ========== -->
 @endsection

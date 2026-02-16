@@ -33,7 +33,7 @@ class UserFactory extends Factory
     public function configure(): static
     {
         return $this->afterCreating(function (User $user) {
-            if ($user->id <= 11 && $user->id != 1) {
+            if ($user->id % 2 == 0 && $user->id != 1) {
                 $user->assignRole('Customer');
             } else {
                 $user->assignRole('Therapist');

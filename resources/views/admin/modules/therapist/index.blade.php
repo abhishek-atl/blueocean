@@ -41,8 +41,8 @@
                             <td>{{ $therapist->first_name }}</td>
                             <td>{{ $therapist->last_name }}</td>
                             <td>{{ $therapist->email }}</td>
-                            <td>{{ $therapist->profile->mobile ?? 'N/A' }}</td>
-                            <td>{{ $therapist->disabled ? 'Disabled' : 'Active' }}</td>
+                            <td>{{ $therapist->user_profile->mobile ?? 'N/A' }}</td>
+                            <td>{{ $therapist->active ? 'Active' : 'Inactive' }}</td>
                             <td>
                                 <div class="action">
 
@@ -61,6 +61,10 @@
                     </tbody>
                 </table>
             </div>
+        </div>
+
+        <div class="col-md-12">
+            {{ $therapists->onEachSide(3)->links() }}
         </div>
 
     </div>

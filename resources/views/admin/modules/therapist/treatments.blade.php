@@ -19,7 +19,10 @@
 
     <ul class="nav nav-tabs">
         <li class="nav-item">
-            <a class="nav-link" href="{{ route('admin.therapists.edit', ['id' => $user->id]) }}">Therapist Information</a>
+            <a class="nav-link" href="{{ route('admin.therapists.edit') }}">User Profile</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{{ route('admin.therapists.edit', ['id' => $user->id]) }}">Therapist Profile</a>
         </li>
         <li class="nav-item">
             <a class="nav-link active" href="{{ route('admin.therapists.treatments', ['id' => $user->id]) }}">Treatments</a>
@@ -39,7 +42,7 @@
     </ul>
 
 
-    <form action="{{ route('admin.therapists.store') }}" method="post" id="storeTherapistForm" enctype="multipart/form-data">
+    <form action="{{ route('admin.therapists.treatmentsStore') }}" method="post" id="storeTreatmentForm" enctype="multipart/form-data">
 
         @csrf
 
@@ -70,6 +73,16 @@
                     </div>
                 </div>
             </div>
+
+            <div class="col-lg-12">
+                <div class="card-style mb-30">
+                    <div class="mb-3">
+                        <button type="submit" class="btn btn-primary">Save</button>
+                        <a href="{{ route('admin.treatments.index') }}" class="btn btn-secondary">Cancel</a>
+                    </div>
+                </div>
+            </div>
+
         </div>
 
     </form>

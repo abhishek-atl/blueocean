@@ -19,6 +19,9 @@
 
     <ul class="nav nav-tabs">
         <li class="nav-item">
+            <a class="nav-link" href="{{ route('admin.therapists.edit') }}">User Profile</a>
+        </li>
+        <li class="nav-item">
             <a class="nav-link" href="{{ route('admin.therapists.edit', ['id' => $user->id]) }}">Therapist Information</a>
         </li>
         <li class="nav-item">
@@ -88,7 +91,7 @@
                                 <li>
                                     <div class="form-check my-2 days">
                                         @php $class = ''; @endphp
-                                        @if($user->therapist_profile?->schedule && $user->therapist_profile?->schedule->$key && in_array($time,explode(',',$user->therapist_profile?->schedule->$key)))
+                                        @if($user->schedule && $user->schedule->$key && in_array($time,explode(',',$user->schedule->$key)))
                                         @php $class = 'checked'; @endphp
                                         @endif
                                         <input class="form-check-input" data-id="{{ $time }}" type="checkbox" name="{{ $key }}[]" value="{{$time}}" id="{{ $day }}_time_{{$time}}" {{$class}}>
@@ -105,14 +108,18 @@
                     </div>
                     @endforeach
 
+                </div>
+            </div>
 
-                    <div class="form-group row">
-                        <div class="col-lg-8">
-                            <button type="submit" class="btn btn-primary">Submit</button>
-                        </div>
+            <div class="col-lg-12">
+                <div class="card-style mb-30">
+                    <div class="mb-3">
+                        <button type="submit" class="btn btn-primary">Save</button>
+                        <a href="{{ route('admin.treatments.index') }}" class="btn btn-secondary">Cancel</a>
                     </div>
                 </div>
             </div>
+
         </div>
     </form>
 </div>
@@ -141,8 +148,8 @@
         })
 
         $(document).ready(function () {
-            @if (Session:: has('success_msg'))
-        toastr.success("{{ Session::get('success_msg') }}")
+            @if (Session:: has('status'))
+        toastr.success("{{ Session::get('status') }}")
         @endif
     })
 
