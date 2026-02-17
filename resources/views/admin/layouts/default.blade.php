@@ -6,9 +6,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="shortcut icon" href="{{ asset('admin/images/favicon.svg') }}" type="image/x-icon" />
-    <title>Blank Page | PlainAdmin Demo</title>
+    <title>@yield('title', env('APP_NAME'))</title>
 
-    <!-- ========== All CSS files linkup ========= -->
     <link rel="stylesheet" href="{{ asset('admin/css/bootstrap.min.css') }}" />
     <link rel="stylesheet" href="{{ asset('admin/css/fontawesome.min.css') }}" />
     <link rel="stylesheet" href="{{ asset('admin/css/solid.min.css') }}" />
@@ -16,13 +15,14 @@
     <link rel="stylesheet" href="{{ asset('admin/css/toastr.min.css') }}" >
 
     <link rel="stylesheet" href="{{ asset('admin/css/main.css') }}" />
+    <link rel="stylesheet" href="{{ asset('admin/css/custom.css') }}" />
 
     @stack('pageCss')
 
 </head>
 
 <body>
-    <!-- ======== Preloader =========== -->
+
     <div id="preloader">
         <div class="spinner"></div>
     </div>
@@ -40,8 +40,6 @@
             </ul>
         </div>
         @endif
-
-        @include('admin.partials.header')
 
         @yield('content')
 

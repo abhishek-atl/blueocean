@@ -6,9 +6,19 @@
 
     <div class="row py-4">
         <div class="col-md-12">
-            <div class="d-flex flex-wrap align-items-center justify-content-between">
+            <div class="card-style d-flex flex-wrap align-items-center justify-content-between">
                 <div class="title">
-                    <h2>Postcoder Zones</h2>
+                    <h2>Postcode Zones</h2>
+                    <div class="breadcrumb-wrapper">
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item">
+                                    <a href="{{ route('admin.dashboard')}}">Dashboard</a>
+                                </li>
+                                <li class="breadcrumb-item active">Postcode Zones</li>
+                            </ol>
+                        </nav>
+                    </div>
                 </div>
             </div>
         </div>
@@ -18,18 +28,11 @@
 
         <div class="col-md-12">
 
-            @if (session('status'))
-            <div class="alert alert-success alert-dismissible fade show">
-                {{ session('status') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-            @endif
-
             <div class="card-style mb-30">
                 <table class="table striped-table">
                     <thead>
                         <tr>
-                            <th scope="col">#</th>
+                            <th scope="col">ID</th>
                             <th scope="col">Postcode Zone Name</th>
                             <th scope="col">Active</th>
                             <th scope="col">Actions</th>
@@ -43,11 +46,8 @@
                             <td>{{ $zone->active ? 'Yes' : 'No' }}</td>
                             <td>
                                 <div class="action">
-                                    <a href="{{ route('admin.postcodes.zones.edit', ['id' => $zone->id]) }}" class="text-dark me-3">
+                                    <a href="{{ route('admin.postcode_zones.edit', ['id' => $zone->id]) }}" class="text-dark me-3">
                                         <i class="fa fa-pen"></i>
-                                    </a>
-                                    <a href="{{ route('admin.roles.destroy', ['id' => $zone->id]) }}" class="text-danger" onclick="return confirm('Are you sure you want to delete this role?');">
-                                        <i class="fa fa-trash"></i>
                                     </a>
                                 </div>
                             </td>
@@ -66,3 +66,15 @@
 
 </div>
 @endsection
+
+@push('pageScripts')
+
+<script>
+    $(document).ready(function () {
+        @if (Session:: has('status'))
+    toastr.success("{{ Session::get('status') }}")
+    @endif
+    });
+</script>
+
+@endpush

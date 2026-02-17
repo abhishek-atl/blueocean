@@ -21,17 +21,15 @@
                     <i class="fa-solid fa-cart-shopping"></i>
                 </div>
                 <div class="content">
-                    <h6 class="mb-10">New Orders</h6>
-                    <h3 class="text-bold mb-10">34567</h3>
+                    <h6 class="mb-10">New Bookings</h6>
+                    <h3 class="text-bold mb-10">120</h3>
                     <p class="text-sm text-success">
                         <i class="fa-solid fa-chevron-up"></i> +2.00%
                         <span class="text-gray">(30 days)</span>
                     </p>
                 </div>
             </div>
-            <!-- End Icon Cart -->
         </div>
-        <!-- End Col -->
         <div class="col-xl-3 col-lg-4 col-sm-6">
             <div class="icon-card mb-30">
                 <div class="icon success">
@@ -46,16 +44,14 @@
                     </p>
                 </div>
             </div>
-            <!-- End Icon Cart -->
         </div>
-        <!-- End Col -->
         <div class="col-xl-3 col-lg-4 col-sm-6">
             <div class="icon-card mb-30">
                 <div class="icon primary">
                     <i class="fa-solid fa-credit-card"></i>
                 </div>
                 <div class="content">
-                    <h6 class="mb-10">Total Expense</h6>
+                    <h6 class="mb-10">Total Payout</h6>
                     <h3 class="text-bold mb-10">$24,567</h3>
                     <p class="text-sm text-danger">
                         <i class="fa-solid fa-chevron-down"></i> -2.00%
@@ -63,9 +59,7 @@
                     </p>
                 </div>
             </div>
-            <!-- End Icon Cart -->
         </div>
-        <!-- End Col -->
         <div class="col-xl-3 col-lg-4 col-sm-6">
             <div class="icon-card mb-30">
                 <div class="icon orange">
@@ -80,9 +74,7 @@
                     </p>
                 </div>
             </div>
-            <!-- End Icon Cart -->
         </div>
-        <!-- End Col -->
     </div>
 
     <div class="row">
@@ -101,10 +93,8 @@
                                 </select>
                             </div>
                         </div>
-                        <!-- end select -->
                     </div>
                 </div>
-                <!-- End Title -->
                 <div class="table-responsive">
                     <table class="table top-selling-table">
                         <thead>
@@ -199,7 +189,6 @@
             </div>
         </div>
     </div>
-
 
 </div>
 

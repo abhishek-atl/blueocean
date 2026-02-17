@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\PostcodeController;
+use App\Http\Controllers\Admin\PostcodeDistrictController;
+use App\Http\Controllers\Admin\PostcodeZoneController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\TherapistController;
 use App\Http\Controllers\Admin\TreatmentController;
@@ -46,18 +48,22 @@ Route::get('/role/destroy/{id}', [RoleController::class, 'destroy'])->name('role
 Route::get('/permissions/{roleId}', [RoleController::class, 'getRolePermissions'])->name('roles.permissions');
 Route::post('/permissions/store', [RoleController::class, 'storeRolePermissions'])->name('roles.permissions.store');
 
-Route::get('/postcodes', [PostcodeController::class, 'index'])->name('postcodes.index');
-Route::get('/postcode-districts', [PostcodeController::class, 'districts'])->name('postcodes.districts');
-
-Route::get('/postcode-zones', [PostcodeController::class, 'zones'])->name('postcodes.zones');
-Route::get('/postcode-zones/add', [PostcodeController::class, 'postcodeZoneAdd'])->name('postcodes.zones.add');
-Route::get('/postcode-zones/edit/{id?}', [PostcodeController::class, 'postcodeZoneAdd'])->name('postcodes.zones.edit');
-Route::post('/postcode-zones/store', [PostcodeController::class, 'postcodeZoneStore'])->name('postcodes.zones.store');
-Route::delete('/postcode-zones/delete/{id}', [PostcodeController::class, 'postcodeZoneDelete'])->name('postcodes.zones.delete');
-
-
 Route::get('/treatments', [TreatmentController::class, 'index'])->name('treatments.index');
 Route::get('/treatment/create', [TreatmentController::class, 'addEdit'])->name('treatments.create');
 Route::get('/treatment/edit/{id}', [TreatmentController::class, 'addEdit'])->name('treatments.edit');
 Route::post('/treatment/store', [TreatmentController::class, 'store'])->name('treatments.store');
 Route::get('/treatment/destroy/{id}', [TreatmentController::class, 'destroy'])->name('treatments.destroy');
+
+
+Route::get('/postcode-districts', [PostcodeDistrictController::class, 'index'])->name('postcode_districts.index');
+
+Route::get('/postcodes', [PostcodeController::class, 'index'])->name('postcodes.index');
+Route::get('/postcodes/create', [PostcodeController::class, 'createEdit'])->name('postcodes.create');
+Route::get('/postcodes/edit/{id}', [PostcodeController::class, 'createEdit'])->name('postcodes.edit');
+Route::post('/postcodes/store', [PostcodeController::class, 'store'])->name('postcodes.store');
+Route::get('/postcodes/destroy/{id}', [PostcodeController::class, 'destroy'])->name('postcodes.destroy');
+
+Route::get('/postcode-zones', [PostcodeZoneController::class, 'index'])->name('postcode_zones.index');
+Route::get('/postcode-zones/create', [PostcodeZoneController::class, 'createEdit'])->name('postcode_zones.create');
+Route::get('/postcode-zones/edit/{id?}', [PostcodeZoneController::class, 'createEdit'])->name('postcode_zones.edit');
+Route::post('/postcode-zones/store', [PostcodeZoneController::class, 'store'])->name('postcode_zones.store');

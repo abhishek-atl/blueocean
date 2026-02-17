@@ -15,87 +15,87 @@ class PostDistrictsTableSeeder extends Seeder
     {
         PostDistrict::create([
             'postcode_area' => 'EC',
-            'district' => 'London',
+            'district_name' => 'London',
         ]);
         PostDistrict::create([
             'postcode_area' => 'WC',
-            'district' => 'London',
+            'district_name' => 'London',
         ]);
         PostDistrict::create([
             'postcode_area' => 'E',
-            'district' => 'London',
+            'district_name' => 'London',
         ]);
         PostDistrict::create([
             'postcode_area' => 'N',
-            'district' => 'London',
+            'district_name' => 'London',
         ]);
         PostDistrict::create([
             'postcode_area' => 'NW',
-            'district' => 'London',
+            'district_name' => 'London',
         ]);
         PostDistrict::create([
             'postcode_area' => 'SE',
-            'district' => 'London',
+            'district_name' => 'London',
         ]);
         PostDistrict::create([
             'postcode_area' => 'SW',
-            'district' => 'London',
+            'district_name' => 'London',
         ]);
         PostDistrict::create([
             'postcode_area' => 'W',
-            'district' => 'London',
+            'district_name' => 'London',
         ]);
         PostDistrict::create([
             'postcode_area' => 'BR',
-            'district' => 'Bromley',
+            'district_name' => 'Bromley',
         ]);
         PostDistrict::create([
             'postcode_area' => 'CR',
-            'district' => 'Croydon',
+            'district_name' => 'Croydon',
         ]);
         PostDistrict::create([
             'postcode_area' => 'DA',
-            'district' => 'Dartford',
+            'district_name' => 'Dartford',
         ]);
         PostDistrict::create([
             'postcode_area' => 'EN',
-            'district' => 'Enfield',
+            'district_name' => 'Enfield',
         ]);
         PostDistrict::create([
             'postcode_area' => 'HA',
-            'district' => 'Harrow',
+            'district_name' => 'Harrow',
         ]);
         PostDistrict::create([
             'postcode_area' => 'IG',
-            'district' => 'Ilford',
+            'district_name' => 'Ilford',
         ]);
         PostDistrict::create([
             'postcode_area' => 'KT',
-            'district' => 'Kingston',
+            'district_name' => 'Kingston',
         ]);
         PostDistrict::create([
             'postcode_area' => 'RM',
-            'district' => 'Romford',
+            'district_name' => 'Romford',
         ]);
         PostDistrict::create([
             'postcode_area' => 'SM',
-            'district' => 'Sutton',
+            'district_name' => 'Sutton',
         ]);
         PostDistrict::create([
             'postcode_area' => 'TW',
-            'district' => 'Twickenham',
+            'district_name' => 'Twickenham',
         ]);
         PostDistrict::create([
             'postcode_area' => 'UB',
-            'district' => 'Uxbridge',
+            'district_name' => 'Uxbridge',
         ]);
         PostDistrict::create([
             'postcode_area' => 'WD',
-            'district' => 'Watford',
+            'district_name' => 'Watford',
         ]);
         PostDistrict::create([
             'postcode_area' => 'XX',
-            'district' => 'Other',
+            'district_name' => 'Other',
         ]);
     }
 }

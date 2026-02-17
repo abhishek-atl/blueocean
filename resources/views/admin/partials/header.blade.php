@@ -5,15 +5,9 @@
             <div class="col-lg-5 col-md-5 col-6">
                 <div class="header-left d-flex align-items-center">
                     <div class="menu-toggle-btn mr-15">
-                        <button id="menu-toggle" class="main-btn primary-btn btn-hover">
+                        <button id="menu-toggle" class="main-btn btn-hover">
                             <i class="fa fa-chevron-left"></i>
                         </button>
-                    </div>
-                    <div class="header-search d-none d-md-flex">
-                        <form action="#">
-                            <input type="text" placeholder="Search..." />
-                            <button><i class="fa fa-search"></i></button>
-                        </form>
                     </div>
                 </div>
             </div>

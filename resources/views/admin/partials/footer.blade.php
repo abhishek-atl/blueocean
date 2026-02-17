@@ -7,7 +7,7 @@
                     <p class="text-sm">
                         Designed and Developed by
                         <a href="https://www.acetechnolabs.com" rel="nofollow" target="_blank">
-                            Acetechnolabs Software Solutions Pvt Ltd
+                            Acetechnolabs Software Pvt Ltd
                         </a>
                     </p>
                 </div>

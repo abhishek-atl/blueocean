@@ -5,12 +5,12 @@
 <div class="container-fluid">
     <div class="row py-4">
         <div class="col-md-12">
-            <div class="d-flex flex-wrap align-items-center justify-content-between">
+            <div class="card-style d-flex flex-wrap align-items-center justify-content-between">
                 <div class="title">
-                    @if(isset($postcode))
-                    <h2>Edit Postcode</h2>
+                    @if(isset($postcodeZone))
+                    <h2>Edit Postcode Zone</h2>
                     @else
-                    <h2>Create Postcode</h2>
+                    <h2>Create Postcode Zone</h2>
                     @endif
                 </div>
             </div>
@@ -23,10 +23,10 @@
 
             <div class="card-style mb-30">
 
-                <form action="{{ route('admin.postcodes.zones.store') }}" method="post">
+                <form action="{{ route('admin.postcode_zones.store') }}" method="post">
                     @csrf
 
-                    @isset($postcode)
+                    @isset($postcodeZone)
                     <input type="hidden" name="id" value="{{ $postcodeZone->id }}" />
                     @endisset
 
@@ -43,15 +43,15 @@
                         <label class="col-2 col-form-label">Active <span class="text-danger">*</span></label>
                         <div class="col-4">
                             <label class="radio-inline mr-3">
-                                <input type="radio" name="active" id="enabled_yes" value="1" @if($isEdit && $postcodeZone->active) checked @endif> Yes</label>
+                                <input type="radio" name="active" id="enabled_yes" value="1" @if($postcodeZone && $postcodeZone->active) checked @endif> Yes</label>
                             <label class="radio-inline mr-3">
-                                <input type="radio" name="active" id="enabled_no" value="0" @if($isEdit && !$postcodeZone->active) checked @endif> No</label>
+                                <input type="radio" name="active" id="enabled_no" value="0" @if($postcodeZone && !$postcodeZone->active) checked @endif> No</label>
                         </div>
                     </div>
                     <div class="mb-3">
                         <div class="offset-2 col-4">
                             <button type="submit" class="btn btn-primary">Save</button>
-                            <a href="{{ route('admin.roles.index') }}" class="btn btn-secondary">Cancel</a>
+                            <a href="{{ route('admin.postcode_zones.index') }}" class="btn btn-secondary">Cancel</a>
                         </div>
                     </div>
 
@@ -72,7 +72,7 @@
                         @foreach($district->postcodes as $postcode)
                         <div class="col-md-2">
                             <div class="form-check my-2">
-                                <input class="form-check-input" type="checkbox" name="postcode[]" value="{{$postcode->id}}" id="{{$postcode->id}}" @if($isEdit && $postcodeZone->postcodes && $postcodeZone->postcodes->contains('id',$postcode->id)) checked @endif>
+                                <input class="form-check-input" type="checkbox" name="postcode[]" value="{{$postcode->id}}" id="{{$postcode->id}}" @if($postcodeZone && $postcodeZone->postcodes && $postcodeZone->postcodes->contains('id',$postcode->id)) checked @endif>
                                 <label class="form-check-label" for="{{$postcode->id}}">
                                     {{ $postcode->postcode }}
                                 </label>

@@ -1,21 +1,12 @@
 <?php
 
-namespace App\Repositories\User;
+namespace App\Services;
 
-use App\Repositories\BaseRepository;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
-class RoleRepository extends BaseRepository
+class UserRoleService
 {
-    protected $model;
-
-    public function __construct(Role $model)
-    {
-        parent::__construct($model);
-        $this->model = $model;
-    }
-
     public function getAllRoles()
     {
         return Role::all();

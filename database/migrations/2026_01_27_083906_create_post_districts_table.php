@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('post_districts', function (Blueprint $table) {
             $table->id();
             $table->string('postcode_area');
-            $table->string('district');
+            $table->string('district_name');
             $table->timestamps();
         });
     }

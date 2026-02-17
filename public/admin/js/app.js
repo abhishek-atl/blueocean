@@ -31,17 +31,17 @@
     mainWrapper.classList.toggle("active");
 
     if (document.body.clientWidth > 1200) {
-      if (menuToggleButtonIcon.classList.contains("lni-chevron-left")) {
-        menuToggleButtonIcon.classList.remove("lni-chevron-left");
-        menuToggleButtonIcon.classList.add("lni-menu");
+      if (menuToggleButtonIcon.classList.contains("fa-chevron-left")) {
+        menuToggleButtonIcon.classList.remove("fa-chevron-left");
+        menuToggleButtonIcon.classList.add("fa-bars");
       } else {
-        menuToggleButtonIcon.classList.remove("lni-menu");
-        menuToggleButtonIcon.classList.add("lni-chevron-left");
+        menuToggleButtonIcon.classList.remove("fa-bars");
+        menuToggleButtonIcon.classList.add("fa-chevron-left");
       }
     } else {
-      if (menuToggleButtonIcon.classList.contains("lni-chevron-left")) {
-        menuToggleButtonIcon.classList.remove("lni-chevron-left");
-        menuToggleButtonIcon.classList.add("lni-menu");
+      if (menuToggleButtonIcon.classList.contains("fa-chevron-left")) {
+        menuToggleButtonIcon.classList.remove("fa-chevron-left");
+        menuToggleButtonIcon.classList.add("fa-bars");
       }
     }
   });

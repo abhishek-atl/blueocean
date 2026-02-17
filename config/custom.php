@@ -12,7 +12,7 @@ return [
 
 
     'db' => [
-        'per_page' => 25
+        'per_page' => 50
     ],
     'download' => [
         'url' => env('DOWNLOAD_URL', '/storage/')
