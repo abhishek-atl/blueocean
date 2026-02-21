@@ -34,9 +34,11 @@ class UserFactory extends Factory
     {
         return $this->afterCreating(function (User $user) {
             if ($user->id % 2 == 0 && $user->id != 1) {
-                $user->assignRole('Customer');
+                $user->user_type = 'Customer';
+                $user->save();
             } else {
-                $user->assignRole('Therapist');
+                $user->user_type = 'Therapist';
+                $user->save();
             }
         });
     }

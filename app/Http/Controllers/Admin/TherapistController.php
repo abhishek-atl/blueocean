@@ -3,15 +3,17 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreUserRequest;
+use Illuminate\Http\Request;
+
 use App\Models\PostcodeZone;
 use App\Models\PostDistrict;
 use App\Models\TherapistHoliday;
 use App\Models\Treatment;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-
 use App\Models\User;
+
 use App\Services\BookingService;
+use App\Services\DatabaseService;
 use App\Services\UploadService;
 use App\Services\UserService;
 
@@ -20,44 +22,56 @@ class TherapistController extends Controller
     protected $uploadService;
     protected $bookingService;
     protected $userService;
+    protected $databaseService;
 
     public function __construct(
         UploadService $uploadService,
         BookingService $bookingService,
-        UserService $userService
+        UserService $userService,
+        DatabaseService $databaseService
     ) {
         $this->uploadService = $uploadService;
         $this->bookingService = $bookingService;
         $this->userService = $userService;
+        $this->databaseService = $databaseService;
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $therapists = User::role('Therapist')
-            ->with('user_profile')
-            ->paginate(15);
-        return view('admin.modules.therapist.index', ['therapists' => $therapists]);
-    }
-
-    public function addEdit($id = null)
-    {
-        $isEdit = false;
-        if ($id) {
-            $user = User::findOrFail($id);
-            $user->load(['user_profile', 'therapist_profile']);
-            $isEdit = true;
+        $params = [];
+        $params['sort_by'] = $request->get('sort_by', 'id');
+        $params['sort_order'] = $request->get('sort_order', 'desc');
+        if (null != $request->get('search')) {
+            $params['search'] = $request->get('search');
         }
 
-        return view('admin.modules.therapist.addUpdate', [
-            'user' => $user ?? null,
-            'isEdit' => $isEdit,
+        $therapists = $this->userService->therapists($params);
+        return view('admin.modules.therapist.index', [
+            'therapists' => $therapists,
+            'sort_by' => $params['sort_by'],
+            'sort_order' => $params['sort_order']
         ]);
     }
 
-    public function store(Request $request)
+    public function createEdit($id = null)
+    {
+        $user = null;
+        if ($id) {
+            $user = $this->userService->find($id);
+            $user->load(['user_profile', 'therapist_profile']);
+        }
+
+        return view('admin.modules.therapist.create_edit', [
+            'user' => $user,
+        ]);
+    }
+
+    public function store(StoreUserRequest $request)
     {
         $params = $request->except(['_token', 'image']);
 
+        $params['user_type'] = User::TYPE_THERAPIST;
+        $params['email_verified_at'] = now();
         $user = $this->userService->save($params);
         $this->userService->saveUserProfile($user, $params);
 
@@ -67,7 +81,6 @@ class TherapistController extends Controller
             $path = $this->uploadService->upload($file, $uploadPath);
             $this->userService->saveUserImage($user, $path);
         }
-        $user->assignRole('Therapist');
 
         if (isset($params['id'])) {
             $message = 'Therapist updated successfully.';
@@ -82,8 +95,14 @@ class TherapistController extends Controller
 
     public function destroy($id)
     {
-        $therapist = User::findOrFail($id);
-        $therapist->delete();
+        $user = $this->userService->find($id);
+        $user->user_profile()->delete();
+        $user->therapist_profile()->delete();
+        $user->treatments()->detach();
+        $user->postcodes()->detach();
+        $user->holidays()->delete();
+        $user->schedule()->delete();
+        $user->delete();
 
         return redirect()
             ->back()
@@ -92,16 +111,14 @@ class TherapistController extends Controller
 
     public function therapistProfile($id)
     {
-        $isEdit = false;
+        $user = null;
         if ($id) {
-            $user = User::findOrFail($id);
+            $user = $this->userService->find($id);
             $user->load(['user_profile', 'therapist_profile']);
-            $isEdit = true;
         }
 
         return view('admin.modules.therapist.profile', [
-            'user' => $user ?? null,
-            'isEdit' => $isEdit,
+            'user' => $user,
         ]);
     }
 
@@ -109,7 +126,7 @@ class TherapistController extends Controller
     {
         $params = $request->except(['_token', 'image']);
 
-        $user = $this->userService->get($params['id']);
+        $user = $this->userService->find($params['id']);
         $this->userService->saveTherapistProfile($user, $params);
 
         return redirect()
@@ -119,13 +136,11 @@ class TherapistController extends Controller
 
     public function treatments($id)
     {
-        $isEdit = true;
-        $user = User::find($id);
+        $user = $this->userService->find($id);
         $user->load(['treatments', 'user_profile']);
 
-        $treatments = Treatment::all();
+        $treatments = $this->databaseService->getByParams(Treatment::class, ['all' => true]);
         return view('admin.modules.therapist.treatments', [
-            'isEdit' => $isEdit,
             'treatments' => $treatments,
             'user' => $user
         ]);
@@ -133,22 +148,20 @@ class TherapistController extends Controller
 
     public function treatmentsStore(Request $request)
     {
-        $therapist = $this->userService->get(request('id'));
-        $therapist->treatments()->sync($request->treatments);
+        $user = $this->userService->find(request('id'));
+        $user->treatments()->sync($request->treatments);
         return redirect()->back()->with('status', 'Treatments updated successfully');
     }
 
     public function postcodes($id)
     {
-        $isEdit = true;
-        $user = User::find($id);;
+        $user = $this->userService->find(request('id'));
         $user->load('postcodes');
 
-        $districts = PostDistrict::all();
-        $zones = PostcodeZone::all();
+        $districts = $this->databaseService->getByParams(PostDistrict::class, ['all' => true]);
+        $zones = $this->databaseService->getByParams(PostcodeZone::class, ['all' => true]);
 
         return view('admin.modules.therapist.postcodes', [
-            'isEdit' => $isEdit,
             'districts' => $districts,
             'user' => $user,
             'zones' => $zones
@@ -157,16 +170,14 @@ class TherapistController extends Controller
 
     public function postcodesStore(Request $request)
     {
-        $therapist = $this->userService->get(request('id'));
-        $therapist->postcodes()->sync($request->postcodes);
+        $user = $this->userService->find(request('id'));
+        $user->postcodes()->sync($request->postcodes);
         return redirect()->back()->with('status', 'Postcodes updated successfully');
     }
 
     public function schedules($id)
     {
-
-        $isEdit = true;
-        $user = User::find($id);
+        $user = $this->userService->find(request('id'));
         $timeSlots = $this->bookingService->getTime();
         $days =
             [
@@ -180,7 +191,6 @@ class TherapistController extends Controller
             ];
 
         return view('admin.modules.therapist.schedules', [
-            'isEdit' => $isEdit,
             'user' => $user,
             'timeSlots' => $timeSlots,
             'days' => $days
@@ -189,7 +199,7 @@ class TherapistController extends Controller
 
     public function schedulesStore(Request $request)
     {
-        $user = $this->userService->get(request('id'));
+        $user = $this->userService->find(request('id'));
         $days = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
         $daysSchedule = $request->only($days);
         foreach ($days as $day) {
@@ -201,11 +211,9 @@ class TherapistController extends Controller
 
     public function fees($id)
     {
-        $isEdit = true;
-        $user = User::find($id);
+        $user = $this->userService->find($id);
 
         return view('admin.modules.therapist.fees', [
-            'isEdit' => $isEdit,
             'user' => $user
         ]);
     }
@@ -214,7 +222,7 @@ class TherapistController extends Controller
     {
         $params = $request->except(['_token']);
 
-        $user = $this->userService->get($params['id']);
+        $user = $this->userService->find($params['id']);
         $this->userService->saveTherapistProfile($user, $params);
 
         return redirect()
@@ -224,13 +232,13 @@ class TherapistController extends Controller
 
     public function holidays($id)
     {
-        $isEdit = true;
-        $holidays = TherapistHoliday::paginate();
+        $params = [];
+        $params['where'] = ['user_id' => $id];
+        $holidays = $this->databaseService->getByParams(TherapistHoliday::class, $params);
 
-        $user = User::find($id);
+        $user = $this->userService->find($id);
 
         return view('admin.modules.therapist.holidays', [
-            'isEdit' => $isEdit,
             'holidays' => $holidays,
             'user' => $user
         ]);

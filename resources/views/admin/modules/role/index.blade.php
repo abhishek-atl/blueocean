@@ -1,17 +1,43 @@
 @extends('admin.layouts.default')
 
+@section('title', 'Roles')
+
 @section('content')
 
 <div class="container-fluid">
 
     <div class="row py-4">
         <div class="col-md-12">
-            <div class="d-flex flex-wrap align-items-center justify-content-between">
+            <div class="card-style d-flex flex-wrap align-items-center justify-content-between">
                 <div class="title">
                     <h2>Roles</h2>
+                    <div class="breadcrumb-wrapper">
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item">
+                                    <a href="{{ route('admin.dashboard')}}">Dashboard</a>
+                                </li>
+                                <li class="breadcrumb-item active">Roles</li>
+                            </ol>
+                        </nav>
+                    </div>
                 </div>
                 <div class="right-content">
-                    <a href="{{ route('admin.roles.create')}}" class="btn btn-primary">Create Role</a>
+                    <form class="row row-cols-lg-auto g-3 align-items-center" method="get" action="{{ url()->current() }}">
+                        <div class="col-12">
+                            <div class="input-group">
+                                <input type="text" name="search" class="form-control" placeholder="Search..." value="{{ Request::get('search') }}">
+                                @if(!Request::get('search'))
+                                <button class="btn btn-secondary" type="submit"><i class="fa fa-search"></i></button>
+                                @else
+                                <a href="{{ url()->current() }}" class="btn btn-secondary" type="button">Clear</a>
+                                @endif
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <a href="{{ route('admin.roles.create')}}" class="btn btn-primary">Add Role</a>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -21,28 +47,31 @@
 
         <div class="col-md-12">
 
-            @if (session('status'))
-            <div class="alert alert-success alert-dismissible fade show">
-                {{ session('status') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-            @endif
-
             <div class="card-style mb-30">
-                <table class="table striped-table">
+                <table class="table striped-table table-fixed">
                     <thead>
                         <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">Name</th>
-                            <th scope="col">Permissions</th>
-                            <th scope="col">Type</th>
+                            <th scope="col" style="width: 5%;">
+                                <a href="{{ route('admin.roles.index', array_merge(request()->query(), ['sort_by' => 'id', 'sort_order' => request('sort_order') === 'asc' ? 'desc' : 'asc'])) }}">
+                                    ID @if($sort_by == 'id') @if($sort_order == 'asc') <i class="fa fa-chevron-down"></i> @else <i class="fa fa-chevron-up"></i> @endif @endif
+                                </a>
+                            </th>
+                            <th scope="col" style="width: 20%;">
+                                <a href="{{ route('admin.roles.index', array_merge(request()->query(), ['sort_by' => 'name', 'sort_order' => request('sort_order') === 'asc' ? 'desc' : 'asc'])) }}">
+                                    Name @if($sort_by == 'name') @if($sort_order == 'asc') <i class="fa fa-chevron-down"></i> @else <i class="fa fa-chevron-up"></i> @endif @endif
+                                </a>
+                            </th>
+                            <th scope="col" style="width: 20%;">Permissions</th>
+                            <th scope="col" style="width: 20%;">Type</th>
                             <th scope="col">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach($roles as $role)
                         <tr>
-                            <th scope="row">{{ $loop->iteration }}</th>
+                            <th scope="row">
+                                {{ $role->id }}
+                            </th>
                             <td>{{ $role->name }}</td>
                             <td>
                                 @if($role->is_default)
@@ -82,5 +111,4 @@
     </div>
 </div>
 
-</div>
 @endsection

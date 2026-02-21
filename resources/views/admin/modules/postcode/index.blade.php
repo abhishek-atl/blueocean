@@ -100,22 +100,10 @@
         </div>
 
         <div class="col-md-12">
-            {{ $postcodes->onEachSide(3)->links() }}
+            {{ $postcodes->links() }}
         </div>
 
     </div>
 
 </div>
 @endsection
-
-@push('pageScripts')
-
-<script>
-    $(document).ready(function () {
-        @if (Session:: has('status'))
-    toastr.success("{{ Session::get('status') }}")
-    @endif
-    });
-</script>
-
-@endpush

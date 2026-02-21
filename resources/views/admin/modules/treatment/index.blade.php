@@ -1,17 +1,43 @@
 @extends('admin.layouts.default')
 
+@section('title', 'Treatments')
+
 @section('content')
 
 <div class="container-fluid">
 
     <div class="row py-4">
         <div class="col-md-12">
-            <div class="d-flex flex-wrap align-items-center justify-content-between">
+            <div class="card-style d-flex flex-wrap align-items-center justify-content-between">
                 <div class="title">
                     <h2>Treatments</h2>
+                    <div class="breadcrumb-wrapper">
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item">
+                                    <a href="{{ route('admin.dashboard')}}">Dashboard</a>
+                                </li>
+                                <li class="breadcrumb-item active">Treatments</li>
+                            </ol>
+                        </nav>
+                    </div>
                 </div>
                 <div class="right-content">
-                    <a href="{{ route('admin.treatments.create')}}" class="btn btn-primary">Create Treatment</a>
+                    <form class="row row-cols-lg-auto g-3 align-items-center" method="get" action="{{ url()->current() }}">
+                        <div class="col-12">
+                            <div class="input-group">
+                                <input type="text" name="search" class="form-control" placeholder="Search..." value="{{ Request::get('search') }}">
+                                @if(!Request::get('search'))
+                                <button class="btn btn-secondary" type="submit"><i class="fa fa-search"></i></button>
+                                @else
+                                <a href="{{ url()->current() }}" class="btn btn-secondary" type="button">Clear</a>
+                                @endif
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <a href="{{ route('admin.treatments.create')}}" class="btn btn-primary">Add Treatment</a>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -22,25 +48,27 @@
         <div class="col-md-12">
 
             <div class="card-style mb-30">
-                <table class="table striped-table">
+                <table class="table striped-table table-fixed">
                     <thead>
                         <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">Name</th>
-                            <th scope="col">Title</th>
-                            <th scope="col">Image</th>
-                            <th scope="col">Active</th>
+                            <th scope="col" style="width: 5%;">
+                                <a href="{{ route('admin.treatments.index', array_merge(request()->query(), ['sort_by' => 'id', 'sort_order' => request('sort_order') === 'asc' ? 'desc' : 'asc'])) }}">
+                                    ID @if($sort_by == 'id') @if($sort_order == 'asc') <i class="fa fa-chevron-down"></i> @else <i class="fa fa-chevron-up"></i> @endif @endif
+                                </a>
+                            </th>
+                            <th scope="col" style="width: 20%;">Name</th>
+                            <th scope="col" style="width: 25%;">Title</th>
+                            <th scope="col" style="width: 10%;">Active</th>
                             <th scope="col">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach($treatments as $treatment)
                         <tr>
-                            <th scope="row">{{ $loop->iteration }}</th>
+                            <th>{{ $treatment->id }}</th>
                             <td>{{ $treatment->name }}</td>
                             <td>{{ $treatment->title }}</td>
-                            <td>{{ $treatment->image }}</td>
-                            <td><span class="status-btn {{ $treatment->is_active ? 'active-btn' : 'inactive-btn' }}">{{ $treatment->is_active ? 'Active' : 'Inactive' }}</span></td>
+                            <td><span class="status-btn {{ $treatment->is_active ? 'active-btn' : 'inactive-btn' }}">{{ $treatment->active ? 'Active' : 'Inactive' }}</span></td>
                             <td>
                                 <div class="action">
 
@@ -61,17 +89,11 @@
             </div>
         </div>
 
+        <div class="col-md-12">
+            {{ $treatments->links() }}
+        </div>
+
     </div>
 </div>
 
 @endsection
-
-@push('pageScripts')
-<script>
-    $(document).ready(function () {
-        @if (Session:: has('status'))
-    toastr.success("{{ Session::get('status') }}")
-    @endif
-    });
-</script>
-@endpush

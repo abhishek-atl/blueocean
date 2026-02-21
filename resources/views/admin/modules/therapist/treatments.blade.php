@@ -1,28 +1,39 @@
 @extends('admin.layouts.default')
 
+@section('title', 'Therapist Treatments')
+
 @section('content')
 
 <div class="container-fluid">
     <div class="row py-4">
         <div class="col-md-12">
-            <div class="d-flex flex-wrap align-items-center justify-content-between">
+            <div class="card-style d-flex flex-wrap align-items-center justify-content-between">
                 <div class="title">
-                    @if(isset($postcode))
-                    <h2>Edit Postcode</h2>
-                    @else
-                    <h2>Create Postcode</h2>
-                    @endif
+                    <h2>Select Treatments</h2>
+                    <div class="breadcrumb-wrapper">
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item">
+                                    <a href="{{ route('admin.dashboard')}}">Dashboard</a>
+                                </li>
+                                <li class="breadcrumb-item">
+                                    <a href="{{ route('admin.therapists.index') }}">Therapists</a>
+                                </li>
+                                <li class="breadcrumb-item active">Therapist Treatments</li>
+                            </ol>
+                        </nav>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
     <ul class="nav nav-tabs">
-        <li class="nav-item">
-            <a class="nav-link" href="{{ route('admin.therapists.edit') }}">User Profile</a>
+       <li class="nav-item">
+            <a class="nav-link" href="{{ route('admin.therapists.edit', ['id' => $user->id]) }}">User Profile</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="{{ route('admin.therapists.edit', ['id' => $user->id]) }}">Therapist Profile</a>
+            <a class="nav-link" href="{{ route('admin.therapists.profile', ['id' => $user->id]) }}">Therapist Profile</a>
         </li>
         <li class="nav-item">
             <a class="nav-link active" href="{{ route('admin.therapists.treatments', ['id' => $user->id]) }}">Treatments</a>
@@ -75,10 +86,10 @@
             </div>
 
             <div class="col-lg-12">
-                <div class="card-style mb-30">
+                <div class="mb-30">
                     <div class="mb-3">
                         <button type="submit" class="btn btn-primary">Save</button>
-                        <a href="{{ route('admin.treatments.index') }}" class="btn btn-secondary">Cancel</a>
+                        <a href="{{ route('admin.therapists.index') }}" class="btn btn-secondary">Cancel</a>
                     </div>
                 </div>
             </div>

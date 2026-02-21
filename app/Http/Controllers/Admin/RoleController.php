@@ -4,68 +4,78 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreRoleRequest;
-use App\Repositories\User\RoleRepository;
 use Illuminate\Http\Request;
+
+use App\Services\DatabaseService;
+use App\Services\UserRoleService;
+
+use Spatie\Permission\Models\Role;
 
 class RoleController extends Controller
 {
 
-    protected RoleRepository $roleRepository;
+    protected UserRoleService $userRoleService;
+    protected DatabaseService $databaseService;
 
-    public function __construct(RoleRepository $roleRepository)
-    {
-        $this->roleRepository = $roleRepository;
+    public function __construct(
+        UserRoleService $userRoleService,
+        DatabaseService $databaseService,
+    ) {
+        $this->userRoleService = $userRoleService;
+        $this->databaseService = $databaseService;
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $roles = $this->roleRepository->getAllRoles();
+        $params = [];
+        $params['sort_by'] = $request->get('sort_by', 'id');
+        $params['sort_order'] = $request->get('sort_order', 'desc');
+        if (null != $request->get('search')) {
+            $params['like'] = ['name' => $request->get('search')];
+        }
 
-        return view(
-            'admin.modules.role.index',
-            [
-                'roles' => $roles,
-                'permissions' => [],
-                'title' => 'Roles',
-            ]
-        );
+        $roles = $this->databaseService->getByParams(Role::class, $params);
+
+        return view('admin.modules.role.index', [
+            'roles' => $roles,
+            'permissions' => [],
+            'sort_by' => $params['sort_by'],
+            'sort_order' => $params['sort_order']
+        ]);
     }
 
     public function create()
     {
-        return view('admin.modules.role.addUpdate');
+        return view('admin.modules.role.create_edit');
     }
 
     public function edit($id)
     {
-        $role = $this->roleRepository->find($id);
-        return view('admin.modules.role.addUpdate', ['role' => $role]);
+        $role = $this->userRoleService->find($id);
+        return view('admin.modules.role.create_edit', [
+            'role' => $role
+        ]);
     }
 
     public function store(StoreRoleRequest $request)
     {
         $validated = $request->validated();
-        $this->roleRepository->save($validated);
+        $role = $this->userRoleService->save($validated);
 
-        if (isset($validated['id'])) {
-            return redirect()->route('admin.modules.role.index')
-                ->with('status', __('Updated Successfully'));
-        }
-
-        return redirect()->route('admin.modules.role.index')
-            ->with('status', __('Created Successfully'));
+        return redirect()->route('admin.roles.edit', ['id' => $role->id])
+            ->with('status', __('Role saved successfully'));
     }
 
     public function destroy($id)
     {
-        $this->roleRepository->delete($id);
-        return back()->with('status', __('Deleted Successfully'));
+        $this->userRoleService->delete($id);
+        return back()->with('status', __('Role deleted successfully'));
     }
 
     public function getRolePermissions($roleId)
     {
-        $role = $this->roleRepository->find($roleId);
-        $permissions = $this->roleRepository->groupPermissionsByModule();
+        $role = $this->userRoleService->find($roleId);
+        $permissions = $this->userRoleService->groupPermissionsByModule();
         $rolePermissions = $role ? $role->permissions->pluck('name')->toArray() : [];
 
         return view('admin.modules.role.permissions', [
@@ -78,14 +88,14 @@ class RoleController extends Controller
     public function storeRolePermissions(Request $request)
     {
 
-        $role = $this->roleRepository->find($request->input('role_id'));
+        $role = $this->userRoleService->find($request->input('role_id'));
 
         if ($role) {
             $permissions = $request->input('permissions', []);
             $role->syncPermissions($permissions);
         }
 
-        return redirect()->route('admin.modules.role.index')
-            ->with('status', __('Permissions Updated Successfully'));
+        return redirect()->back()
+            ->with('status', __('Permissions saved successfully'));
     }
 }

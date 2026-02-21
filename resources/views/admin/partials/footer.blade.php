@@ -1,4 +1,3 @@
-<!-- ========== footer start =========== -->
 <footer class="footer">
     <div class="container-fluid">
         <div class="row">
@@ -12,11 +11,16 @@
                     </p>
                 </div>
             </div>
-            <!-- end col-->
-
         </div>
-        <!-- end row -->
     </div>
-    <!-- end container -->
 </footer>
-<!-- ========== footer end =========== -->
+
+@push('pageScripts')
+<script>
+    $(document).ready(function () {
+        @if (Session:: has('status'))
+            toastr.success("{{ Session::get('status') }}")
+        @endif
+    });
+</script>
+@endpush

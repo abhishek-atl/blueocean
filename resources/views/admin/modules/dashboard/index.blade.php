@@ -1,12 +1,14 @@
 @extends('admin.layouts.default')
 
+@section('title', 'Dashboard')
+
 @section('content')
 
 <div class="container-fluid">
 
     <div class="row py-4">
         <div class="col-md-12">
-            <div class="d-flex flex-wrap align-items-center justify-content-between">
+            <div class="card-style d-flex flex-wrap align-items-center justify-content-between">
                 <div class="title">
                     <h2>Dashboard</h2>
                 </div>

@@ -20,9 +20,10 @@ class UserSeeder extends Seeder
             'last_name' => 'User',
             'email' => 'admin@blueocean.com',
             'password' => bcrypt('password'),
+            'user_type' => 'Admin',
         ]);
         $user = User::find(1);
-        $user->assignRole('Administrator');
+        $user->assignRole('Admin');
 
         User::factory()
             ->count(100)

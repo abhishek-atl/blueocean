@@ -48,7 +48,7 @@ class LoginController extends Controller
 
         $user = Auth::getProvider()->retrieveByCredentials($credentials);
 
-        if ($user->isDisabled()) {
+        if (!$user->active) {
             return redirect()->to('auth.login')
                 ->withErrors(__('Please contact an administrator.'));
         }

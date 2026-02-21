@@ -7,16 +7,6 @@ use Spatie\Permission\Models\Role;
 
 class UserRoleService
 {
-    public function getAllRoles()
-    {
-        return Role::all();
-    }
-
-    public function getAllPermissions()
-    {
-        return Permission::all();
-    }
-
     public function groupPermissionsByModule()
     {
         $permissions = Permission::all();

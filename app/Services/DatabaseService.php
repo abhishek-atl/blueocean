@@ -33,7 +33,7 @@ class DatabaseService
         if (isset($params['like'])) {
             $query->where(function ($qb) use ($params) {
                 foreach ($params['like'] as $key => $value) {
-                    $qb->orWhere($key, 'like', $value);
+                    $qb->orWhere($key, 'like', '%' . $value . '%');
                 }
             });
         }

@@ -6,8 +6,67 @@ use App\Models\User;
 
 class UserService
 {
+    public function admins($params)
+    {
+        $query = User::where('user_type', 'Admin')->with('user_profile');
 
-    public function get($id)
+        if (isset($params['search'])) {
+            $query->where('first_name', 'like', $params['search']);
+        }
+
+        $sortBy = isset($params['sort_by']) ?  $params['sort_by'] : 'created_at';
+        $sortOrder = (isset($params['sort_order']) && $params['sort_order'] === 'asc') ? 'asc' : 'desc';
+
+        $query->orderBy($sortBy, $sortOrder);
+
+        if (isset($params['all'])) {
+            return $query->get();
+        } else {
+            return $query->paginate(config('custom.db.per_page'));
+        }
+    }
+
+    public function therapists($params)
+    {
+        $query = User::where('user_type', 'Therapist')->with('user_profile');
+
+        if (isset($params['search'])) {
+            $query->where('first_name', 'like', $params['search']);
+        }
+
+        $sortBy = isset($params['sort_by']) ?  $params['sort_by'] : 'created_at';
+        $sortOrder = (isset($params['sort_order']) && $params['sort_order'] === 'asc') ? 'asc' : 'desc';
+
+        $query->orderBy($sortBy, $sortOrder);
+
+        if (isset($params['all'])) {
+            return $query->get();
+        } else {
+            return $query->paginate(config('custom.db.per_page'));
+        }
+    }
+
+    public function customers($params)
+    {
+        $query = User::where('user_type', 'Customer')->with('user_profile');
+
+        if (isset($params['search'])) {
+            $query->where('first_name', 'like', $params['search']);
+        }
+
+        $sortBy = isset($params['sort_by']) ?  $params['sort_by'] : 'created_at';
+        $sortOrder = (isset($params['sort_order']) && $params['sort_order'] === 'asc') ? 'asc' : 'desc';
+
+        $query->orderBy($sortBy, $sortOrder);
+
+        if (isset($params['all'])) {
+            return $query->get();
+        } else {
+            return $query->paginate(config('custom.db.per_page'));
+        }
+    }
+
+    public function find($id)
     {
         return User::find($id);
     }
@@ -31,6 +90,7 @@ class UserService
 
     public function saveUserProfile($user, $params)
     {
+        $params['birthday'] = \Carbon\Carbon::createFromDate($params['birthday']);
         $user->user_profile()->updateOrCreate(
             [
                 'user_id' => $user->id
@@ -54,6 +114,9 @@ class UserService
 
     public function saveTherapistProfile($user, $params)
     {
+        if(isset($params['health_renewal_date'])) {
+            $params['health_renewal_date'] = \Carbon\Carbon::createFromDate($params['health_renewal_date']);
+        }
         $user->therapist_profile()->updateOrCreate(
             [
                 'user_id' => $user->id

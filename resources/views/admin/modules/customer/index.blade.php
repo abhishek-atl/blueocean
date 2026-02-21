@@ -1,6 +1,6 @@
 @extends('admin.layouts.default')
 
-@section('title', 'Therapists')
+@section('title', 'Customers')
 
 @section('content')
 
@@ -10,14 +10,14 @@
         <div class="col-md-12">
             <div class="card-style d-flex flex-wrap align-items-center justify-content-between">
                 <div class="title">
-                    <h2>Therapists</h2>
+                    <h2>Customers</h2>
                     <div class="breadcrumb-wrapper">
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item">
                                     <a href="{{ route('admin.dashboard')}}">Dashboard</a>
                                 </li>
-                                <li class="breadcrumb-item active">Therapists</li>
+                                <li class="breadcrumb-item active">Customers</li>
                             </ol>
                         </nav>
                     </div>
@@ -35,7 +35,7 @@
                             </div>
                         </div>
                         <div class="col-12">
-                            <a href="{{ route('admin.therapists.create')}}" class="btn btn-primary">Add Therapist</a>
+                            <a href="{{ route('admin.customers.create')}}" class="btn btn-primary">Add Customer</a>
                         </div>
                     </form>
                 </div>
@@ -52,22 +52,22 @@
                     <thead>
                         <tr>
                             <th scope="col" style="width: 5%;">
-                                <a href="{{ route('admin.therapists.index', array_merge(request()->query(), ['sort_by' => 'id', 'sort_order' => request('sort_order') === 'asc' ? 'desc' : 'asc'])) }}">
+                                <a href="{{ route('admin.customers.index', array_merge(request()->query(), ['sort_by' => 'id', 'sort_order' => request('sort_order') === 'asc' ? 'desc' : 'asc'])) }}">
                                     ID @if($sort_by == 'id') @if($sort_order == 'asc') <i class="fa fa-chevron-down"></i> @else <i class="fa fa-chevron-up"></i> @endif @endif
                                 </a>
                             </th>
                             <th scope="col" style="width: 15%;">
-                                <a href="{{ route('admin.therapists.index', array_merge(request()->query(), ['sort_by' => 'first_name', 'sort_order' => request('sort_order') === 'asc' ? 'desc' : 'asc'])) }}">
+                                <a href="{{ route('admin.customers.index', array_merge(request()->query(), ['sort_by' => 'first_name', 'sort_order' => request('sort_order') === 'asc' ? 'desc' : 'asc'])) }}">
                                     First Name @if($sort_by == 'first_name') @if($sort_order == 'asc') <i class="fa fa-chevron-down"></i> @else <i class="fa fa-chevron-up"></i> @endif @endif
                                 </a>
                             </th>
                             <th scope="col" style="width: 15%;">
-                                <a href="{{ route('admin.therapists.index', array_merge(request()->query(), ['sort_by' => 'last_name', 'sort_order' => request('sort_order') === 'asc' ? 'desc' : 'asc'])) }}">
+                                <a href="{{ route('admin.customers.index', array_merge(request()->query(), ['sort_by' => 'last_name', 'sort_order' => request('sort_order') === 'asc' ? 'desc' : 'asc'])) }}">
                                     Last Name @if($sort_by == 'last_name') @if($sort_order == 'asc') <i class="fa fa-chevron-down"></i> @else <i class="fa fa-chevron-up"></i> @endif @endif
                                 </a>
                             </th>
                             <th scope="col" style="width: 20%;">
-                                <a href="{{ route('admin.therapists.index', array_merge(request()->query(), ['sort_by' => 'email', 'sort_order' => request('sort_order') === 'asc' ? 'desc' : 'asc'])) }}">
+                                <a href="{{ route('admin.customers.index', array_merge(request()->query(), ['sort_by' => 'email', 'sort_order' => request('sort_order') === 'asc' ? 'desc' : 'asc'])) }}">
                                     Email @if($sort_by == 'email') @if($sort_order == 'asc') <i class="fa fa-chevron-down"></i> @else <i class="fa fa-chevron-up"></i> @endif @endif
                                 </a>
 
@@ -78,22 +78,22 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($therapists as $therapist)
+                        @foreach($customers as $customer)
                         <tr>
-                            <td>{{ $therapist->id }}</th>
-                            <td>{{ $therapist->first_name }}</td>
-                            <td>{{ $therapist->last_name }}</td>
-                            <td>{{ $therapist->email }}</td>
-                            <td>{{ $therapist->user_profile->mobile ?? 'N/A' }}</td>
-                            <td>{{ $therapist->active ? 'Active' : 'Inactive' }}</td>
+                            <td>{{ $customer->id }}</th>
+                            <td>{{ $customer->first_name }}</td>
+                            <td>{{ $customer->last_name }}</td>
+                            <td>{{ $customer->email }}</td>
+                            <td>{{ $customer->user_profile->mobile ?? 'N/A' }}</td>
+                            <td>{{ $customer->active ? 'Active' : 'Inactive' }}</td>
                             <td>
                                 <div class="action">
 
                                     <div class="action">
-                                        <a href="{{ route('admin.therapists.edit', ['id' => $therapist->id]) }}" class="text-dark me-3">
+                                        <a href="{{ route('admin.customers.edit', ['id' => $customer->id]) }}" class="text-dark me-3">
                                             <i class="fa fa-pen"></i>
                                         </a>
-                                        <a href="{{ route('admin.therapists.destroy', ['id' => $therapist->id]) }}" class="text-danger" onclick="return confirm('Are you sure you want to delete this therapist?');">
+                                        <a href="{{ route('admin.customers.destroy', ['id' => $customer->id]) }}" class="text-danger" onclick="return confirm('Are you sure you want to delete this customer?');">
                                             <i class="fa fa-trash"></i>
                                         </a>
                                     </div>
@@ -107,7 +107,7 @@
         </div>
 
         <div class="col-md-12">
-            {{ $therapists->links() }}
+            {{ $customers->links() }}
         </div>
 
     </div>

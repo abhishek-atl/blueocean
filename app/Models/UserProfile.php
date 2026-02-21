@@ -18,4 +18,5 @@ class UserProfile extends Model
             get: fn($value) => asset(config('custom.download.url') . config('custom.upload.user_path') . '/' . $value)
         );
     }
+
 }

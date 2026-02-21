@@ -2,29 +2,43 @@
 
 @inject('format', 'App\Services\FormatService')
 
+@section('title', 'Therapist Holidays')
+
 @section('content')
 
 <div class="container-fluid">
     <div class="row py-4">
         <div class="col-md-12">
-            <div class="d-flex flex-wrap align-items-center justify-content-between">
+            <div class="card-style d-flex flex-wrap align-items-center justify-content-between">
                 <div class="title">
-                    @if(isset($postcode))
-                    <h2>Edit Postcode</h2>
-                    @else
-                    <h2>Create Postcode</h2>
-                    @endif
+                    <h2>Therapist Holidays</h2>
+
+                    <div class="breadcrumb-wrapper">
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item">
+                                    <a href="{{ route('admin.dashboard')}}">Dashboard</a>
+                                </li>
+                                <li class="breadcrumb-item">
+                                    <a href="{{ route('admin.therapists.index') }}">Therapists</a>
+                                </li>
+                                <li class="breadcrumb-item active">Therapist Holidays</li>
+
+                            </ol>
+                        </nav>
+                    </div>
+
                 </div>
             </div>
         </div>
     </div>
 
     <ul class="nav nav-tabs">
-        <li class="nav-item">
-            <a class="nav-link" href="{{ route('admin.therapists.edit') }}">User Profile</a>
+       <li class="nav-item">
+            <a class="nav-link" href="{{ route('admin.therapists.edit', ['id' => $user->id]) }}">User Profile</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="{{ route('admin.therapists.edit', ['id' => $user->id]) }}">Therapist Information</a>
+            <a class="nav-link" href="{{ route('admin.therapists.profile', ['id' => $user->id]) }}">Therapist Profile</a>
         </li>
         <li class="nav-item">
             <a class="nav-link" href="{{ route('admin.therapists.treatments', ['id' => $user->id]) }}">Treatments</a>
@@ -61,31 +75,30 @@
                         <tbody>
                             @foreach($holidays as $holiday)
 
-                                @php
-                                    $color = '';
-                                    if($holiday->start_date > now())
-                                    $color = 'lightyellow';
-                                    elseif($holiday->start_date < now() && $holiday->end_date > now())
-                                        $color = 'lightgreen';
-                                    elseif($holiday->end_date < now())
-                                        $color='lightgray';
-                                @endphp
-
-                                <tr style="background-color: {{ $color }}">
-                                    <td>{{ $format->date($holiday->start_date, config('custom.format.date_time')) }}</td>
-                                    <td>{{ $format->date($holiday->end_date, config('custom.format.date_time')) }}</td>
-                                    <td>{{ $format->date($holiday->created_at, config('custom.format.date_time')) }}</td>
-                                    <td>
-                                        <a href="javascript:void(0)" type="button" data-id="{{ $holiday->id}}" class="btn mb-1 ml-3 btn-rounded btn-outline-danger btn-sm btnDeleteHoliday">
-                                            <i class="fa fa-trash"></i>
-                                        </a>
-                                    </td>
-                                </tr>
+                            @php
+                            $color = '';
+                            if($holiday->start_date > now())
+                                $color = 'lightyellow';
+                            elseif($holiday->start_date < now() && $holiday->end_date > now())
+                                $color = 'lightgreen';
+                            elseif($holiday->end_date < now())
+                                $color='lightgray';
+                            @endphp
+                            <tr style="background-color: {{ $color }}">
+                                <td>{{ $format->date($holiday->start_date, config('custom.format.date_time')) }}</td>
+                                <td>{{ $format->date($holiday->end_date, config('custom.format.date_time')) }}</td>
+                                <td>{{ $format->date($holiday->created_at, config('custom.format.date_time')) }}</td>
+                                <td>
+                                    <a href="javascript:void(0)" type="button" data-id="{{ $holiday->id}}" class="btn mb-1 ml-3 btn-rounded btn-outline-danger btn-sm btnDeleteHoliday">
+                                        <i class="fa fa-trash"></i>
+                                    </a>
+                                </td>
+                             </tr>
                             @endforeach
 
                         </tbody>
                     </table>
-                    {{ $holidays->onEachSide(0)->links() }}
+                    {{ $holidays->links() }}
                 </div>
 
             </div>

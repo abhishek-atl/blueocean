@@ -20,6 +20,10 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+    const TYPE_ADMIN = 'Admin';
+    const TYPE_THERAPIST = 'Therapist';
+    const TYPE_CUSTOMER = 'Customer';
+
     public function user_profile()
     {
         return $this->hasOne(UserProfile::class);
@@ -43,6 +47,16 @@ class User extends Authenticatable
     public function schedule()
     {
         return $this->hasOne(TherapistSchedule::class);
+    }
+
+    public function holidays()
+    {
+        return $this->hasMany(TherapistHoliday::class);
+    }
+
+    public function active()
+    {
+        return $this->active;
     }
 
 }

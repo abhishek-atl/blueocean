@@ -1,17 +1,40 @@
 @extends('admin.layouts.default')
 
+@if(isset($role))
+@section('title', 'Edit Role')
+@else
+@section('title', 'Add Role')
+@endif
+
 @section('content')
 
 <div class="container-fluid">
     <div class="row py-4">
-        <div class="col-md-6">
-            <div class="d-flex flex-wrap align-items-center justify-content-between">
+        <div class="col-md-12">
+            <div class="card-style d-flex flex-wrap align-items-center justify-content-between">
                 <div class="title">
                     @if(isset($role))
                     <h2>Edit Role</h2>
                     @else
-                    <h2>Create Role</h2>
+                    <h2>Add Role</h2>
                     @endif
+                    <div class="breadcrumb-wrapper">
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item">
+                                    <a href="{{ route('admin.dashboard')}}">Dashboard</a>
+                                </li>
+                                <li class="breadcrumb-item">
+                                    <a href="{{ route('admin.roles.index')}}">Roles</a>
+                                </li>
+                                @if(isset($role))
+                                <li class="breadcrumb-item active">Edit Role</li>
+                                @else
+                                <li class="breadcrumb-item active">Add Role</li>
+                                @endif
+                            </ol>
+                        </nav>
+                    </div>
                 </div>
             </div>
         </div>

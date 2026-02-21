@@ -1,49 +1,48 @@
 @extends('admin.layouts.default')
 
+@if($user)
+@section('title', 'Edit Customer')
+@else
+@section('title', 'Add Customer')
+@endif
+
 @section('content')
 
 <div class="container-fluid">
     <div class="row py-4">
-        <div class="col-md-6">
-            <div class="d-flex flex-wrap align-items-center justify-content-between">
+        <div class="col-md-12">
+            <div class="card-style d-flex flex-wrap align-items-center justify-content-between">
                 <div class="title">
                     @if(isset($user))
-                    <h2>Edit Therapist</h2>
+                    <h2>Edit Customer</h2>
                     @else
-                    <h2>Create Therapist</h2>
+                    <h2>Add Customer</h2>
                     @endif
+                    <div class="breadcrumb-wrapper">
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item">
+                                    <a href="{{ route('admin.dashboard')}}">Dashboard</a>
+                                </li>
+                                <li class="breadcrumb-item">
+                                    <a href="{{ route('admin.customers.index') }}">Customers</a>
+                                </li>
+                                @if(isset($user))
+                                <li class="breadcrumb-item active">Edit Customer</li>
+                                @else
+                                <li class="breadcrumb-item active">Add Customer</li>
+                                @endif
+                            </ol>
+                        </nav>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
 
-    <ul class="nav nav-tabs">
-        <li class="nav-item">
-            <a class="nav-link active" href="{{ route('admin.therapists.edit') }}">User Profile</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="{{ route('admin.therapists.profile', ['id' => $user?->id]) }}">Therapist Profile</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="{{ route('admin.therapists.treatments', ['id' => $user?->id]) }}">Treatments</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="{{ route('admin.therapists.postcodes', ['id' => $user?->id]) }}">Postcodes</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="{{ route('admin.therapists.schedules', ['id' => $user?->id]) }}">Schedules</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="{{ route('admin.therapists.fees', ['id' => $user?->id]) }}">Fees</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="{{ route('admin.therapists.fees', ['id' => $user?->id]) }}">Holidays</a>
-        </li>
-    </ul>
 
-
-    <form action="{{ route('admin.therapists.store') }}" method="post" id="storeTherapistForm" enctype="multipart/form-data">
+    <form action="{{ route('admin.customers.store') }}" method="post" id="storeCustomerForm" enctype="multipart/form-data">
 
         @csrf
 
@@ -85,8 +84,14 @@
 
                     <div class="mb-3 col-6">
                         <label class="form-label" for="password">Password</label>
-                        <input type="text" name="password" id="password" class="form-control" placeholder="Password" value="" />
+                        <input type="password" name="password" id="password" class="form-control" placeholder="Password" value="" />
+                        @if($user)
                         <small>Keep blank to keep unchanged.</small>
+                        @else
+                        @error('password')
+                        <div class="text-danger">{{ $message }}</div>
+                        @enderror
+                        @endif
                     </div>
 
                     <div class="mb-3 col-6">
@@ -97,9 +102,12 @@
                         @enderror
                     </div>
 
-                    <div class="mb-3 col-6">
+                    <div class="mb-3 col-6" id="calendar_pick" data-td-target-input="nearest" data-td-target-toggle="nearest">
                         <label class="form-label required" for="birthday">Birthday</label>
-                        <input type="text" name="birthday" id="birthday" class="form-control" placeholder="Birthday" value="{{ old('birthday', $user->user_profile->birthday ?? '') }}" />
+                        <div class="input-group">
+                            <input type="text" name="birthday" id="birthday" class="form-control" placeholder="Birthday" value="{{ old('birthday') }}" data-td-target="#birthday_pick" />
+                            <span class="input-group-text" data-td-target="#calendar_pick" data-td-toggle="datetimepicker"><i class="fas fa-calendar"></i></span>
+                        </div>
                         @error('birthday')
                         <div class="text-danger">{{ $message }}</div>
                         @enderror
@@ -148,7 +156,7 @@
                     <div class="mb-3 col-6">
                         <label class="form-label">Image</label>
                         <input type="file" id="image" name="image" class="form-control" accept="image/*" />
-                        @if($isEdit)
+                        @if($user)
                         <img id="showImage" style="height: 90px; max-width: 130px;" src="{{ $user->user_profile?->image }}" />
                         @else
                         <img id="showImage" src="#" style="height: 90px; max-width: 130px; display: none;" />
@@ -161,22 +169,22 @@
                     <div class="mb-3 col-6">
                         <label class="form-label col-4 required">Active</label>
                         <div class="form-check form-check-inline radio-style mb-20">
-                            <input type="radio" name="active" id="active_y" value="1" @if($isEdit && $user->active) checked @endif>
+                            <input type="radio" name="active" id="active_y" value="1" @if($user && $user->active) checked @elseif(!$user) checked @endif>
                             <label class="form-check-label" for="active_y">Yes</label>
                         </div>
                         <div class="form-check form-check-inline radio-style mb-20">
-                            <input type="radio" name="active" id="active_n" value="0" @if($isEdit && !$user->active) checked @endif>
+                            <input type="radio" name="active" id="active_n" value="0" @if($user && !$user->active) checked @endif>
                             <label class="form-check-label" for="active_n">No</label>
                         </div>
                     </div>
 
-                    <div class="col-lg-12">
-                        <div class="mb-3">
-                            <button type="submit" class="btn btn-primary">Save</button>
-                            <a href="{{ route('admin.treatments.index') }}" class="btn btn-secondary">Cancel</a>
-                        </div>
-                    </div>
+                </div>
+            </div>
 
+            <div class="col-lg-12">
+                <div class="mb-3">
+                    <button type="submit" class="btn btn-primary">Save</button>
+                    <a href="{{ route('admin.customers.index') }}" class="btn btn-secondary">Cancel</a>
                 </div>
             </div>
 
@@ -190,13 +198,34 @@
 
 <script>
     $(document).ready(function () {
+        new tempusDominus.TempusDominus(document.getElementById('calendar_pick'), {
+            allowInputToggle: true,
+            defaultDate: undefined,
+            useCurrent: false,
+            localization: {
+                format: date_format,
+            },
+            display: {
+                components: {
+                    calendar: true,
+                    date: true,
+                    month: true,
+                    year: true,
+                    decades: false,
+                    clock: false,
+                    hours: false,
+                    minutes: false,
+                    seconds: false,
+                    useTwentyfourHour: undefined
+                },
+            }
 
-        @if (Session:: has('status'))
-    toastr.success("{{ Session::get('status') }}")
-    @endif
+        });
+        @if ($user)
+            $('#birthday').val(moment('{{ $user->user_profile->birthday}}').format(moment_date_format));
+        @endif
     });
 </script>
 
 @include('admin.modules.common.tinymce')
-
 @endpush
