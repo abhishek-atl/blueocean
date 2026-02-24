@@ -1,7 +1,7 @@
 <aside class="sidebar-nav-wrapper">
     <div class="navbar-logo">
         <a href="{{ route('admin.dashboard') }}">
-            BlueOcean
+            <img src="{{ asset('assets/img/logo.svg') }}" alt="logo" class="img-fluid">
         </a>
     </div>
     <nav class="sidebar-nav">

@@ -1,0 +1,42 @@
+<svg width="500" height="220" viewBox="0 0 500 220" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="oceanGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#0A3D62"/>
+      <stop offset="100%" stop-color="#3EDBF0"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Circular outline -->
+  <circle cx="100" cy="100" r="60"
+          stroke="url(#oceanGradient)"
+          stroke-width="3"
+          fill="none"/>
+
+  <!-- Wave line -->
+  <path d="M40 105
+           Q70 80, 100 105
+           T160 105"
+        stroke="url(#oceanGradient)"
+        stroke-width="3"
+        fill="none"
+        stroke-linecap="round"/>
+
+  <!-- Brand name -->
+  <text x="190" y="105"
+        font-family="Helvetica, Arial, sans-serif"
+        font-size="60"
+        fill="#090a0a"
+        letter-spacing="2">
+    BlueOcean
+  </text>
+
+  <!-- Wellness (equal visual width) -->
+  <text x="190" y="145"
+        font-family="Helvetica, Arial, sans-serif"
+        font-size="30"
+        fill="#5DADE2"
+        letter-spacing="6"
+        >
+    WELLNESS
+  </text>
+</svg>
