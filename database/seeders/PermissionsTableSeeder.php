@@ -17,11 +17,11 @@ class PermissionsTableSeeder extends Seeder
         app()[PermissionRegistrar::class]->forgetCachedPermissions();
 
         // create permissions
-        Permission::create(['name' => 'Therapist Management']);
-        Permission::create(['name' => 'User Management']);
-        Permission::create(['name' => 'Setting Management']);
-        Permission::create(['name' => 'Booking Management']);
-        Permission::create(['name' => 'Payment Management']);
-        Permission::create(['name' => 'Report Management']);
+        Permission::create(['name' => 'Therapist']);
+        Permission::create(['name' => 'User']);
+        Permission::create(['name' => 'Setting']);
+        Permission::create(['name' => 'Booking']);
+        Permission::create(['name' => 'Payment']);
+        Permission::create(['name' => 'Report']);
     }
 }
