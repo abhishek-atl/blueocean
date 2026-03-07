@@ -54,6 +54,8 @@ class DatabaseService
 
         if (isset($params['all'])) {
             return $query->get();
+        } else if (isset($params['first'])) {
+            return $query->first();
         } else {
             return $query->paginate(config('custom.db.per_page'));
         }

@@ -1,0 +1,70 @@
+.show-elem {
+    display: block;
+}
+
+.hide-elem {
+    display: none;
+}
+
+.therapy-list {
+    max-height: 400px;
+    overflow-y: auto;
+}
+.therapy-list .list-group-item {
+
+}
+.therapy-list .list-group-item:hover {
+    cursor: pointer;
+    background-color: #f8f9fa;
+}
+
+
+.calendar_date {
+    border: 1px solid #ddd;
+    width: 80px;
+    height: 80px;
+    font-size: 18px;
+    background-color: #fff;
+}
+
+.calendar_date:hover,
+.calendar_date.active {
+    background-color: #5cb85c;
+    color: #fff;
+}
+
+.calendar_date:disabled {
+    border: 1px solid #999999;
+    background-color: #cccccc;
+    color: #666666;
+}
+
+.calendar_date_day {
+    width: 80px;
+    text-align: center;
+}
+
+.calendar_date_month {
+    width: 80px;
+    text-align: center;
+}
+
+.calendar_time {
+    border: 1px solid #ddd;
+    width: 80px;
+    height: 80px;
+    font-size: 16px;
+    background-color: #fff;
+}
+
+.calendar_time:hover,
+.calendar_time.active {
+    background-color: #5cb85c;
+    color: #fff;
+}
+
+.calendar_time:disabled {
+    border: 1px solid #999999;
+    background-color: #cccccc;
+    color: #666666;
+}

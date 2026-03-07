@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id')->unique();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->string('slug')->unique();
             $table->longText('about')->nullable();
             $table->longText('notes')->nullable();
             $table->date('health_renewal_date')->nullable();
@@ -35,14 +36,11 @@ return new class extends Migration
             $table->decimal('avg_rating', 2, 1)->nullable();
             $table->boolean('bonus_eligible')->nullable();
             $table->decimal('bonus_amount', 8, 2)->nullable();
-            $table->string('image_alt');
-            $table->string('url');
+
+            $table->string('page_meta_title', 255);
             $table->longText('page_meta_tag');
-            $table->string('page_meta_title_orig')->nullable();
-            $table->string('page_meta_title');
-            $table->string('image_title');
-            $table->string('extra_meta_tags')->nullable();
-            $table->boolean('show_progress_bar')->nullable();
+            $table->string('extra_meta_tags', 255)->nullable();
+
             $table->timestamps();
         });
     }

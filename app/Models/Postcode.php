@@ -10,6 +10,6 @@ class Postcode extends Model
 
     public function district()
     {
-        return $this->belongsTo(PostDistrict::class, 'district_id');
+        return $this->belongsTo(PostcodeDistrict::class, 'district_id');
     }
 }

@@ -3,10 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\PostcodeDistrict;
 use Illuminate\Http\Request;
 
 use App\Services\DatabaseService;
-use App\Models\PostDistrict;
+
 
 class PostcodeDistrictController extends Controller
 {
@@ -31,7 +32,7 @@ class PostcodeDistrictController extends Controller
             ];
         }
 
-        $districts = $this->databaseService->getByParams(PostDistrict::class, $params);
+        $districts = $this->databaseService->getByParams(PostcodeDistrict::class, $params);
 
         return view('admin.modules.postcode_district.index', [
             'districts' => $districts,

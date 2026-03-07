@@ -7,7 +7,7 @@ use App\Http\Requests\StoreUserRequest;
 use Illuminate\Http\Request;
 
 use App\Models\PostcodeZone;
-use App\Models\PostDistrict;
+use App\Models\PostcodeDistrict;
 use App\Models\TherapistHoliday;
 use App\Models\Treatment;
 use App\Models\User;
@@ -158,7 +158,7 @@ class TherapistController extends Controller
         $user = $this->userService->find(request('id'));
         $user->load('postcodes');
 
-        $districts = $this->databaseService->getByParams(PostDistrict::class, ['all' => true]);
+        $districts = $this->databaseService->getByParams(PostcodeDistrict::class, ['all' => true]);
         $zones = $this->databaseService->getByParams(PostcodeZone::class, ['all' => true]);
 
         return view('admin.modules.therapist.postcodes', [
