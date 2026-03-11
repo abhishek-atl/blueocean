@@ -88,6 +88,10 @@
     let routeDays = "{{ route('getDays') }}";
     let routeTime = "{{ route('getTime') }}";
     let routeCheckPostal = "{{ route('checkPostcode') }}";
+    let routeFreeTherapists = "{{ route('freeTherapists') }}";
+
+    let postcode = "{{ session('booking.postcode') }}";
+    let fullpostcode = "{{ session('booking.input_postal_code') }}";
 
     $('#duration_amount').val($('#duration').find(':selected').data('amount'));
 
@@ -104,6 +108,7 @@
         let date = selectedDate.data('date');
         $('#date').val(date);
         $('#time').val("");
+
         if ($('#therapist_id').val()) {
             loadTime().then(function () {
                 getTimeTherapist().then(function () {

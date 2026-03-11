@@ -15,6 +15,7 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
             PermissionSeeder::class,
             UserSeeder::class,
+            TherapistProfileSeeder::class,
             TreatmentSeeder::class,
             TreatmentCategorySeeder::class,
             TariffPlanSeeder::class,

@@ -148,4 +148,9 @@ class BookingController extends Controller
             'time_today' => false,
         ]);
     }
+
+    public function getFreeTherapists($date, $duration = 2, $name = null, $asap = false, $timeAviability = null)
+    {
+
+    }
 }

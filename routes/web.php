@@ -21,3 +21,4 @@ Route::post('/booking-info', [BookingController::class, 'bookingInfo'])->name('b
 
 Route::post('get-days', [BookingController::class, 'getDays'])->name('getDays');
 Route::post('/get-time', [BookingController::class, 'getTime'])->name('getTime');
+Route::post('/free-therapists', [BookingController::class, 'getFreeTherapists'])->name('getFreeTherapists');
