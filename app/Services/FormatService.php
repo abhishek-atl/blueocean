@@ -29,4 +29,9 @@ class FormatService
     {
         return '£' . number_format($amount, 2);
     }
+
+    public function parseFloat($val)
+    {
+        return (float) filter_var($val, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+    }
 }

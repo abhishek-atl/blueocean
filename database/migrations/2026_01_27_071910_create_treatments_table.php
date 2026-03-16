@@ -13,9 +13,14 @@ return new class extends Migration
     {
         Schema::create('treatments', function (Blueprint $table) {
             $table->id();
+            $table->string('slug', 255)->unique();
             $table->string('name', 100);
             $table->string('title', 100);
-            $table->string('image', 255);
+
+            $table->string('image')->nullable();
+            $table->string('image_alt')->nullable();
+            $table->string('image_title')->nullable();
+
             $table->longText('description');
             $table->boolean('active')->default(0);
             $table->boolean('on_treatment_page')->default(0);
@@ -28,13 +33,11 @@ return new class extends Migration
             $table->string('description_heading', 255)->nullable();
             $table->string('benefits_heading', 255)->nullable();
             $table->longText('benefits')->nullable();
+
             $table->string('page_meta_title', 255);
             $table->longText('page_meta_tag');
-            $table->string('url', 255);
-            $table->string('image_alt', 255);
-            $table->string('image_title', 255);
             $table->string('extra_meta_tags', 255)->nullable();
-            $table->boolean('show_progress_bar')->nullable();
+
             $table->timestamps();
         });
     }

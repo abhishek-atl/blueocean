@@ -1,0 +1,170 @@
+.show-elem {
+    display: block;
+}
+
+.hide-elem {
+    display: none;
+}
+
+.therapy-list {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.therapy-list .list-group-item {}
+
+.therapy-list .list-group-item:hover {
+    cursor: pointer;
+    background-color: #f8f9fa;
+}
+
+
+.calendar_date {
+    border: 1px solid #ddd;
+    width: 80px;
+    height: 80px;
+    font-size: 18px;
+    background-color: #fff;
+}
+
+.calendar_date:hover,
+.calendar_date.active {
+    background-color: #5cb85c;
+    color: #fff;
+}
+
+.calendar_date:disabled {
+    border: 1px solid #999999;
+    background-color: #cccccc;
+    color: #666666;
+}
+
+.calendar_date_day {
+    width: 80px;
+    text-align: center;
+}
+
+.calendar_date_month {
+    width: 80px;
+    text-align: center;
+}
+
+.calendar_time {
+    border: 1px solid #ddd;
+    width: 80px;
+    height: 80px;
+    font-size: 16px;
+    background-color: #fff;
+}
+
+.calendar_time:hover,
+.calendar_time.active {
+    background-color: #5cb85c;
+    color: #fff;
+}
+
+.calendar_time:disabled {
+    border: 1px solid #999999;
+    background-color: #cccccc;
+    color: #666666;
+}
+
+.therapist-card {}
+
+.therapist-card:hover {
+    cursor: pointer;
+}
+
+.therapist-active {
+    border: solid 3px green;
+}
+
+.calendar_date_month {
+    height: 25px;
+}
+
+.calendar_date_day {
+    height: 25px;
+}
+
+.owl-corousel-container-date {
+    position: relative;
+    padding: 0 35px;
+}
+
+.owl-corousel-container-date .owl-theme .custom-nav {
+    position: absolute;
+    margin: 0 15px;
+    padding: 0;
+    height: 130px;
+    top: 0;
+    left: 0;
+    right: 0;
+}
+
+.owl-corousel-container-date .owl-theme .custom-nav .owl-prev,
+.owl-corousel-container-date .owl-theme .custom-nav .owl-next {
+    position: absolute;
+    margin: 0;
+    padding: 0;
+    height: 130px;
+    color: inherit;
+    background: none;
+    border: none;
+    z-index: 100;
+}
+
+.owl-corousel-container-date .owl-theme .custom-nav .owl-prev i,
+.owl-corousel-container-date .owl-theme .custom-nav .owl-next i {
+    font-size: 1.5rem;
+    color: #ff5509;
+}
+
+.owl-corousel-container-date .owl-theme .custom-nav .owl-prev {
+    left: -10px;
+}
+
+.owl-corousel-container-date .owl-theme .custom-nav .owl-next {
+    right: -10px;
+}
+
+.owl-corousel-container-time {
+    position: relative;
+    padding: 0 35px;
+}
+
+.owl-corousel-container-time .owl-theme .custom-nav {
+    position: absolute;
+    margin: 0 15px;
+    padding: 0;
+    height: 80px;
+    top: 0;
+    left: 0;
+    right: 0;
+}
+
+.owl-corousel-container-time .owl-theme .custom-nav .owl-prev,
+.owl-corousel-container-time .owl-theme .custom-nav .owl-next {
+    position: absolute;
+    margin: 0;
+    padding: 0;
+    height: 80px;
+    color: inherit;
+    background: none;
+    border: none;
+    z-index: 100;
+}
+
+.owl-corousel-container-time .owl-theme .custom-nav .owl-prev i,
+.owl-corousel-container-time .owl-theme .custom-nav .owl-next i {
+    font-size: 1.5rem;
+    color: #ff5509;
+}
+
+.owl-corousel-container-time .owl-theme .custom-nav .owl-prev {
+    left: -10px;
+}
+
+.owl-corousel-container-time .owl-theme .custom-nav .owl-next {
+    right: -10px;
+}

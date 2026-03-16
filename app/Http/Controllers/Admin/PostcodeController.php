@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 use App\Services\DatabaseService;
 use App\Models\Postcode;
-use App\Models\PostDistrict;
+use App\Models\PostcodeDistrict;
 
 class PostcodeController extends Controller
 {
@@ -47,7 +47,7 @@ class PostcodeController extends Controller
         if ($id) {
             $postcode = $this->databaseService->getByParams(Postcode::class, ['id' => $id]);
         }
-        $districts = $this->databaseService->getByParams(PostDistrict::class, ['all' => true]);
+        $districts = $this->databaseService->getByParams(PostcodeDistrict::class, ['all' => true]);
 
         return view('admin.modules.postcode.postcode_add_edit', [
             'districts' => $districts,

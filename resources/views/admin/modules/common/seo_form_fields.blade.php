@@ -13,9 +13,9 @@
     </div>
 </div>
 <div class="form-group row mb-3">
-    <label class="col-lg-4 col-form-label">Url <span class="text-danger">*</span></label>
+    <label class="col-lg-4 col-form-label">Slug <span class="text-danger">*</span></label>
     <div class="col-lg-7">
-        <input type="text" class="form-control" id="url" name="url" placeholder="Enter url.." value="@if($entity){{ $entity?->url }}@endif">
+        <input type="text" class="form-control" id="slug" name="slug" placeholder="Enter slug.." value="@if($entity){{ $entity?->slug }}@endif">
     </div>
 </div>
 <div class="form-group row mb-3">

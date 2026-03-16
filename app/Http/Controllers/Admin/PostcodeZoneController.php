@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use App\Services\DatabaseService;
 
 use App\Models\PostcodeZone;
-use App\Models\PostDistrict;
+use App\Models\PostcodeDistrict;
 
 class PostcodeZoneController  extends Controller
 {
@@ -39,7 +39,7 @@ class PostcodeZoneController  extends Controller
             $postcodeZone->load(['postcodes']);
         }
 
-        $districts = $this->databaseService->getByParams(PostDistrict::class, ['with' => 'postcodes', 'all' => true]);
+        $districts = $this->databaseService->getByParams(PostcodeDistrict::class, ['with' => 'postcodes', 'all' => true]);
 
         return view('admin.modules.postcode_zone.create_edit', [
             'postcodeZone' => $postcodeZone,

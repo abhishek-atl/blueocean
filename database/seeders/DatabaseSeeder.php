@@ -12,14 +12,16 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
-            RolesTableSeeder::class,
-            PermissionsTableSeeder::class,
+            RoleSeeder::class,
+            PermissionSeeder::class,
             UserSeeder::class,
-            TreatmentTableSeeder::class,
-            TreatmentCategoriesTableSeeder::class,
-            PostDistrictsTableSeeder::class,
-            PostcodesTableSeeder::class,
-            PostcodeZonesTablesSeeder::class,
+            TherapistProfileSeeder::class,
+            TreatmentSeeder::class,
+            TreatmentCategorySeeder::class,
+            TariffPlanSeeder::class,
+            PostcodeDistrictSeeder::class,
+            PostcodeSeeder::class,
+            PostcodeZoneSeeder::class,
         ]);
     }
 }
