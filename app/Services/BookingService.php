@@ -6,6 +6,7 @@ use App\Models\Postcode;
 use App\Models\TariffPlan;
 use App\Models\TherapistHoliday;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class BookingService
@@ -13,6 +14,8 @@ class BookingService
 
     public function checkPostalCodeCovered($postcode)
     {
+        // First try to find the postcode with initial 4 characters
+        // Other formats needs to be considered
         $shortPostcode = substr($postcode, 0, 4);
         $postcode = Postcode::where('postcode', $shortPostcode)
             ->where('active', 1)
@@ -20,6 +23,9 @@ class BookingService
         return $postcode;
     }
 
+    /**
+     * Get therapists by postcode
+     */
     public function getTherapistsByPostcode($postcode, $count = false)
     {
         $query = User::whereHas('postcodes', function ($query) use ($postcode) {
@@ -33,83 +39,74 @@ class BookingService
         }
     }
 
-    public function getDays()
+    /**
+     * Get next 15 days starting from today or tomorrow based on current time.
+     * If current time is 22:31 or later, start from tomorrow, otherwise from today.
+     *
+     * @return array Array of dates with day info (number, month, day name, full date)
+     */
+    public function getBookableDays()
     {
-        $timezone = new \DateTimeZone("Europe/London");
-        $now = new \DateTime('now', $timezone);
-        $dateN = clone($now);
-        $check = clone($now);
-        $check->setTime('22', '31', '00');
-        for ($i = 0; $i < 18; $i += 1) {
-            if ($i == 0 && $now < $check) {
-                $day = $dateN;
-            } else {
-                $day = $dateN->modify('+1 day');
+        $now = Carbon::now();
+        $cutoffTime = Carbon::now()->setTime(22, 31, 0);
+        $dates = [];
+
+        // Determine start date based on current time
+        $startDate = $now >= $cutoffTime ? $now->addDay()->startOfDay() : $now->startOfDay();
+
+        // Generate next 15 days
+        for ($i = 0; $i < 15; $i++) {
+            $currentDate = (clone $startDate)->addDays($i);
+
+            $dates[] = [
+                'number' => $currentDate->format('d'),
+                'month' => $currentDate->format('M'),
+                'day' => $currentDate->format('D'),
+                'full' => $currentDate->format('Y-m-d'),
+                'timestamp' => $currentDate->timestamp,
+            ];
+        }
+
+        return $dates;
+    }
+
+    /**
+     * Get available time slots every 30 minutes from now to 22:00
+     * If current time is greater than 22:00, time slots start from 07:00 the next day
+     *
+     * @return array Array of time slots in 'H:i' format
+     */
+    public function getAvailableTimeSlots()
+    {
+        $now = Carbon::now()->addHour();
+        $endTime = Carbon::now()->setTime(22, 30, 0);
+        $timeSlots = [];
+
+        // If current time is after 22:30, start from 07:00 tomorrow
+        if ($now > $endTime) {
+            $startTime = $now->addDay()->setTime(7, 0, 0);
+        } else {
+            // Start from current time, rounded to nearest 30-minute interval
+            $startTime = clone $now;
+            $minute = (int)$startTime->format('i');
+
+            // Round up to next 30-minute interval
+            if ($minute > 0 && $minute < 30) {
+                $startTime->setTime($startTime->format('H'), 30, 0);
+            } elseif ($minute > 30) {
+                $startTime->addHour()->setTime($startTime->format('H'), 0, 0);
             }
-            $date[] = ['number' => $day->format('d'), 'month' => $day->format('M'), 'day' => $day->format('D'), 'full' => $day->format('d-m-Y')];
-        }
-        return $date;
-    }
-
-    public function getTime()
-    {
-        return $time = [
-            1 => '07:00',
-            2 => '07:30',
-            3 => '08:00',
-            4 => '08:30',
-            5 => '09:00',
-            6 => '09:30',
-            7 => '10:00',
-            8 => '10:30',
-            9 => '11:00',
-            10 => '11:30',
-            11 => '12:00',
-            12 => '12:30',
-            13 => '13:00',
-            14 => '13:30',
-            15 => '14:00',
-            16 => '14:30',
-            17 => '15:00',
-            18 => '15:30',
-            19 => '16:00',
-            20 => '16:30',
-            21 => '17:00',
-            22 => '17:30',
-            23 => '18:00',
-            24 => '18:30',
-            25 => '19:00',
-            26 => '19:30',
-            27 => '20:00',
-            28 => '20:30',
-            29 => '21:00',
-            30 => '21:30',
-            31 => '22:00',
-            32 => '22:30',
-            33 => '23:00',
-            34 => '23:30',
-        ];
-    }
-
-    public function checkLockedTime($now, $bookingDate, $mmn)
-    {
-        // check for the past date
-        if ($now->format('Y-m-d') > $bookingDate->format('Y-m-d')) {
-            return true;
         }
 
-        // if quick booking, check for the time, should not be after 10 and before 7
-        if ($mmn == 'now') {
-            if ($now->format('H') > 22 || $now->format('H') < 7)
-                return true;
-        }
+        // Set end time to 22:00 on the start date
+        $endTimeSlot = (clone $startTime)->setTime(22, 30, 0);
 
-        // revisit
-        $bookingDate->setTime('23', '59', '59');
-        if ($now > $bookingDate) {
-            return true;
+        // Generate 30-minute intervals
+        while ($startTime <= $endTimeSlot) {
+            $timeSlots[] = $startTime->format('H:i');
+            $startTime->addMinutes(30);
         }
-        return false;
+        return $timeSlots;
     }
 
     /**
@@ -122,38 +119,38 @@ class BookingService
      * @param array $therapistIds Optional array of specific therapist IDs to check
      * @return \Illuminate\Database\Eloquent\Collection Available therapists
      */
-    public function getFreeTherapistsOnDateTime($date, $time, $duration = 60, $therapistIds = null)
+    public function getFreeTherapists($date, $time, $duration = 60, $therapistIds = [])
     {
-        // Convert date to DateTime object if string
-        if (is_string($date)) {
-            $date = new \DateTime($date);
-        }
-
-        // Parse time
-        $timeParts = explode(':', $time);
-        $startDateTime = clone $date;
-        $startDateTime->setTime((int)$timeParts[0], (int)$timeParts[1], 0);
-
-        // Calculate end time
-        $endDateTime = clone $startDateTime;
-        $endDateTime->modify("+{$duration} minutes");
-
-        // Get day of week (mon, tue, wed, etc.)
-        $dayOfWeek = strtolower($date->format('D'));
-        $dayMap = ['mon' => 'mon', 'tue' => 'tue', 'wed' => 'wed', 'thu' => 'thu', 'fri' => 'fri', 'sat' => 'sat', 'sun' => 'sun'];
-        $scheduleDay = $dayMap[$dayOfWeek];
-
         // Base query for therapists
-        $query = User::where('user_type', self::TYPE_THERAPIST)
+        $query = User::where('user_type', User::TYPE_THERAPIST)
             ->where('active', 1)
+            ->with(['therapist_profile','user_profile'])
             ->whereHas('schedule');
 
         // Filter by specific therapist IDs if provided
         if (!empty($therapistIds)) {
             $query->whereIn('id', $therapistIds);
         }
-
         $therapists = $query->get();
+
+        $startDateTime = null;
+        $endDateTime = null;
+        $scheduleDay = null;
+        if ($date && $time) {
+            $timeParts = explode(':', $time);
+            $startDateTime = clone $date;
+            $startDateTime->setTime((int)$timeParts[0], (int)$timeParts[1], 0);
+
+            // Calculate end time
+            $endDateTime = clone $startDateTime;
+            $endDateTime->modify("+{$duration} minutes");
+
+
+            // Get day of week (mon, tue, wed, etc.)
+            $dayOfWeek = strtolower($date->format('D'));
+            $dayMap = ['mon' => 'mon', 'tue' => 'tue', 'wed' => 'wed', 'thu' => 'thu', 'fri' => 'fri', 'sat' => 'sat', 'sun' => 'sun'];
+            $scheduleDay = $dayMap[$dayOfWeek];
+        }
 
         // Filter therapists based on schedule, holidays, and bookings
         $availableTherapists = $therapists->filter(function ($therapist) use (
@@ -164,43 +161,49 @@ class BookingService
             $duration
         ) {
             // Check 1: Is therapist on holiday?
-            $isOnHoliday = TherapistHoliday::where('user_id', $therapist->id)
-                ->where('start_date', '<=', $endDateTime)
-                ->where('end_date', '>=', $startDateTime)
-                ->exists();
+            if ($startDateTime && $endDateTime) {
+                $isOnHoliday = TherapistHoliday::where('user_id', $therapist->id)
+                    ->where('start_date', '<=', $endDateTime)
+                    ->where('end_date', '>=', $startDateTime)
+                    ->exists();
 
-            if ($isOnHoliday) {
-                return false;
+                if ($isOnHoliday) {
+                    return false;
+                }
             }
 
             // Check 2: Does therapist have working hours for this day?
-            $schedule = $therapist->schedule;
-            if (!$schedule || empty($schedule->{$scheduleDay})) {
-                return false;
-            }
+            if ($scheduleDay) {
+                $schedule = $therapist->schedule;
+                if (!$schedule || empty($schedule->{$scheduleDay})) {
+                    return false;
+                }
 
-            $workingHours = $schedule->{$scheduleDay};
-            if (!$this->isTimeWithinWorkingHours($startDateTime, $endDateTime, $workingHours)) {
-                return false;
+                $workingHours = $schedule->{$scheduleDay};
+                if (!$this->isTimeWithinWorkingHours($startDateTime, $endDateTime, $workingHours)) {
+                    return false;
+                }
             }
 
             // Check 3: Are there conflicting bookings?
-            $hasConflictingBooking = DB::table('bookings')
-                ->where('user_id', $therapist->id)
-                ->where(function ($query) use ($startDateTime, $endDateTime) {
-                    // Check if there's any overlap with existing bookings
-                    $query->whereBetween('appointment_start', [$startDateTime, $endDateTime])
-                        ->orWhereBetween('appointment_finish', [$startDateTime, $endDateTime])
-                        ->orWhere(function ($q) use ($startDateTime, $endDateTime) {
-                            $q->where('appointment_start', '<', $startDateTime)
-                                ->where('appointment_finish', '>', $endDateTime);
-                        });
-                })
-                ->whereIn('status', ['new', 'processing']) // Only consider active bookings
-                ->exists();
+            if ($startDateTime && $endDateTime) {
+                $hasConflictingBooking = DB::table('bookings')
+                    ->where('user_id', $therapist->id)
+                    ->where(function ($query) use ($startDateTime, $endDateTime) {
+                        // Check if there's any overlap with existing bookings
+                        $query->whereBetween('appointment_start', [$startDateTime, $endDateTime])
+                            ->orWhereBetween('appointment_finish', [$startDateTime, $endDateTime])
+                            ->orWhere(function ($q) use ($startDateTime, $endDateTime) {
+                                $q->where('appointment_start', '<', $startDateTime)
+                                    ->where('appointment_finish', '>', $endDateTime);
+                            });
+                    })
+                    ->whereIn('status', ['new', 'processing']) // Only consider active bookings
+                    ->exists();
 
-            if ($hasConflictingBooking) {
-                return false;
+                if ($hasConflictingBooking) {
+                    return false;
+                }
             }
 
             return true;
@@ -247,6 +250,4 @@ class BookingService
         // Check if appointment falls within working hours
         return $startDateTime >= $workStart && $endDateTime <= $workEnd;
     }
-
-
 }

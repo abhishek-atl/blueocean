@@ -15,6 +15,7 @@ return new class extends Migration
         Schema::create('bookings', function (Blueprint $table) {
             $table->id();
             $table->unsignedInteger('user_id')->nullable();
+            $table->unsignedInteger('therapist_id');
             $table->unsignedInteger('treatment_id');
             $table->dateTime('booking_datetime');
             $table->dateTime('appointment_start');
@@ -24,7 +25,6 @@ return new class extends Migration
             $table->string('email', 50)->nullable();
             $table->string('phone', 14);
             $table->string('postcode', 50);
-            $table->longText('address');
             $table->string('flat_no', 50)->nullable();
             $table->string('street_number', 50);
             $table->string('street_name', 50)->nullable();

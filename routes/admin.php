@@ -48,6 +48,14 @@ Route::post('/therapists/fees/{id?}', [TherapistController::class, 'feesStore'])
 Route::get('/holidays/{id}', [TherapistController::class, 'holidays'])->name('therapists.holidays');
 
 
+// Bookings
+Route::get('/bookings', [TreatmentController::class, 'index'])->name('bookings.index');
+Route::get('/bookings/create', [TreatmentController::class, 'createEdit'])->name('bookings.create');
+Route::get('/bookings/edit/{id}', [TreatmentController::class, 'createEdit'])->name('bookings.edit');
+Route::post('/bookings/store', [TreatmentController::class, 'store'])->name('bookings.store');
+Route::get('/bookings/destroy/{id}', [TreatmentController::class, 'destroy'])->name('bookings.destroy');
+
+
 // Treatments
 Route::get('/treatments', [TreatmentController::class, 'index'])->name('treatments.index');
 Route::get('/treatments/create', [TreatmentController::class, 'createEdit'])->name('treatments.create');

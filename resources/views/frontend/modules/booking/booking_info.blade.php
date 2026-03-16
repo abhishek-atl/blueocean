@@ -2,11 +2,24 @@
 
 @section('content')
 
+<div class="container pt-5">
+    <div class="row">
+        <div class="col-md-12">
+            <h1 class="text-primary">Massage Information</h1>
+        </div>
+    </div>
+</div>
+
+@if ($blockedIp)
+<div class="container">
+    <p>Sorry, we are currently experiencing technical problems. Please try again later.</p>
+</div>
+@else
+
 <form name="frmMassageInfo" method="post" action="{{ route('bookingInfoPost') }}">
     @csrf
     <input type="hidden" id="date" name="date" value="@if(session('booking.date')){{ session('booking.date') }}@endif">
     <input type="hidden" id="time" name="time" value="@if(session('booking.time')){{ session('booking.time') }}@endif">
-    <input type="hidden" id="asap" name="asap" value="@if(session('booking.asap')){{ session('booking.asap') }}@endif">
     <input type="hidden" id="therapist_id" name="therapist_id" value="@if(session('booking.therapist_id')){{ session('booking.therapist_id') }}@endif">
 
     <div class="container">
@@ -77,8 +90,36 @@
             </div>
         </div>
 
+        <div class="focus-image-block mt-3  hide-elem">
+            <div class="row mt-4 mt-lg-4 button-block hide-elem">
+                <div class="col-md-12 d-flex justify-content-center justify-content-lg-start">
+                    <button type="submit" class="btn btn-dark px-3 rounded">Continue</button>
+                </div>
+            </div>
+        </div>
+
     </div>
 </form>
+
+<div class="modal fade" tabindex="-1" id="modal_common">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Information</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@endif
+
 @endsection
 
 
@@ -88,62 +129,11 @@
     let routeDays = "{{ route('getDays') }}";
     let routeTime = "{{ route('getTime') }}";
     let routeCheckPostal = "{{ route('checkPostcode') }}";
-    let routeFreeTherapists = "{{ route('freeTherapists') }}";
+    let routeFreeTherapists = "{{ route('getFreeTherapists') }}";
+    let routeTherapistInfo = "{{ route('therapistInfo') }}";
 
     let postcode = "{{ session('booking.postcode') }}";
     let fullpostcode = "{{ session('booking.input_postal_code') }}";
-
-    $('#duration_amount').val($('#duration').find(':selected').data('amount'));
-
-    // events
-    $('#duration').change(function () {
-        $('#duration_amount').val($('#duration').find(':selected').data('amount'));
-    });
-
-    $(document).on("click", '.calendar_date', function (event) {
-        let selectedDate = $(this);
-        $('.calendar_date').removeClass('active');
-        selectedDate.addClass('active');
-        $('#asap').val('no');
-        let date = selectedDate.data('date');
-        $('#date').val(date);
-        $('#time').val("");
-
-        if ($('#therapist_id').val()) {
-            loadTime().then(function () {
-                getTimeTherapist().then(function () {
-                    scrollToNextSelection('date-block');
-                })
-            })
-        } else {
-            loadTime().then(function () {
-                getFreeTherapists().then(function () {
-                    scrollToNextSelection('date-block');
-                })
-            })
-        }
-    });
-
-    $(document).on("click", '.calendar_time', function (event) {
-        if (!$('#date').val()) {
-            $('#modal_common .modal-body').empty();
-            $('#modal_common .modal-body').append('Please select a date first');
-            $('#modal_common').modal('show');
-            return false;
-        }
-        let selectedTime = $(this);
-        $('.calendar_time').removeClass('active');
-        selectedTime.addClass('active');
-        $('#asap').val('no');
-        $('#time').val(selectedTime.data('time'));
-        if ($('#therapist_id').val()) {
-            scrollToNextSelection('focus-image-block');
-        } else {
-            getFreeTherapists().then(function () {
-                scrollToNextSelection('time-block');
-            });
-        }
-    });
 
     function loadDays() {
         return new Promise(function (resolve, reject) {
@@ -206,7 +196,7 @@
     function loadTherapists() {
         return new Promise(function (resolve, reject) {
             $('.loading').show();
-            $.post(routeCheckPostal, {
+            $.post(routeFreeTherapists, {
                 postcode: postcode,
             }, function (response) {
                 $('#therapists-update').empty();
@@ -253,126 +243,99 @@
         });
     }
 
+    function initOwlOnTherapists() {
+        $('.owl-corousel-therapists').owlCarousel({
+            nav: true,
+            dots: false,
+            mouseDrag: false,
+            navText: ["<div class='nav-btn prev-slide'></div>", "<div class='nav-btn next-slide'></div>"],
+            slideBy: 3,
+            margin: 15,
+            responsive: {
+                1000: {
+                    items: 4,
+                }
+            }
+        });
+    }
+
     loadDays().then(function () {
         loadTime().then(function () {
             loadTherapists();
         })
     })
 
-    function getTimeTherapist() {
-        return new Promise(function (resolve, reject) {
-            $('.loading').show();
-            var duration = $('#duration').val();
-            var date = $('#date').val();
-            var therapistId = $('#therapist_id').val();
-            var time = $('#time').val();
-            if (therapistId) {
-                $.post(routeTherapistTime, {
-                    id: therapistId,
-                    date: date,
-                    duration: duration
-                }, function (response) {
-                    $('.calendar_time').attr("disabled", false);
-                    if (response) {
-                        for (i = 0; i < response.length; i++) {
-                            // if selected time is disabled time before selecting therapist
-                            // unset it
-                            if (time == response[i]) {
-                                resetTime();
-                                scrollToNextSelection();
-                            }
-                            $('.calendar_time[data-time="' + response[i] + '"]').attr("disabled", true);
-                            $('.loading').hide();
-                            resolve();
-                        }
-                    }
-                }).fail(function (xhr, status, error) {
-                    if (xhr.status == 419) {
-                        alert(xhr.responseJSON.message);
-                        window.location.reload();
-                    }
-                });
+
+    function showTherapistsInfo(e, id, firstName) {
+        e.stopPropagation();
+        $('#modal_common .modal-body').empty();
+        $.post(routeTherapistInfo, {
+            therapist_id: id
+        }, function (response) {
+            if (response) {
+                $('#modal_common .modal-title').html(firstName);
+                $('#modal_common .modal-body').append(response.view);
+                $('#modal_common .modal-footer').html(
+                    '<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button><button data-dismiss="modal" onclick=\' therapistClicked("' +
+                    id + '");\' class="btn btn-primary" type="submit">SELECT</button>');
+                $('#modal_common').modal('show');
+            }
+        }).fail(function (xhr, status, error) {
+            if (xhr.status == 419) {
+                alert(xhr.responseJSON.message);
+                window.location.reload();
             }
         });
     }
 
-    function getFreeTherapists() {
-        $('.loading').show();
+    function therapistClicked(id) {
+        // hide modal if selected from therapist modal popup
+        $('#modal_common').modal('hide');
+        if ($('#therapist_' + id).hasClass('therapist-active')) {
+            $('#therapist_' + id).removeClass('therapist-active');
+            $('#therapist_id').val("");
+            $('.therapist-diary').addClass('hide-elem');
+            $('.therapist-diary').find('.alert').html('');
+            loadTime();
+            return false;
+        } else {
+            $('.therapist-card').removeClass('therapist-active');
+            $('#therapist_' + id).addClass('therapist-active');
+            $('#therapist_id').val(id);
+            $('.therapist-diary').removeClass('hide-elem');
+            $('.therapist-diary').find('.alert').html($('#therapist_' + id).attr('data-name') + ' Selected. Click To Reset.');
+        }
 
-        return new Promise(function (resolve, reject) {
-            var option, style, duration, mTable, zChair, soothing, strong, female, male;
-            var asap;
-            if ($('#mTable:checked').length) {
-                mTable = 1;
-            }
-            if ($('#zChair:checked').length) {
-                zChair = 1;
-            }
-            if ($('#soothing:checked').length) {
-                soothing = 1;
-            }
-            if ($('#strong:checked').length) {
-                strong = 1;
-            }
-            if ($('#female:checked').length) {
-                female = 1;
-            }
-            if ($('#male:checked').length) {
-                male = 1;
-            }
-            var date = $('#date').val() ? $('#date').val() : 'none';
-            var time = $('#time').val() ? $('#time').val() : 'none';
-            var asap = false;
-            var style = $('#treatment').val();
-            var duration = $('#duration').val()
-
-            option = {
-                date: date,
-                time: time,
-                style: style,
-                duration: duration,
-                asap: asap,
-                postcode: postcode,
-                fullPostcode: fullpostcode,
-                mTable: mTable,
-                zChair: zChair,
-                soothing: soothing,
-                strong: strong,
-                female: female,
-                male: male,
-            };
-            $.post(routeFreeTherapists, option, function (response) {
-                $('#therapists-update').empty();
-                $('#therapists-update').append(response.therapists);
-                initOwlOnTherapists()
-                resolve();
-            }).fail(function (xhr, status, error) {
-                if (xhr.status == 419) {
-                    alert(xhr.responseJSON.message);
-                    window.location.reload();
-                }
-            }).always(function () {
-                $('.loading').hide();
+        if (!$('#date').val()) {
+            $('#modal_common .modal-body').empty();
+            $('#modal_common .modal-body').append('Please select a date and time');
+            $('#modal_common').modal('show');
+            scrollToNextSelection('date-block');
+        } else {
+            loadTime().then(function () {
+                scrollToNextSelection('focus-image-block');
             });
-        });
+        }
+    }
+
+    function resetDiary() {
+        $('.therapist-card').removeClass('therapist-active');
+        $('#therapist_id').val("");
+        $('.therapist-diary').addClass('hide-elem');
+        $('.therapist-diary').find('.alert').html('');
+        $('.focus-image-block').addClass('hide-elem');
+        $('.button-block').addClass('hide-elem');
+        loadTime();
     }
 
     function scrollToNextSelection(section = null) {
         let delay = 0;
         let scrollSpeed = 1000;
-        if (section && section == 'focus-image-block') {
-            setTimeout(() => {
-                $([document.documentElement, document.body]).animate({
-                    scrollTop: $("." + section).offset().top - 200
-                }, scrollSpeed)
-            }, delay);
-        } else if (section) {
-            setTimeout(() => {
-                $([document.documentElement, document.body]).animate({
-                    scrollTop: $("." + section).offset().top - 85
-                }, scrollSpeed)
-            }, delay);
-        }
+        setTimeout(() => {
+            $([document.documentElement, document.body]).animate({
+                scrollTop: $("." + section).offset().top - 85
+            }, scrollSpeed)
+        }, delay);
         let date = $('#date').val();
         let time = $('#time').val();
         let therapist_id = $('#therapist_id').val();
@@ -384,6 +347,58 @@
             $('.button-block').addClass('hide-elem');
         }
     }
+
+    $('#modal_common').on('hidden.bs.modal', function (event) {
+        $('#modal_common .modal-title').html('Information');
+        $('#modal_common .modal-body').html('');
+        $('#modal_common .modal-footer').html(
+            '<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>');
+    })
+
+    $('#duration_amount').val($('#duration').find(':selected').data('amount'));
+
+    // events
+    $('#duration').change(function () {
+        $('#duration_amount').val($('#duration').find(':selected').data('amount'));
+    });
+
+    $(document).on("click", '.calendar_date', function (event) {
+        let selectedDate = $(this);
+        $('.calendar_date').removeClass('active');
+        selectedDate.addClass('active');
+
+        let date = selectedDate.data('date');
+        $('#date').val(date);
+        $('#time').val("");
+
+        loadTime().then(function () {
+            loadTherapists().then(function () {
+                scrollToNextSelection('date-block');
+            })
+        })
+    });
+
+    $(document).on("click", '.calendar_time', function (event) {
+        if (!$('#date').val()) {
+            $('#modal_common .modal-body').empty();
+            $('#modal_common .modal-body').append('Please select a date first');
+            $('#modal_common').modal('show');
+            return false;
+        }
+        let selectedTime = $(this);
+        $('.calendar_time').removeClass('active');
+        selectedTime.addClass('active');
+        $('#time').val(selectedTime.data('time'));
+        if ($('#therapist_id').val()) {
+            scrollToNextSelection('focus-image-block');
+        } else {
+            loadTherapists().then(function () {
+                scrollToNextSelection('time-block');
+            });
+        }
+    });
+
+
 
 </script>
 @endpush

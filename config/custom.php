@@ -14,15 +14,12 @@ return [
     'db' => [
         'per_page' => 25
     ],
-    'download' => [
-        'url' => env('DOWNLOAD_URL', '/storage/')
-    ],
     'upload' => [
+        'url' => env('DOWNLOAD_URL', '/storage/'),
         'disk' => env('STORAGE_DISK', 'public_uploads'),
         'blog_path' => 'posts',
         'treatment_path' => 'treatments',
         'user_path' => 'users',
-        'therapist_path' => 'therapists',
         'massage_locations_path' => 'mobileMassage',
         'job_application_path' => 'job-applications',
         'editor_image_path' => 'ckeditorimages',

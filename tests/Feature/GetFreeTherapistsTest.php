@@ -9,6 +9,7 @@ use App\Models\Booking;
 use App\Services\BookingService;
 use Tests\TestCase;
 use DateTime;
+use Illuminate\Support\Facades\DB;
 
 class GetFreeTherapistsTest extends TestCase
 {
@@ -100,7 +101,7 @@ class GetFreeTherapistsTest extends TestCase
         $endTime = new DateTime('2024-03-18 11:00:00');
 
         // Create a booking for this therapist at the same time
-        \DB::table('bookings')->insert([
+        DB::table('bookings')->insert([
             'user_id' => $therapist->id,
             'treatment_id' => 1,
             'booking_datetime' => now(),
@@ -147,7 +148,7 @@ class GetFreeTherapistsTest extends TestCase
         $date = '2024-03-18';
 
         // Create a booking at 10:00-11:00
-        \DB::table('bookings')->insert([
+        DB::table('bookings')->insert([
             'user_id' => $therapist->id,
             'treatment_id' => 1,
             'booking_datetime' => now(),

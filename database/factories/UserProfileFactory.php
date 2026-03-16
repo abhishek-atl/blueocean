@@ -17,6 +17,7 @@ class UserProfileFactory extends Factory
     public function definition(): array
     {
         return [
+            'image' => 'https://placehold.co/400x400',
             'birthday' => fake()->date(),
             'mobile' => fake()->phoneNumber(),
             'postcode' => fake()->postcode(),

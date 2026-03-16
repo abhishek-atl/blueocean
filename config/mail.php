@@ -115,4 +115,9 @@ return [
         'name' => env('MAIL_FROM_NAME', 'Example'),
     ],
 
+    'to' => [
+        'admin_address' => env('MAIL_ADMIN_ADDRESS', 'admin@example.com'),
+        'capture_all_to_address' => env('CAPTURE_ALL_TO_ADDRESS', 'admin@example.com'),
+    ],
+
 ];

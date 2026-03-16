@@ -1,4 +1,4 @@
-<form method="post" action="{{ route('bookingInfo') }}" id="postcode_form">
+<form method="post" action="{{ route('bookingPostcodePost') }}" id="postcode_form">
     @csrf
     <h1>Welcome to Blueocean</h1>
     <p class="lead">Relax: Our expert mobile massage service starts at just £59</p>

@@ -20,7 +20,7 @@ class Booking extends Model
         'is_extension_paid' => 'boolean',
     ];
 
-    public function user()
+    public function therapist()
     {
         return $this->belongsTo(User::class);
     }
@@ -28,5 +28,10 @@ class Booking extends Model
     public function treatment()
     {
         return $this->belongsTo(Treatment::class);
+    }
+
+    public function payment()
+    {
+        return $this->hasOne(Payment::class);
     }
 }

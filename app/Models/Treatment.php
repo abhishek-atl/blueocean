@@ -17,7 +17,7 @@ class Treatment extends Model
     protected function image(): Attribute
     {
         return Attribute::make(
-            get: fn($value) => asset(config('custom.download.url') . config('custom.upload.treatment_path') . '/' . $value)
+            get: fn($value) => asset(config('custom.upload.url') . config('custom.upload.treatment_path') . '/' . $value)
         );
     }
 }

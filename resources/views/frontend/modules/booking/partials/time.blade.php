@@ -1,7 +1,3 @@
-@if ($time_today)
-<p style="text-align: center; padding-top: 16px;padding-bottom: 16px;">Sorry! We are now closed for today. Please
-    select a future day and time.</p>
-@else
 <div class="owl-corousel-container-time mt-3">
     <div class="owl-corousel-time owl-carousel owl-theme">
         @foreach ($timeSlots as $time)
@@ -15,4 +11,3 @@
         </div>
     </div>
 </div>
-@endif
