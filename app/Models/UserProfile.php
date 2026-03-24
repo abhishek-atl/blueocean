@@ -12,7 +12,7 @@ class UserProfile extends Model
 
     protected $guarded = ['id'];
 
-    protected function imagepath(): Attribute
+    protected function image(): Attribute
     {
         return Attribute::make(
             get: fn($value) => asset(config('custom.upload.url') . config('custom.upload.user_path') . '/' . $value)

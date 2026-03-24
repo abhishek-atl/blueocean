@@ -36,11 +36,13 @@ class UserFactory extends Factory
             if ($user->id == 1) {
                 $user->user_type = 'Admin';
                 $user->save();
-            } else if ($user->id <= 50) {
+            } else if ($user->id <= 8) {
                 $user->user_type = 'Customer';
+                $user->assignRole('Customer');
                 $user->save();
             } else {
                 $user->user_type = 'Therapist';
+                $user->assignRole('Therapist');
                 $user->save();
             }
         });

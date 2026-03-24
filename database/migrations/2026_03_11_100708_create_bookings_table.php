@@ -17,9 +17,6 @@ return new class extends Migration
             $table->unsignedInteger('user_id')->nullable();
             $table->unsignedInteger('therapist_id');
             $table->unsignedInteger('treatment_id');
-            $table->dateTime('booking_datetime');
-            $table->dateTime('appointment_start');
-            $table->dateTime('appointment_finish');
 
             $table->string('name', 100);
             $table->string('email', 50)->nullable();
@@ -31,22 +28,29 @@ return new class extends Migration
             $table->string('town', 100);
             $table->longText('comments')->nullable();
 
-
+            $table->dateTime('booking_datetime');
+            $table->dateTime('appointment_start');
+            $table->dateTime('appointment_finish');
             $table->integer('duration');
             $table->integer('extra_duration')->default(0);
-            $table->decimal('cost', 10, 2);
-            $table->decimal('training_cost', 10, 2);
-            $table->decimal('fee_platform', 10, 2);
-            $table->decimal('fee_therapist', 10, 2);
-            $table->decimal('fee_extension', 10, 2)->nullable();
-            $table->decimal('fee_therapist_extension', 10, 2)->nullable();
+
+            $table->decimal('amount', 10, 2);
             $table->decimal('discount_amount', 10, 2)->nullable();
             $table->string('discount_code', 50)->nullable();
+            $table->decimal('payable_amount', 10, 2)->nullable();
+            $table->decimal('travel_supp', 10, 2)->nullable();
+
+            $table->decimal('fee_platform', 10, 2);
+            $table->decimal('fee_therapist', 10, 2);
+            $table->decimal('fee_platform_extension', 10, 2)->nullable();
+            $table->decimal('fee_therapist_extension', 10, 2)->nullable();
+
             $table->decimal('gift_discount_amount', 10, 2)->nullable();
             $table->decimal('gift_discount_remaining_amount', 8, 2)->nullable();
             $table->string('gift_discount_code', 100)->nullable();
+
             $table->boolean('paid_by_therapist')->default(false);
-            $table->decimal('travel_supp', 10, 2)->nullable();
+
             $table->boolean('therapist_conf_sms')->default(false);
             $table->enum('status', ['new', 'cancelled', 'processing'])->nullable();
             $table->text('late_reason')->nullable();

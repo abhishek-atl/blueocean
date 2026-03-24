@@ -17,11 +17,11 @@ class PermissionSeeder extends Seeder
         app()[PermissionRegistrar::class]->forgetCachedPermissions();
 
         // create permissions
-        Permission::create(['name' => 'Therapist Management']);
-        Permission::create(['name' => 'User Management']);
-        Permission::create(['name' => 'Setting Management']);
-        Permission::create(['name' => 'Booking Management']);
-        Permission::create(['name' => 'Payment Management']);
-        Permission::create(['name' => 'Report Management']);
+        Permission::create(['name' => 'Manage Booking']);
+        Permission::create(['name' => 'Manage Therapist']);
+        Permission::create(['name' => 'Manage User']);
+        Permission::create(['name' => 'Manage Setting']);
+        Permission::create(['name' => 'Manage Content']);
+        Permission::create(['name' => 'View Report']);
     }
 }

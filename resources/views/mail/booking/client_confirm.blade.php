@@ -25,7 +25,7 @@
                     <td colspan="2" style="padding-top: 40px; padding-bottom:40px;" align="center">
                         <p>Hello {{ $booking->name }}!</p>
                         <p>Thank you for choosing us for your {{ $booking->treatment->name}} treatment in London.</p>
-                        <p>Your chosen therapist {{ $booking->therapist[0]->first_name }} looks forward to meeting you soon!</p>
+                        <p>Your chosen therapist {{ $booking->therapist->first_name }} looks forward to meeting you soon!</p>
                         <p style="font-weight: bold;">Right now, you're all that matters!</p>
                     </td>
                 </tr>
@@ -40,17 +40,13 @@
                 </td>
                 <tr>
                     <td width="50%">Therapist:</td>
-                    <td align="right">{{ $booking->therapist[0]->first_name }}</td>
+                    <td align="right">{{ $booking->therapist->first_name }}</td>
                 </tr>
                 <tr>
                     <td>Arriving:</td>
-                    <td align="right"> @if($booking->mmn_date)
-                        {{ Carbon\Carbon::createFromFormat('Y-m-d H:i:s',$booking->mmn_date)->format('l, d F Y') }} at
-                        {{ Carbon\Carbon::createFromFormat('Y-m-d H:i:s',$booking->mmn_date)->format('H:i') }}
-                        @else
-                        {{ Carbon\Carbon::createFromFormat('Y-m-d H:i:s',$booking->training_day)->format('l, d F Y') }} at
-                        {{ Carbon\Carbon::createFromFormat('Y-m-d H:i:s',$booking->training_day)->format('H:i') }}
-                        @endif
+                    <td align="right">
+                        {{ Carbon\Carbon::createFromFormat('Y-m-d H:i:s',$booking->appointment_datetime)->format('l, d F Y') }} at
+                        {{ Carbon\Carbon::createFromFormat('Y-m-d H:i:s',$booking->appointment_datetime)->format('H:i') }}
                     </td>
 
                 </tr>

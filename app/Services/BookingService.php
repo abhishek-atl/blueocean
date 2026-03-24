@@ -3,14 +3,53 @@
 namespace App\Services;
 
 use App\Models\Postcode;
-use App\Models\TariffPlan;
 use App\Models\TherapistHoliday;
 use App\Models\User;
-use Carbon\Carbon;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class BookingService
 {
+
+    public function getTime()
+    {
+        return $time = [
+            1 => '07:00',
+            2 => '07:30',
+            3 => '08:00',
+            4 => '08:30',
+            5 => '09:00',
+            6 => '09:30',
+            7 => '10:00',
+            8 => '10:30',
+            9 => '11:00',
+            10 => '11:30',
+            11 => '12:00',
+            12 => '12:30',
+            13 => '13:00',
+            14 => '13:30',
+            15 => '14:00',
+            16 => '14:30',
+            17 => '15:00',
+            18 => '15:30',
+            19 => '16:00',
+            20 => '16:30',
+            21 => '17:00',
+            22 => '17:30',
+            23 => '18:00',
+            24 => '18:30',
+            25 => '19:00',
+            26 => '19:30',
+            27 => '20:00',
+            28 => '20:30',
+            29 => '21:00',
+            30 => '21:30',
+            31 => '22:00',
+            32 => '22:30',
+            33 => '23:00',
+            34 => '23:30',
+        ];
+    }
 
     public function checkPostalCodeCovered($postcode)
     {
@@ -124,7 +163,7 @@ class BookingService
         // Base query for therapists
         $query = User::where('user_type', User::TYPE_THERAPIST)
             ->where('active', 1)
-            ->with(['therapist_profile','user_profile'])
+            ->with(['therapist_profile', 'user_profile'])
             ->whereHas('schedule');
 
         // Filter by specific therapist IDs if provided
