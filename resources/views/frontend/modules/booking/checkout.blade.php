@@ -24,54 +24,58 @@
             </div>
 
             <div class="col-md-8">
-                <p class="font-weight-bold">PERSONAL INFORMATION</p>
+                <p class="fw-bold">Personal Information</p>
 
-                <div class="form-row">
-                    <div class="form-group col-md-6">
+                <div class="row">
+                    <div class="col">
                         <label for="name" class="col-form-label">Name</label>
                         <input type="text" id="name" name="name" class="form-control autosave" placeholder="Type your name here" value="{{ $name }}">
                     </div>
-                    <div class="form-group col-md-6">
+                    <div class="col">
                         <label for="mobile" class="col-form-label">Mobile</label>
                         <input type="tel" id="mobile" name="mobile" class="form-control autosave" placeholder="07400123456" value="{{ $mobile }}">
                     </div>
                 </div>
+                <div class="row">
+                    <div class="col-6">
+                        <label for="town" class="col-form-label">Email</label>
+                        <input type="text" id="email" name="email" class="form-control autosave" value="{{ $email }}" @if (Auth::user()) readonly="readonly" @endif>
+                    </div>
+                </div>
 
-                <div class="form-row">
-                    <div class="form-group col-md-6">
+
+                <p class="fw-bold mt-3">Address</p>
+                <div class="row">
+                    <div class="col">
                         <label for="postcode" class="col-form-label">Postcode</label>
                         <input type="text" id="postcode" name="postcode" class="form-control autosave" value="{{ $postcode }}" readonly>
                     </div>
-                    <div class="form-group col-md-6">
+                    <div class="col">
                         <label for="flat_no" class="col-form-label">Flat Number / Building Name / Hotel
                             Name</label>
                         <input type="text" id="flat_no" name="flat_no" class="form-control autosave" placeholder="Optional (eg. Flat 12 River Court)" value="{{ $flat_no }}">
                     </div>
                 </div>
 
-                <div class="form-row">
-                    <div class="form-group col-md-6">
+                <div class="row">
+                    <div class="col">
                         <label for="street_number" class="col-form-label">Street Number</label>
                         <input type="text" id="street_number" name="street_number" class="form-control autosave" placeholder="eg. 10" value="{{ $street_number }}">
                     </div>
-                    <div class="form-group col-md-6">
+                    <div class="col">
                         <label for="street_name" class="col-form-label">Street Name</label>
                         <input type="text" id="street_name" name="street_name" class="form-control autosave" placeholder="eg. Kings Road" value="{{ $street_name }}">
                     </div>
                 </div>
 
-                <div class="form-row">
-                    <div class="form-group col-md">
+                <div class="row">
+                    <div class="col-6">
                         <label for="town" class="col-form-label">Town</label>
                         <input type="text" id="town" name="town" class="form-control autosave" placeholder="eg. London" value="{{ $town }}">
                     </div>
-                    @if (Auth::user())
-                    <div class="form-group col-md">
-                        <label for="town" class="col-form-label">Email</label>
-                        <input type="text" id="email" name="email" class="form-control autosave" value="{{ $email }}" @if (Auth::user()) readonly="readonly" @endif>
-                    </div>
-                    @endif
                 </div>
+
+                {{--
                 <div class="form-row">
                     <div class="form-group col-md-12">
                         <label for="Comment" class="col-form-label">Comment</label>
@@ -88,6 +92,8 @@
                         <small class="discount_code_message"></small>
                     </div>
                 </div>
+                --}}
+
                 <div class="d-lg-none d-md-block">
                     <div class="form-group row py-0 my-0">
                         <label class="col-5 col-form-label">Cost</label>
@@ -127,6 +133,7 @@
                             <input class="form-check-input" type="radio" name="payment_method" id="payment_method_cash" value="cash" @if (($paymentMethod && $paymentMethod=='cash' ) || !$paymentMethod) checked="checked" @endif>
                             <label class="form-check-label" for="payment_method_cash">Cash</label>
                         </div>
+                        {{--
                         <div class="form-check">
                             <input class="form-check-input" type="radio" name="payment_method" id="payment_method_cc" value="credit_card" @if ($paymentMethod && $paymentMethod=='credit_card' ) checked="checked" @endif>
                             <label class="form-check-label" for="payment_method_cc">Credit Card</label>
@@ -144,12 +151,13 @@
                             </div>
                             <small class="gift_code_message"></small>
                         </div>
+                        --}}
                     </div>
                 </div>
 
                 <div class="form-row">
                     <div class="col">
-                        <p class="textCash bg-secondary m-0 p-3">Your therapist will collect <span id="cost_massage_val"></span> in cash from you directly.</p>
+                        <p class="textCash m-0 p-3">Your therapist will collect <span id="cost_massage_val"></span> in cash from you directly.</p>
                         <p class="textCreditCard bg-secondary m-0 p-3" style="display:none;">
                             <i class="fa fa-lock"></i>
                             We process all credit cards directly through <a href="https://stripe.com/gb" target="_blank" class="text-white text-dark">STRIPE</a>, a globally trusted secure

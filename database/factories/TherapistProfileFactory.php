@@ -20,7 +20,7 @@ class TherapistProfileFactory extends Factory
     {
         $firstName = fake()->firstName();
         $lastName = fake()->lastName();
-        $slug = Str::slug($firstName . ' ' . $lastName) . '-' . Str::random(6);
+        $slug = Str::slug($firstName . '' . $lastName);
 
         return [
             'slug' => $slug,

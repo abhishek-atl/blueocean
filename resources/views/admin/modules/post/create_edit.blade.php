@@ -70,7 +70,7 @@
 
                     <div class="mb-3">
                         <label class="form-label required" for="content">Content</label>
-                        <textarea name="content" id="content" class="form-control" rows="8" placeholder="Post Content">{{ old('content', $post->content ?? '') }}</textarea>
+                        <textarea name="content" id="content" class="form-control editor" rows="8" placeholder="Post Content">{{ old('content', $post->content ?? '') }}</textarea>
                         @error('content')
                         <div class="text-danger">{{ $message }}</div>
                         @enderror
@@ -94,65 +94,14 @@
             <div class="col-lg-12">
                 <div class="card-style mb-30">
 
-                    <div class="mb-3">
-                        <label class="form-label" for="image">Featured Image</label>
-                        <input type="file" name="image" id="image" class="form-control" accept="image/*" />
-                        @error('image')
-                        <div class="text-danger">{{ $message }}</div>
-                        @enderror
-                        @if(isset($post) && $post->image)
-                        <div class="mt-2">
-                            <img src="{{ asset($post->image) }}" alt="Post Image" style="max-width: 200px; max-height: 200px;">
-                        </div>
-                        @endif
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label" for="image_alt">Image Alt Text</label>
-                        <input type="text" name="image_alt" id="image_alt" class="form-control" placeholder="Image Alt Text" value="{{ old('image_alt', $post->image_alt ?? '') }}" />
-                        @error('image_alt')
-                        <div class="text-danger">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label" for="image_title">Image Title</label>
-                        <input type="text" name="image_title" id="image_title" class="form-control" placeholder="Image Title" value="{{ old('image_title', $post->image_title ?? '') }}" />
-                        @error('image_title')
-                        <div class="text-danger">{{ $message }}</div>
-                        @enderror
-                    </div>
+                    @include('admin.modules.common.image_form_field', ['entity' => $post ?? null])
 
                 </div>
             </div>
 
             <div class="col-lg-12">
                 <div class="card-style mb-30">
-
-                    <div class="mb-3">
-                        <label class="form-label" for="meta_title">Meta Title</label>
-                        <input type="text" name="meta_title" id="meta_title" class="form-control" placeholder="Meta Title" value="{{ old('meta_title', $post->meta_title ?? '') }}" />
-                        @error('meta_title')
-                        <div class="text-danger">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label" for="meta_description">Meta Description</label>
-                        <textarea name="meta_description" id="meta_description" class="form-control" rows="3" placeholder="Meta Description">{{ old('meta_description', $post->meta_description ?? '') }}</textarea>
-                        @error('meta_description')
-                        <div class="text-danger">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label" for="extra_meta_tags">Extra Meta Tags</label>
-                        <textarea name="extra_meta_tags" id="extra_meta_tags" class="form-control" rows="3" placeholder="Extra Meta Tags">{{ old('extra_meta_tags', $post->extra_meta_tags ?? '') }}</textarea>
-                        @error('extra_meta_tags')
-                        <div class="text-danger">{{ $message }}</div>
-                        @enderror
-                    </div>
-
+                    @include('admin.modules.common.seo_form_fields', ['entity' => $post ?? null])
                 </div>
             </div>
 
@@ -205,7 +154,7 @@
 <script>
     $(document).ready(function () {
         // Auto-generate slug from title
-        $('#title').on('keyup', function () {
+        $('#title').on('blur', function () {
             var title = $(this).val();
             var slug = title.toLowerCase()
                 .trim()
@@ -216,5 +165,7 @@
         });
     });
 </script>
+
+@include('admin.modules.common.tinymce')
 
 @endpush

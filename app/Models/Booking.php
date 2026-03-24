@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 
 class Booking extends Model
@@ -33,5 +34,12 @@ class Booking extends Model
     public function payment()
     {
         return $this->hasOne(Payment::class);
+    }
+
+    protected function address(): Attribute
+    {
+        return Attribute::make(
+            get: fn($value) => $this->street_number . ' ' . $this->street_name . ' ' . $this->town . ' ' . $this->postcode
+        );
     }
 }

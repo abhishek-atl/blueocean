@@ -57,7 +57,7 @@ class UserController extends Controller
             $user->load(['user_profile']);
         }
 
-        $roles = $this->databaseService->getByParams(Role::class, ['all' => true]);
+        $roles = $this->databaseService->getByParams(Role::class, ['where' => ['is_default' => 0]]);
 
         return view('admin.modules.user.create_edit', [
             'user' => $user,

@@ -49,7 +49,7 @@
 
     </main>
 
-    <script src="{{ asset('admin/js/jquery-4.0.0.min.js') }}"></script>
+    <script src="{{ asset('admin/js/jquery.min.js') }}"></script>
     <script src="{{ asset('admin/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('admin/js/popper.min.js') }}"></script>
     <script src="{{ asset('admin/js/select2.min.js') }}"></script>

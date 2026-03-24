@@ -75,13 +75,13 @@
 <script>
     $(document).ready(function () {
         // Auto-generate slug from name
-        $('#name').on('keyup', function() {
+        $('#name').on('blur', function () {
             var name = $(this).val();
             var slug = name.toLowerCase()
-                           .trim()
-                           .replace(/[^\w\s-]/g, '')
-                           .replace(/\s+/g, '-')
-                           .replace(/-+/g, '-');
+                .trim()
+                .replace(/[^\w\s-]/g, '')
+                .replace(/\s+/g, '-')
+                .replace(/-+/g, '-');
             $('#slug').val(slug);
         });
     });

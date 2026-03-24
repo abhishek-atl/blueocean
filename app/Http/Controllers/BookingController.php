@@ -213,8 +213,8 @@ class BookingController extends Controller
         $params['email'] = $request->email;
         $params['duration'] = (int) $request->session_duration;
 
-        $params['cost'] = $totalCost;
-        $params['training_cost'] = $sessionCost;
+        $params['amount'] = $totalCost;
+        $params['payable_amount'] = $sessionCost;
         $params['fee_platform'] = $feeTmr;
         $params['fee_therapist'] = $feeTherapist;
 
@@ -249,9 +249,9 @@ class BookingController extends Controller
             ]);
 
             if (Auth::user()) {
-                $this->mailService->sendBookingMailToClient($booking, Auth::user()->email);
+                //$this->mailService->sendBookingMailToClient($booking, Auth::user()->email);
             } else if ($booking->email) {
-                $this->mailService->sendBookingMailToClient($booking, $booking->email);
+                //$this->mailService->sendBookingMailToClient($booking, $booking->email);
             }
 
             //$this->mailService->sendBookingMailToTherapist($booking);
@@ -262,7 +262,7 @@ class BookingController extends Controller
                 $status = 1;
                 $booking->update(['therapist_conf_sms' => $status]);
             } catch (\Exception $e) {
-                $this->mailService->sendBookingSmsFailedToAdmin($booking);
+                //$this->mailService->sendBookingSmsFailedToAdmin($booking);
             }
 
             $bookingId = $request->session()->get('bookingId');

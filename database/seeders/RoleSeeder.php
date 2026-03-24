@@ -17,5 +17,13 @@ class RoleSeeder extends Seeder
             'name' => 'Admin',
             'is_default' => true,
         ]);
+        Role::create([
+            'name' => 'Therapist',
+            'is_default' => true,
+        ]);
+        Role::create([
+            'name' => 'Customer',
+            'is_default' => true,
+        ]);
     }
 }

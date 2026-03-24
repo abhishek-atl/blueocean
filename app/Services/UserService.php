@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\User;
+use Illuminate\Support\Carbon;
 
 class UserService
 {
@@ -90,7 +91,7 @@ class UserService
 
     public function saveUserProfile($user, $params)
     {
-        $params['birthday'] = \Carbon\Carbon::createFromDate($params['birthday']);
+        $params['birthday'] = Carbon::createFromFormat(config('custom.format.date_short'), $params['birthday']);
         $user->user_profile()->updateOrCreate(
             [
                 'user_id' => $user->id
@@ -114,8 +115,8 @@ class UserService
 
     public function saveTherapistProfile($user, $params)
     {
-        if(isset($params['health_renewal_date'])) {
-            $params['health_renewal_date'] = \Carbon\Carbon::createFromDate($params['health_renewal_date']);
+        if (isset($params['health_renewal_date'])) {
+            $params['health_renewal_date'] = Carbon::createFromDate(config('custom.format.date_short'), $params['health_renewal_date']);
         }
         $user->therapist_profile()->updateOrCreate(
             [

@@ -18,6 +18,7 @@ class PostController extends Controller
     {
         $this->databaseService = $databaseService;
         $this->uploadService = $uploadService;
+        abort_if(!auth()->user()->can('Content Management'), 403);
     }
 
     public function index(Request $request)
