@@ -14,8 +14,8 @@ use App\Services\UploadService;
 
 class TreatmentController extends Controller
 {
-    protected $uploadService;
-    protected $databaseService;
+    protected UploadService $uploadService;
+    protected  DatabaseService $databaseService;
 
     public function __construct(
         UploadService $uploadService,
