@@ -18,6 +18,7 @@
     <link rel="stylesheet" href="{{ asset('assets/css/owl.theme.default.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/fontawesome.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/solid.min.css') }}" />
+    <link rel="stylesheet" href="{{ asset('assets/css/brands.min.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/css/tempus-dominus.min.css') }}">
 
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
@@ -28,15 +29,17 @@
 
 <body>
 
-    @include('frontend.partials.navigation')
+    <header>
+        @include('frontend.partials.navigation')
+    </header>
 
     @yield('content')
 
-    <div class="footer">
+    <footer>
         <div class="container">
             @include('frontend.partials.footer')
         </div>
-    </div>
+    </footer>
 
     <script src="{{ asset('assets/js/jquery.min.3.6.3.js') }}"></script>
     <script src="{{ asset('assets/js/bootstrap.bundle.min.js') }}"></script>

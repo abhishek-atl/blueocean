@@ -6,6 +6,7 @@ use App\Http\Requests\StoreTherapistApplication;
 use Illuminate\Http\Request;
 
 use App\Models\Treatment;
+use App\Models\TreatmentCategory;
 use App\Services\MailService;
 use App\Services\UploadService;
 
@@ -24,8 +25,14 @@ class HomeController extends Controller
 
     public function home(Request $request)
     {
-        $request->session()->forget('booking');
-        return view('frontend.modules.home.index');
+        $treatments = Treatment::query()
+            ->where('active', true)
+            ->orderBy('name')
+            ->limit(6)
+            ->get();
+        return view('frontend.modules.home.index', [
+            'treatments' => $treatments
+        ]);
     }
 
     public function treatments(Request $request)
@@ -35,13 +42,19 @@ class HomeController extends Controller
             $currentTag = $request->input('category');
         }
 
-        $treatments = Treatment::query()
-            ->where('active', true)
-            ->where('on_treatment_page', true)
+        $query = Treatment::query()->where('active', true);
+        if ($currentTag !== 'all') {
+            $query->whereHas('categories', function ($query) use ($currentTag) {
+                $query->where('slug', $currentTag);
+            });
+        }
+        $treatments = $query->where('on_treatment_page', true)
             ->orderBy('name')
             ->get();
 
-        $categories = $treatments->pluck('categories')->flatten()->unique('id')->values();
+        $categories = TreatmentCategory::query()
+            ->orderBy('name')
+            ->get();
 
         return view('frontend.modules.treatments.index', [
             'treatments' => $treatments,

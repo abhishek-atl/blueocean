@@ -3,7 +3,7 @@
 @section('title', 'Treatments')
 
 @section('content')
-<section class="treatments-hero">
+<section class="page-hero">
     <div class="container">
         <div class="row justify-content-center text-center">
             <div class="col-lg-8">
@@ -21,11 +21,11 @@
             <div class="col">
                 <ul class="nav nav-pills">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="{{ route('treatments') }}">All</a>
+                        <a class="nav-link @if($currentTag === 'all') active @endif" aria-current="page" href="{{ route('treatments') }}">All</a>
                     </li>
                     @foreach($categories as $category)
                     <li class="nav-item">
-                        <a class="nav-link" aria-current="page" href="{{ route('treatments', ['category' => $category['slug']]) }}">{{ $category['name'] }}</a>
+                        <a class="nav-link @if($currentTag === $category['slug']) active @endif" aria-current="page" href="{{ route('treatments', ['category' => $category['slug']]) }}">{{ $category['name'] }}</a>
                     </li>
                     @endforeach
                 </ul>
@@ -33,63 +33,50 @@
         </div>
     </section>
 
+    <div class="row g-4">
+        @foreach($treatments as $treatment)
+        <div class="col-12 col-md-6 col-lg-4">
+            <article class="custom-card h-100">
 
-    <section class="treatments-section">
-        @if($treatments->isEmpty())
-        <div class="alert alert-info mb-0" role="alert">
-            No treatments are available at the moment.
-        </div>
-        @else
-        <div class="row g-4">
-            @foreach($treatments as $treatment)
-            <div class="col-12 col-md-6 col-lg-4">
-                <article class="treatment-card h-100">
+                @if($treatment->getRawOriginal('image'))
+                <a href="{{ route('treatment_detail', $treatment->slug) }}" class="custom-card-image">
+                    <img
+                        src="{{ $treatment->image }}"
+                        alt="{{ $treatment->image_alt ?: $treatment->name }}"
+                        title="{{ $treatment->image_title ?: $treatment->name }}"
+                        class="img-fluid">
+                </a>
+                @endif
 
-                    @if($treatment->getRawOriginal('image'))
-                    <a href="{{ route('treatment_detail', $treatment->slug) }}" class="treatment-card-image">
-                        <img
-                            src="{{ $treatment->image }}"
-                            alt="{{ $treatment->image_alt ?: $treatment->name }}"
-                            title="{{ $treatment->image_title ?: $treatment->name }}"
-                            class="img-fluid">
-                    </a>
+                <div class="custom-card-body">
+                    <h2>{{ $treatment->name }}</h2>
+
+                    @if($treatment->title)
+                    <p class="custom-card-title">{{ $treatment->title }}</p>
                     @endif
 
-                    <div class="treatment-card-body">
-                        <h2>{{ $treatment->name }}</h2>
+                    @if($treatment->summary)
+                    <div class="custom-card-summary">
+                        {!! Str::limit(strip_tags($treatment->summary), 100) !!}
+                    </div>
+                    @endif
 
-                        @if($treatment->title)
-                        <p class="treatment-card-title">{{ $treatment->title }}</p>
-                        @endif
-
-                        @if($treatment->summary)
-                        <div class="treatment-card-summary">
-                            {!! Str::limit(strip_tags($treatment->summary), 100) !!}
+                    <div class="custom-card-actions">
+                        <div class="custom-card-price">
+                            @if($treatment->price)
+                            From <strong>£{{ number_format($treatment->price, 2) }}</strong>
+                            @else
+                            From <strong>£{{ number_format(59, 2) }}</strong>
+                            @endif
                         </div>
-                        @endif
-
-                        <div class="treatment-card-actions">
-                            <div class="treatment-card-price">
-                                @if($treatment->price)
-                                From <strong>£{{ number_format($treatment->price, 2) }}</strong>
-                                @else
-                                From <strong>£{{ number_format(59, 2) }}</strong>
-                                @endif
-                            </div>
-                            <div class="treatment-card-details-link">
-                                <a href="{{ route('treatment_detail', $treatment->slug) }}" class="btn btn-primary">View Treatment</a>
-                            </div>
+                        <div class="custom-card-details-link">
+                            <a href="{{ route('treatment_detail', $treatment->slug) }}" class="btn btn-primary">View Treatment</a>
                         </div>
                     </div>
-                </article>
-            </div>
-            @endforeach
+                </div>
+            </article>
         </div>
-        @endif
-    </section>
+        @endforeach
+    </div>
 </div>
 @endsection
-
-@push('pageCss')
-<link rel="stylesheet" href="{{ asset('assets/css/treatments.css') }}">
-@endpush

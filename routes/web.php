@@ -17,8 +17,10 @@ Route::withoutMiddleware([AdminMiddleware::class])->group(function () {
 
 // frontend
 Route::get('/', [HomeController::class, 'home'])->name('home');
+
 Route::get('/treatments', [HomeController::class, 'treatments'])->name('treatments');
 Route::get('/treatment/{slug}', [HomeController::class, 'treatmentDetail'])->name('treatment_detail');
+
 Route::get('/join-us', [HomeController::class, 'joinUs'])->name('join_us');
 Route::post('/join-us', [HomeController::class, 'joinUsPost'])->name('join_us_post');
 
@@ -48,6 +50,7 @@ Route::post('buy-gift-card/payment', [GiftVoucherController::class, 'giftsPaymen
 Route::post('buy-gift-card/success', [GiftVoucherController::class, 'giftsSuccess'])->name('gifts_success');
 Route::get('buy-gift-card/payment/stripe/return', [GiftVoucherController::class, 'giftsPaymentStripeReturn'])->name('gifts_payment_stripe_return');
 Route::get('buy-gift-card/payment/paypal/return', [GiftVoucherController::class, 'giftsPaymentPaypalReturn'])->name('gifts_payment_paypal_return');
+
 Route::get('buy-gift-card/payment/success', [GiftVoucherController::class, 'giftsPaymentSuccess'])->name('gifts_payment_success');
 Route::get('buy-gift-card/print/gift-card/{id}', [GiftVoucherController::class, 'giftsPaymentPrint'])->name('gifts_payment_print');
 

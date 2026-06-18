@@ -12,16 +12,14 @@
 @endpush
 
 @section('content')
-<section class="treatment-detail-hero">
+<section class="page-detail-hero">
     <div class="container">
         <div class="row align-items-center g-5">
             <div class="col-lg-6">
                 <h1>{{ $treatment->title }}</h1>
 
                 @if($treatment->summary)
-                <div class="treatment-detail-summary">
-                    {!! $treatment->summary !!}
-                </div>
+                {!! $treatment->summary !!}
                 @endif
 
                 @if($treatment->cta_button_visible && $treatment->cta_button_text && $treatment->cta_button_url)
@@ -44,7 +42,7 @@
     </div>
 </section>
 
-<section class="treatment-detail-content">
+<section class="custom-section">
     <div class="container">
         <div class="row justify-content-center">
             <div class="col">
@@ -56,7 +54,3 @@
     </div>
 </section>
 @endsection
-
-@push('pageCss')
-<link rel="stylesheet" href="{{ asset('assets/css/treatments.css') }}">
-@endpush

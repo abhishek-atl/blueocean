@@ -20,4 +20,5 @@ class Treatment extends Model
             get: fn($value) => asset(config('custom.upload.url') . config('custom.upload.treatment_path') . '/' . $value)
         );
     }
+    
 }

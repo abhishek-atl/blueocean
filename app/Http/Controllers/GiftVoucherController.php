@@ -145,7 +145,6 @@ class GiftVoucherController extends Controller
             return redirect(route('gifts'));
         }
         $giftCertificate = $this->giftCertificateRepository->getById($request->session()->get('giftCertificateId'));
-        //$request->session()->forget('giftCertificateId');
         return view('frontend.modules.gifts.success', [
             'giftCertificate' => $giftCertificate,
         ]);

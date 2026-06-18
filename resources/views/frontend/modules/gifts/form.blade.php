@@ -8,7 +8,6 @@
     <div class="container">
         <div class="row justify-content-center text-center">
             <div class="col-lg-8">
-                <span class="section-eyebrow">Gift cards</span>
                 <h1>Buy a Massage Gift Card in London</h1>
                 <p>Send a thoughtful home massage voucher instantly, or schedule it ahead for birthdays, anniversaries, and last-minute gifts.</p>
             </div>
@@ -16,7 +15,7 @@
     </div>
 </section>
 
-<section class="content-section gift-section">
+<section class="content-section">
     <div class="container">
         <div class="row g-4 align-items-start">
             <div class="col-lg-5">
@@ -222,8 +221,6 @@
                 },
             }
         });
-
-
 
         function syncVoucherAmount() {
             if ($('#voucher_id').val() == 4) {

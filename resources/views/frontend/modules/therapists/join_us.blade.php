@@ -11,8 +11,7 @@
 <section class="page-hero">
     <div class="container">
         <div class="row justify-content-center text-center">
-            <div class="col-lg-8">
-                <span class="section-eyebrow">Join our team</span>
+            <div class="col-12">
                 <h1>Massage Job Application Form</h1>
                 <p>Apply to join our team of mobile massage therapists in London.</p>
             </div>
@@ -20,11 +19,11 @@
     </div>
 </section>
 
-<section class="content-section application-section">
+<section class="content-section">
     <div class="container">
         <div class="row g-4 align-items-start">
             <div class="col-lg-4">
-                <aside class="content-panel application-intro">
+                <aside class="content-panel">
                     <div class="feature-icon"><i class="fa-solid fa-spa"></i></div>
                     <h2>Who we are looking for</h2>
                     <p>Successful applicants are reliable, honest, happy to travel, and genuinely love giving massages.</p>
@@ -34,8 +33,6 @@
                         <li><i class="fa-solid fa-check"></i> Happy to travel around London</li>
                         <li><i class="fa-solid fa-check"></i> Reliable and honest</li>
                     </ul>
-
-                    <a href="{{ url('/massage-therapist-jobs-london') }}" class="feature-link feature-link-dark">Massage therapist job guide</a>
                 </aside>
             </div>
 
@@ -113,11 +110,11 @@
                                     <legend>Are you happy to travel to client homes and hotels in London?</legend>
                                     <div class="option-stack">
                                         <div class="form-check">
-                                            <input class="form-check-input" name="travel" type="radio" value="yes" id="travel_yes" @checked(old('travel') == 'yes')>
+                                            <input class="form-check-input" name="travel" type="radio" value="yes" id="travel_yes" @checked(old('travel')=='yes' )>
                                             <label class="form-check-label" for="travel_yes">Yes</label>
                                         </div>
                                         <div class="form-check">
-                                            <input class="form-check-input" name="travel" type="radio" value="no" id="travel_no" @checked(old('travel') == 'no')>
+                                            <input class="form-check-input" name="travel" type="radio" value="no" id="travel_no" @checked(old('travel')=='no' )>
                                             <label class="form-check-label" for="travel_no">No</label>
                                         </div>
                                     </div>
@@ -131,15 +128,15 @@
                                     <legend>Would you like to work?</legend>
                                     <div class="option-stack">
                                         <div class="form-check">
-                                            <input class="form-check-input" name="fulltime" type="radio" value="fulltime" id="fulltime_yes" @checked(old('fulltime') == 'fulltime')>
+                                            <input class="form-check-input" name="fulltime" type="radio" value="fulltime" id="fulltime_yes" @checked(old('fulltime')=='fulltime' )>
                                             <label class="form-check-label" for="fulltime_yes">Full-Time</label>
                                         </div>
                                         <div class="form-check">
-                                            <input class="form-check-input" name="fulltime" type="radio" value="parttime" id="fulltime_no" @checked(old('fulltime') == 'parttime')>
+                                            <input class="form-check-input" name="fulltime" type="radio" value="parttime" id="fulltime_no" @checked(old('fulltime')=='parttime' )>
                                             <label class="form-check-label" for="fulltime_no">Part-Time</label>
                                         </div>
                                         <div class="form-check">
-                                            <input class="form-check-input" name="fulltime" type="radio" value="flexitime" id="fulltime_flexitime" @checked(old('fulltime') == 'flexitime')>
+                                            <input class="form-check-input" name="fulltime" type="radio" value="flexitime" id="fulltime_flexitime" @checked(old('fulltime')=='flexitime' )>
                                             <label class="form-check-label" for="fulltime_flexitime">Flexi-Time</label>
                                         </div>
                                     </div>

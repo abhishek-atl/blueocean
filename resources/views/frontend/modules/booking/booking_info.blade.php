@@ -2,13 +2,15 @@
 
 @section('content')
 
-<div class="container pt-5">
-    <div class="row">
-        <div class="col-md-12">
-            <h1 class="text-primary">Massage Information</h1>
+<section class="page-hero">
+    <div class="container">
+        <div class="row justify-content-center text-center">
+            <div class="col-lg-8">
+                <h1>Massage Information</h1>
+            </div>
         </div>
     </div>
-</div>
+</section>
 
 @if ($blockedIp)
 <div class="container">
@@ -22,7 +24,7 @@
     <input type="hidden" id="time" name="time" value="@if(session('booking.time')){{ session('booking.time') }}@endif">
     <input type="hidden" id="therapist_id" name="therapist_id" value="@if(session('booking.therapist_id')){{ session('booking.therapist_id') }}@endif">
 
-    <div class="container">
+    <div class="container custom-section">
 
         <div class="row duration-block style-block">
             <div class="col-md-2">

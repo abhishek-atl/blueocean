@@ -127,7 +127,7 @@ class PaymentRepository extends BaseRepository
                     'currency' => 'gbp',
                     'product_data' => [
                         'name' => $productName,
-                        'images' => ['https://www.themassagerooms.com/assets/img/logo.png']
+                        'images' => ['https://www.massagefy.com/assets/img/logo.png']
                     ],
                     'unit_amount' => (int) ($amount * 100),
                 ],
