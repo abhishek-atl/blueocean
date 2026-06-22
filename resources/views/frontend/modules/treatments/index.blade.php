@@ -14,69 +14,74 @@
     </div>
 </section>
 
-<div class="container">
+<div class="page-section">
 
-    <section class="treatments-categories">
-        <div class="row py-4">
-            <div class="col">
-                <ul class="nav nav-pills">
-                    <li class="nav-item">
-                        <a class="nav-link @if($currentTag === 'all') active @endif" aria-current="page" href="{{ route('treatments') }}">All</a>
-                    </li>
-                    @foreach($categories as $category)
-                    <li class="nav-item">
-                        <a class="nav-link @if($currentTag === $category['slug']) active @endif" aria-current="page" href="{{ route('treatments', ['category' => $category['slug']]) }}">{{ $category['name'] }}</a>
-                    </li>
-                    @endforeach
-                </ul>
-            </div>
-        </div>
-    </section>
+    <div class="container">
 
-    <div class="row g-4">
-        @foreach($treatments as $treatment)
-        <div class="col-12 col-md-6 col-lg-4">
-            <article class="custom-card h-100">
-
-                @if($treatment->getRawOriginal('image'))
-                <a href="{{ route('treatment_detail', $treatment->slug) }}" class="custom-card-image">
-                    <img
-                        src="{{ $treatment->image }}"
-                        alt="{{ $treatment->image_alt ?: $treatment->name }}"
-                        title="{{ $treatment->image_title ?: $treatment->name }}"
-                        class="img-fluid">
-                </a>
-                @endif
-
-                <div class="custom-card-body">
-                    <h2>{{ $treatment->name }}</h2>
-
-                    @if($treatment->title)
-                    <p class="custom-card-title">{{ $treatment->title }}</p>
-                    @endif
-
-                    @if($treatment->summary)
-                    <div class="custom-card-summary">
-                        {!! Str::limit(strip_tags($treatment->summary), 100) !!}
-                    </div>
-                    @endif
-
-                    <div class="custom-card-actions">
-                        <div class="custom-card-price">
-                            @if($treatment->price)
-                            From <strong>£{{ number_format($treatment->price, 2) }}</strong>
-                            @else
-                            From <strong>£{{ number_format(59, 2) }}</strong>
-                            @endif
-                        </div>
-                        <div class="custom-card-details-link">
-                            <a href="{{ route('treatment_detail', $treatment->slug) }}" class="btn btn-primary">View Treatment</a>
-                        </div>
-                    </div>
+        <section class="treatments-categories">
+            <div class="row py-4">
+                <div class="col">
+                    <ul class="nav nav-pills">
+                        <li class="nav-item">
+                            <a class="nav-link @if($currentTag === 'all') active @endif" aria-current="page" href="{{ route('treatments') }}">All</a>
+                        </li>
+                        @foreach($categories as $category)
+                        <li class="nav-item">
+                            <a class="nav-link @if($currentTag === $category['slug']) active @endif" aria-current="page" href="{{ route('treatments', ['category' => $category['slug']]) }}">{{ $category['name'] }}</a>
+                        </li>
+                        @endforeach
+                    </ul>
                 </div>
-            </article>
+            </div>
+        </section>
+
+        <div class="row g-4">
+            @foreach($treatments as $treatment)
+            <div class="col-12 col-md-6 col-lg-4">
+                <article class="custom-card h-100">
+
+                    @if($treatment->getRawOriginal('image'))
+                    <a href="{{ route('treatment_detail', $treatment->slug) }}" class="custom-card-image">
+                        <img
+                            src="{{ $treatment->image }}"
+                            alt="{{ $treatment->image_alt ?: $treatment->name }}"
+                            title="{{ $treatment->image_title ?: $treatment->name }}"
+                            class="img-fluid">
+                    </a>
+                    @endif
+
+                    <div class="custom-card-body">
+                        <h2>{{ $treatment->name }}</h2>
+
+                        @if($treatment->title)
+                        <p class="custom-card-title">{{ $treatment->title }}</p>
+                        @endif
+
+                        @if($treatment->summary)
+                        <div class="custom-card-summary">
+                            {!! Str::limit(strip_tags($treatment->summary), 100) !!}
+                        </div>
+                        @endif
+
+                        <div class="custom-card-actions">
+                            <div class="custom-card-price">
+                                @if($treatment->price)
+                                From <strong>£{{ number_format($treatment->price, 2) }}</strong>
+                                @else
+                                From <strong>£{{ number_format(59, 2) }}</strong>
+                                @endif
+                            </div>
+                            <div class="custom-card-details-link">
+                                <a href="{{ route('treatment_detail', $treatment->slug) }}" class="btn btn-primary">View Treatment</a>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            </div>
+            @endforeach
         </div>
-        @endforeach
     </div>
+
 </div>
+
 @endsection

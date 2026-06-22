@@ -1,27 +1,44 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'Home Page')</title>
-    <meta name="csrf-token" content="{{ csrf_token() }}" />
+    @yield('google_meta')
 
-    @stack('meta')
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    @if(Request::query())
+    <link rel="canonical" href="{{ Request::url() }}" />
+    @else
+    <link rel="canonical" href="{{ Request::fullUrl() }}" />
+    @endif
+    <link rel="manifest" href="/manifest.json">
+
+    <title>@yield('title')</title>
+    <meta name="title" content="@yield('title')">
+    <meta name="description" content="@yield('description')">
+    <meta name="keywords" content="@yield('keywords')">
+
+    @yield('extra_meta')
+
+    <link rel="icon" href="/favicon.ico" type="image/ico" sizes="24x24">
+    <meta name="csrf-token" content="{{ csrf_token() }}" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" href="{{ asset('assets/css/bootstrap.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/css/owl.carousel.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/css/owl.theme.default.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/css/fontawesome.min.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/css/solid.min.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/css/brands.min.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/css/tempus-dominus.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/vendor/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/vendor/owl.carousel.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/vendor/owl.theme.default.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/vendor/fontawesome.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/vendor/solid.min.css') }}" />
+    <link rel="stylesheet" href="{{ asset('assets/css/vendor/brands.min.css') }}" />
+    <link rel="stylesheet" href="{{ asset('assets/css/vendor/tempus-dominus.min.css') }}">
 
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/booking.css') }}">
 
     @stack('pageCss')
 
@@ -29,11 +46,23 @@
 
 <body>
 
+    <div class="loading">Loading</div>
+
     <header>
         @include('frontend.partials.navigation')
+
+        @if(session('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <div class="text-center">{!! session('success') !!}</div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        @endif
+
     </header>
 
-    @yield('content')
+    <main>
+        @yield('content')
+    </main>
 
     <footer>
         <div class="container">

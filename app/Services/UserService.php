@@ -3,10 +3,58 @@
 namespace App\Services;
 
 use App\Models\User;
+use App\Models\UserVerify;
 use Illuminate\Support\Carbon;
+
+use Illuminate\Support\Str;
 
 class UserService
 {
+
+    protected MailService $mailService;
+
+    public function __construct(
+        MailService $mailService,
+    ) {
+        $this->mailService = $mailService;
+    }
+
+    public function sendVerificationLink($id)
+    {
+
+        $user = User::whereId($id)->first();
+        $token = Str::random(64);
+        UserVerify::create([
+            'user_id' => $user->id,
+            'token' => $token
+        ]);
+        $this->mailService->sendMailVerifyEmail($user, $token);
+
+        return true;
+    }
+
+    public function rateBooking($bookingId, $score)
+    {
+        $result = false;
+        try {
+            $booking = $this->booking::whereId($bookingId)->with('client')->first();
+            $booking->update([
+                'client_rating' => $score
+            ]);
+            if ($booking->client) {
+                $avg = $booking->client->client_bookings()
+                    ->whereNotNull('client_rating')
+                    ->avg('client_rating');
+                $booking->client->update([
+                    'avg_rating' => number_format($avg, 2)
+                ]);
+            }
+            $result = true;
+        } catch (Exception $e) {
+        }
+        return $result;
+    }
+
     public function admins($params)
     {
         $query = User::where('user_type', 'Admin')->with('user_profile');

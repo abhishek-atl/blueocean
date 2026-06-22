@@ -21,7 +21,10 @@ use App\Http\Controllers\Admin\FAQController;
 use App\Http\Controllers\Admin\TariffPlanController;
 use App\Http\Controllers\Admin\GiftCertificateController;
 use App\Http\Controllers\Admin\BlacklistController;
+use App\Http\Controllers\Auth\LoginController;
 use App\Http\Middleware\AdminMiddleware;
+
+Route::get('login', [LoginController::class, 'showAdminLoginForm'])->name('login');
 
 Route::middleware([AdminMiddleware::class])->group(function () {
     // Dashboard

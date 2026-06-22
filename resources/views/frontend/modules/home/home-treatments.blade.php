@@ -1,12 +1,14 @@
-<div class="row justify-content-center text-center">
-    <div class="col-12">
-        <span class="section-eyebrow">Out at-home Treatments</span>
-        <h2>Bring relaxation to your doorstep.</h2>
-        <p class="featured-intro">From booking to treatment, the experience is built to be clear, flexible, and reliable.</p>
+<div class="page-section">
+    <div class="row justify-content-center text-center">
+        <div class="col-12">
+            <span class="section-eyebrow">Out at-home Treatments</span>
+            <h2>Bring relaxation to your doorstep.</h2>
+            <p>From booking to treatment, the experience is built to be clear, flexible, and reliable.</p>
+        </div>
     </div>
 </div>
 
-<div class="row g-4 inner-section">
+<div class="row g-4 mt60">
     @foreach($treatments as $treatment)
     <div class="col-12 col-md-6 col-lg-4">
         <article class="custom-card h-100">

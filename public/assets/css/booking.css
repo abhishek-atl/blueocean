@@ -1,0 +1,307 @@
+.booking-section {
+    position: relative;
+    margin-top: 0;
+    padding: 72px 20px;
+    background:
+        linear-gradient(180deg, rgba(243, 239, 229, 0.86), rgba(255, 255, 255, 0.96)),
+        #fff;
+}
+
+.booking-section .postcode-form {
+    width: min(100%, 780px);
+    margin: 0 auto;
+    padding: 34px;
+    background: #fff;
+    border: 1px solid rgba(104, 138, 140, 0.16);
+    border-radius: 8px;
+    box-shadow: 0 24px 58px rgba(33, 49, 50, 0.12);
+}
+
+.booking-section .postcode-search {
+    align-items: stretch;
+}
+
+.booking-section .form-control-lg {
+    min-height: 58px;
+    padding: 14px 18px;
+    font-size: 1rem;
+    font-weight: 600;
+    background: #fbfaf7;
+    border-color: rgba(104, 138, 140, 0.28);
+}
+
+.booking-section .form-control-lg::placeholder {
+    color: rgba(51, 51, 51, 0.52);
+    font-weight: 500;
+}
+
+.booking-section .postcode-button {
+    min-height: 58px;
+    padding-right: 30px;
+    padding-left: 30px;
+    color: #fff;
+    font-weight: 700;
+    background: var(--primary-color);
+    border: 0;
+    border-radius: 8px;
+    box-shadow: 0 12px 26px rgba(104, 138, 140, 0.24);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+}
+
+.booking-section .postcode-button:hover,
+.booking-section .postcode-button:focus {
+    color: #fff;
+    background: var(--primary-color);
+    box-shadow: 0 16px 32px rgba(104, 138, 140, 0.3);
+    transform: translateY(-1px);
+}
+
+.booking-section .postcode-button:disabled {
+    color: rgba(255, 255, 255, 0.72);
+    background: rgba(104, 138, 140, 0.62);
+    box-shadow: none;
+    transform: none;
+    opacity: 1;
+}
+
+.booking-section #postcode_error {
+    border: 0;
+    border-radius: 8px;
+    font-weight: 600;
+}
+
+.booking-how-it-works {
+    margin-top: 0;
+    padding-bottom: 90px;
+}
+
+.booking-how-it-works h2 {
+    margin: 0;
+    color: var(--text-color);
+    font-size: clamp(1.85rem, 3vw, 2.75rem);
+    font-weight: 800;
+    line-height: 1.16;
+}
+
+.how-it-works-row {
+    margin-top: 42px;
+}
+
+.how-it-works-card {
+    position: relative;
+    padding: 34px 30px;
+    background: #fff;
+    border: 1px solid rgba(104, 138, 140, 0.14);
+    border-radius: 8px;
+    box-shadow: 0 18px 42px rgba(33, 49, 50, 0.08);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.how-it-works-card:hover {
+    border-color: rgba(104, 138, 140, 0.34);
+    box-shadow: 0 24px 52px rgba(33, 49, 50, 0.12);
+    transform: translateY(-3px);
+}
+
+.how-it-works-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 54px;
+    height: 54px;
+    margin-bottom: 22px;
+    color: #fff;
+    font-size: 0.95rem;
+    font-weight: 800;
+    line-height: 1;
+    background: var(--primary-color);
+    border-radius: 50%;
+    box-shadow: 0 12px 26px rgba(104, 138, 140, 0.25);
+}
+
+.how-it-works-card h3 {
+    margin: 0 0 12px;
+    color: var(--text-color);
+    font-size: 1.25rem;
+    font-weight: 800;
+    line-height: 1.25;
+}
+
+.how-it-works-card p {
+    margin: 0;
+    color: rgba(51, 51, 51, 0.68);
+    font-size: 0.98rem;
+    line-height: 1.7;
+}
+
+@media (max-width: 767.98px) {
+    .booking-section {
+        padding: 48px 16px;
+    }
+
+    .booking-section .postcode-form {
+        padding: 22px;
+    }
+
+    .booking-how-it-works {
+        padding-bottom: 64px;
+    }
+
+    .how-it-works-row {
+        margin-top: 30px;
+    }
+
+    .how-it-works-card {
+        padding: 28px 24px;
+    }
+}
+
+.calendar_date {
+    border: 1px solid #ddd;
+    width: 80px;
+    height: 80px;
+    font-size: 18px;
+    background-color: #fff;
+}
+
+.calendar_date:hover,
+.calendar_date.active {
+    background-color: #5cb85c;
+    color: #fff;
+}
+
+.calendar_date:disabled {
+    border: 1px solid #999999;
+    background-color: #cccccc;
+    color: #666666;
+}
+
+.calendar_date_day {
+    width: 80px;
+    text-align: center;
+}
+
+.calendar_date_month {
+    width: 80px;
+    text-align: center;
+}
+
+.calendar_time {
+    border: 1px solid #ddd;
+    width: 80px;
+    height: 80px;
+    font-size: 16px;
+    background-color: #fff;
+}
+
+.calendar_time:hover,
+.calendar_time.active {
+    background-color: #5cb85c;
+    color: #fff;
+}
+
+.calendar_time:disabled {
+    border: 1px solid #999999;
+    background-color: #cccccc;
+    color: #666666;
+}
+
+.therapist-card {}
+
+.therapist-card:hover {
+    cursor: pointer;
+}
+
+.therapist-active {
+    border: solid 3px green;
+}
+
+.calendar_date_month {
+    height: 25px;
+}
+
+.calendar_date_day {
+    height: 25px;
+}
+
+.owl-corousel-container-date {
+    position: relative;
+    padding: 0 35px;
+}
+
+.owl-corousel-container-date .owl-theme .custom-nav {
+    position: absolute;
+    margin: 0 15px;
+    padding: 0;
+    height: 130px;
+    top: 0;
+    left: 0;
+    right: 0;
+}
+
+.owl-corousel-container-date .owl-theme .custom-nav .owl-prev,
+.owl-corousel-container-date .owl-theme .custom-nav .owl-next {
+    position: absolute;
+    margin: 0;
+    padding: 0;
+    height: 130px;
+    color: inherit;
+    background: none;
+    border: none;
+    z-index: 100;
+}
+
+.owl-corousel-container-date .owl-theme .custom-nav .owl-prev i,
+.owl-corousel-container-date .owl-theme .custom-nav .owl-next i {
+    font-size: 1.5rem;
+    color: #ff5509;
+}
+
+.owl-corousel-container-date .owl-theme .custom-nav .owl-prev {
+    left: -10px;
+}
+
+.owl-corousel-container-date .owl-theme .custom-nav .owl-next {
+    right: -10px;
+}
+
+.owl-corousel-container-time {
+    position: relative;
+    padding: 0 35px;
+}
+
+.owl-corousel-container-time .owl-theme .custom-nav {
+    position: absolute;
+    margin: 0 15px;
+    padding: 0;
+    height: 80px;
+    top: 0;
+    left: 0;
+    right: 0;
+}
+
+.owl-corousel-container-time .owl-theme .custom-nav .owl-prev,
+.owl-corousel-container-time .owl-theme .custom-nav .owl-next {
+    position: absolute;
+    margin: 0;
+    padding: 0;
+    height: 80px;
+    color: inherit;
+    background: none;
+    border: none;
+    z-index: 100;
+}
+
+.owl-corousel-container-time .owl-theme .custom-nav .owl-prev i,
+.owl-corousel-container-time .owl-theme .custom-nav .owl-next i {
+    font-size: 1.5rem;
+    color: #ff5509;
+}
+
+.owl-corousel-container-time .owl-theme .custom-nav .owl-prev {
+    left: -10px;
+}
+
+.owl-corousel-container-time .owl-theme .custom-nav .owl-next {
+    right: -10px;
+}

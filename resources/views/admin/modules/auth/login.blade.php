@@ -39,6 +39,7 @@
                                 <label for="password" class="form-label">Password</label>
                                 <input id="password" name="password" type="password" class="form-control" placeholder="Password">
                             </div>
+
                             <div class="mb-3 form-check">
                                 <input type="checkbox" class="form-check-input" id="remember" name="remember">
                                 <label class="form-check-label" for="remember">Remember Me</label>

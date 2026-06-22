@@ -173,7 +173,7 @@
             @endcan
 
             <li class="nav-item">
-                <a href="{{ route('auth.logout') }}">
+                <a href="{{ route('auth.logout',['user' => 'admin']) }}">
                     <i class="fa fa-home me-2"></i> <span class="text">Logout {{ Auth::user()->first_name }}</span>
                 </a>
             </li>

@@ -13,4 +13,14 @@ let moment_date_time_format = "DD/MM/YYYY HH:mm";
         }
     });
 
+    $('form').submit(function () {
+        if ($(this).valid()) {
+            $('.loading').show();
+            $(this).find('.submit').prop('disabled', true);
+            $(this).find('.submit').html('Please wait...');
+        }
+    });
+
+    $('.loading').hide();
+
 })(jQuery);

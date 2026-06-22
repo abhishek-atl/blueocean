@@ -2,6 +2,9 @@
 
 namespace App\Services;
 
+use App\Mail\Auth\ForgotPassword;
+use App\Mail\Auth\PasswordChangedNotification;
+use App\Mail\Auth\SendUserEmailVerificationMail;
 use App\Mail\PostcodeNotCovered;
 use App\Mail\SendBookingMailToAdmin;
 use App\Mail\SendBookingMailToClient;
@@ -20,6 +23,27 @@ class MailService
     public function __construct()
     {
         // Initialize any dependencies or configurations if needed
+    }
+
+    public function sendMailVerifyEmail($user, $token)
+    {
+        $url = route('user.verify', ['token' => $token]);
+        $mail = new SendUserEmailVerificationMail($user, $url);
+        Mail::to($user)->send($mail);
+    }
+
+    public function forgotPassword($user, $token)
+    {
+        $url = route('get-password-reset-link', ['token' => $token, 'email' => urlencode($user->email)]);
+        $mail = new ForgotPassword($user, $url);
+        Mail::to($user)->send($mail);
+    }
+
+    // Password changed email
+    public function adminPasswordChanged($user)
+    {
+        $mail = new PasswordChangedNotification($user);
+        Mail::to($user)->send($mail);
     }
 
     public function sendPostcodeNotCoveredMail($postcode)
@@ -65,7 +89,7 @@ class MailService
         Mail::to($giftCertificate->sender_email)->send(new SendGiftCertificateSender($giftCertificate));
     }
 
-     public function sendMailGiftCertificateRecipient($giftCertificate)
+    public function sendMailGiftCertificateRecipient($giftCertificate)
     {
         Mail::to($giftCertificate->recipient_email)->send(new SendGiftCertificateRecipient($giftCertificate));
     }

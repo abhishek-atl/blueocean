@@ -94,7 +94,7 @@
                                 </span>
                             </td>
                             <td>${{ number_format($cert->remaining_amount, 2) }}</td>
-                            <td>{{ $cert->expire_at ? $cert->expire_at->format('M d, Y') : '-' }}</td>
+                            <td>{{ $cert->expire_at }}</td>
                             <td>
                                 <div class="action">
                                     <a href="{{ route('admin.gift_certificates.edit', ['id' => $cert->id]) }}" class="text-dark me-3">

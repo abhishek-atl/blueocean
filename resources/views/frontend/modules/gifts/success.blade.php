@@ -18,7 +18,8 @@
     </div>
 </section>
 
-<section class="content-section">
+<section class="page-section">
+
     <div class="container">
         <div class="row">
             <div class="col-md-12 content-panel">

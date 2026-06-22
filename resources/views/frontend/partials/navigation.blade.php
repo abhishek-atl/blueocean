@@ -20,6 +20,29 @@
                   <li class="nav-item">
                       <a class="nav-link {{ request()->routeIs('join_us') ? 'active' : '' }}" href="{{ route('join_us') }}">Join Us</a>
                   </li>
+                  <li class="nav-item dropdown">
+                      <a class="nav-link dropdown-toggle btn-user-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                          <i class="fa fa-user"></i>
+                      </a>
+                      <i class="fa fa-chevron-down arrow-down"></i>
+                      <ul class="dropdown-menu btn-user">
+                          @auth
+                          <div class="p-3 text-center">
+                              <p><a href="{{ route('auth.logout') }}" class="btn btn-primary">Logout</a></p>
+                              <hr />
+                              <p><a href="">Profile</a></p>
+                          </div>
+                          @endauth
+                          @guest
+                          <div class="p-3 text-center">
+                              <p>Already have an account?</p>
+                              <p><a href="{{ route('auth.login') }}" class="btn btn-primary">Login</a></p>
+                              <hr />
+                              <p>No Account? <a href="{{ route('auth.register') }}">Signup Here</a></p>
+                          </div>
+                          @endguest
+                      </ul>
+                  </li>
                   <li class="nav-item">
                       <a class="btn btn-primary {{ request()->routeIs('booking*') ? 'active' : '' }}" href="{{ route('bookingPostcode') }}">Book Now</a>
                   </li>

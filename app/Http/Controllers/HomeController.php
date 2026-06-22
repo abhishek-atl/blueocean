@@ -12,8 +12,8 @@ use App\Services\UploadService;
 
 class HomeController extends Controller
 {
-    protected $mailService;
-    protected $uploadService;
+    protected MailService $mailService;
+    protected UploadService $uploadService;
 
     public function __construct(
         MailService $mailService,
@@ -104,6 +104,6 @@ class HomeController extends Controller
 
         return redirect()
             ->route('join_us')
-            ->with('status', 'Thank you! <br />We have received your application form. <br />If you are successful, we will be in touch very soon!');
+            ->with('success', 'Thank you! <br />We have received your application form. <br />If you are successful, we will be in touch very soon!');
     }
 }

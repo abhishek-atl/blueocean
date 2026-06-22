@@ -42,15 +42,15 @@
     </div>
 </section>
 
-<section class="custom-section">
+<section class="page-section">
+
     <div class="container">
         <div class="row justify-content-center">
             <div class="col">
-                <div class="content-body">
-                    {!! $treatment->description !!}
-                </div>
+                {!! $treatment->description !!}
             </div>
         </div>
     </div>
+
 </section>
 @endsection

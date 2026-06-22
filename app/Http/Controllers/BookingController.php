@@ -23,11 +23,11 @@ use Illuminate\Support\Facades\View;
 class BookingController extends Controller
 {
 
-    protected $bookingService;
-    protected $databaseService;
-    protected $formatService;
-    protected $mailService;
-    protected $smsService;
+    protected BookingService $bookingService;
+    protected DatabaseService $databaseService;
+    protected FormatService $formatService;
+    protected MailService $mailService;
+    protected SmsService $smsService;
 
     public function __construct(
         BookingService $bookingService,
@@ -240,6 +240,7 @@ class BookingController extends Controller
     public function bookingSuccess(Request $request)
     {
         $request->session()->forget('booking');
+
         if ($request->session()->has('bookingId')) {
 
             $booking = $this->databaseService->find(Booking::class, $request->session()->get('bookingId'));
