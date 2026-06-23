@@ -74,7 +74,7 @@ taking advantage of our loyalty benefits
                         @if(session('booking'))
                         <div class="auth-guest-link">
                             <p>or</p>
-                            <a href="{{ route('booking_customer_info') }}">Checkout As Guest</a>
+                            <a href="{{ route('bookingCheckout') }}">Checkout As Guest</a>
                         </div>
                         @endif
                     </form>

@@ -100,7 +100,7 @@ class RegisterController extends Controller
             $verifyUser->delete();
             $message = "Your e-mail has been verified.";
             if (session('booking'))
-                return redirect()->route('booking_customer_info')->with('success', $message);
+                return redirect()->route('bookingCheckout')->with('success', $message);
             else
                 return redirect()->route('home')->with('success', $message);
         }

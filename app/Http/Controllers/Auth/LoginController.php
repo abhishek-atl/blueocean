@@ -78,7 +78,7 @@ class LoginController extends Controller
         }
 
         if (session('booking')) {
-            return redirect(route('booking_customer_info'));
+            return redirect(route('bookingCheckout'));
         }
         if ($user->hasRole(['Therapist'])) {
             return redirect(route('bookings'));

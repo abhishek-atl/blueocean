@@ -61,7 +61,7 @@
                 @if(Auth::user())
                 <p>You have been emailed confirmation of this booking. This booking has also been added to your Customer Dashboard. <a href="{{ route('bookingPostcode') }}">Click here to go to your Dashboard</a>. </p>
                 @else
-                <div class="border border-primary p-3">
+                <div class"p-3">
                     <p class="h2">Join the Club: Get Rewarded</p>
                     <p>Access your Customer Dashboard now! Sign up below to unlock exclusive loyalty offers, rate therapists,
                         track your full booking history, and breeze through checkout faster than ever!</p>

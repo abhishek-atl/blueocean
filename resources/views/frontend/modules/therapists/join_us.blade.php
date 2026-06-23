@@ -163,7 +163,7 @@
                             </div>
 
                             <div class="col-12">
-                                <button class="btn btn-primary btn-block submit" type="submit">Sign in</button>
+                                <button class="btn btn-primary btn-block submit" type="submit">Submit</button>
                             </div>
 
                         </div>

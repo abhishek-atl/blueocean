@@ -1,7 +1,13 @@
 @extends('frontend.layouts.default')
 
-@section('title','Massage Gift Cards for Every Occasion - TheMassageRooms')
-@section('description','Give an instant gift of relaxation with a gift card from The Massage Rooms. These massage gift cards are perfect for birthdays, anniversaries, romantic weekends or pregnant partners.')
+@section('title')
+Massage Gift Cards for Every Occasion - {{ config('app.name') }}
+@endsection
+
+@section('description')
+Give an instant gift of relaxation with a gift card from {{ config('app.name') }}. These massage gift
+cards are perfect for birthdays, anniversaries, romantic weekends or pregnant partners.
+@endsection
 
 @section('content')
 
@@ -23,7 +29,7 @@
                 <form method="post" action="{{ route('giftsPost') }}" id="frmGift">
                     @csrf
                     <input type="hidden" name="spk" id="spk" value="{{ $spk }}" />
-                    <a class="btn btn-primary btn-block btnPaymentTypeStripe mb-3 p-3">Stripe</a>
+                    <a class="btn btn-primary btnPaymentTypeStripe">Stripe</a>
                 </form>
             </div>
         </div>

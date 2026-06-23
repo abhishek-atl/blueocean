@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Repositories;
+namespace App\Services;
 
 use App\Models\Payment;
 use App\Models\PaymentReceived;
@@ -9,7 +9,7 @@ use App\Models\TherapistsMandate;
 use App\Repositories\BaseRepository;
 use PhpOffice\PhpSpreadsheet\Calculation\Statistical\Distributions\F;
 
-class PaymentRepository extends BaseRepository
+class PaymentService extends BaseRepository
 {
     protected $payment;
     protected $therapistsMandate;
@@ -74,7 +74,7 @@ class PaymentRepository extends BaseRepository
         ]);
         return $result;
     }
-    
+
     public function paymentDisputeCreated($dispute)
     {
         $result = PaymentReceived::where('stripe_payment_id', $dispute->payment_intent)->update([

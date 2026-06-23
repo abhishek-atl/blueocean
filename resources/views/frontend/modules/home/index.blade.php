@@ -1,5 +1,15 @@
 @extends('frontend.layouts.default')
 
+@section('title')
+Book a Massage in London - Mobile Therapists | {{ config('app.name') }}
+@endsection
+
+@section('description')
+Book a relaxing, professional massage at home in London. Our trusted mobile therapists deliver expert
+treatments with genuine care, from just £59
+@endsection
+
+
 @section('content')
 
 <section class="jumbotron">

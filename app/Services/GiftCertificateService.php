@@ -1,12 +1,12 @@
 <?php
 
 
-namespace App\Repositories;
+namespace App\Services;
 
 use App\Models\GiftCertificate;
 use App\Repositories\BaseRepository;
 
-class GiftCertificateRepository extends BaseRepository
+class GiftCertificateService extends BaseRepository
 {
     protected $giftCertificate;
 

@@ -12,6 +12,8 @@ use App\Models\TreatmentCategory;
 use App\Services\DatabaseService;
 use App\Services\UploadService;
 
+use Illuminate\Support\Str;
+
 class TreatmentController extends Controller
 {
     protected UploadService $uploadService;
@@ -66,6 +68,8 @@ class TreatmentController extends Controller
     public function store(StoreTreatmentRequest $request)
     {
         $params = $request->except('_token', 'image');
+
+        $params['slug'] = Str::of($request->name)->slug('-');
 
         if ($request->has('image')) {
             $file = $request->file('image');

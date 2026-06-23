@@ -12,7 +12,7 @@
 @endpush
 
 @section('content')
-<section class="page-detail-hero">
+<section class="page-hero">
     <div class="container">
         <div class="row align-items-center g-5">
             <div class="col-lg-6">
@@ -23,9 +23,9 @@
                 @endif
 
                 @if($treatment->cta_button_visible && $treatment->cta_button_text && $treatment->cta_button_url)
-                <a href="{{ $treatment->cta_button_url }}" class="btn btn-primary mt-3">{{ $treatment->cta_button_text }}</a>
+                <a href="{{ $treatment->cta_button_url }}" class="btn btn-secondary mt-3">{{ $treatment->cta_button_text }}</a>
                 @else
-                <a href="{{ route('bookingPostcode') }}" class="btn btn-primary mt-3">Book Now</a>
+                <a href="{{ route('bookingPostcode') }}" class="btn btn-secondary mt-3">Book Now</a>
                 @endif
             </div>
 

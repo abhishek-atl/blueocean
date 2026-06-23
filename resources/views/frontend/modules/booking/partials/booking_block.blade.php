@@ -1,4 +1,4 @@
-<form method="post" action="{{ route('bookingPostcodePost') }}" id="postcode_form" class="postcode-form">
+<form method="post" action="{{ route('bookingPostcodeSubmit') }}" id="postcode_form" class="postcode-form">
     @csrf
     <div class="row g-2 postcode-search">
         <div class="col-12 col-sm">

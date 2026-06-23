@@ -1,12 +1,12 @@
 <?php
 
 
-namespace App\Repositories;
+namespace App\Services;
 
 use App\Models\TariffPlan;
 use App\Repositories\BaseRepository;
 
-class TariffPlanRepository extends BaseRepository
+class TariffPlanService extends BaseRepository
 {
 
     protected $tariffPlan;

@@ -4,14 +4,19 @@ namespace App\Http\Controllers;
 
 use App\Models\Blacklist;
 use App\Models\Booking;
+use App\Models\Payment;
+use App\Models\PaymentReceived;
 use App\Models\Postcode;
 use App\Models\TariffPlan;
 use App\Models\Treatment;
 use App\Models\User;
+use App\Models\UserProfile;
 use App\Services\BookingService;
 use App\Services\DatabaseService;
 use App\Services\FormatService;
+use App\Services\GiftCertificateService;
 use App\Services\MailService;
+use App\Services\PaymentService;
 use App\Services\SmsService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -28,6 +33,8 @@ class BookingController extends Controller
     protected FormatService $formatService;
     protected MailService $mailService;
     protected SmsService $smsService;
+    protected GiftCertificateService $giftCertificateService;
+    protected PaymentService $paymentService;
 
     public function __construct(
         BookingService $bookingService,
@@ -35,45 +42,65 @@ class BookingController extends Controller
         FormatService $formatService,
         MailService $mailService,
         SmsService $smsService,
+        GiftCertificateService $giftCertificateService,
+        PaymentService $paymentService,
     ) {
         $this->bookingService = $bookingService;
         $this->databaseService = $databaseService;
         $this->formatService = $formatService;
         $this->mailService = $mailService;
         $this->smsService = $smsService;
+        $this->giftCertificateService = $giftCertificateService;
+        $this->paymentService = $paymentService;
     }
 
     public function bookingPostcode(Request $request)
     {
         $request->session()->forget('booking');
-
-        if ($request->isMethod('post')) {
-            $request->session()->put('booking', $request->except('_token'));
-            $request->session()->put('booking.begin', microtime(true));
-            return redirect()->to(route('bookingInfo'));
-        }
         return view('frontend.modules.booking.postcode');
+    }
+
+    public function bookingPostcodeSubmit(Request $request)
+    {
+        $request->session()->put('booking', $request->except('_token'));
+        $request->session()->put('booking.begin', microtime(true));
+        return redirect()->to(route('bookingInfo'));
+    }
+
+    public function checkPostcode(Request $request)
+    {
+        $result = true;
+        $message = '';
+        $therapistsCount = null;
+
+        $postcode = $this->bookingService->checkPostalCodeCovered($request->postcode);
+        if (!$postcode) {
+            $result = false;
+            $message = 'Sorry, we do not cover this area yet.';
+            $this->mailService->sendPostcodeNotCoveredMail($request->postcode);
+        } else {
+            $therapistsCount = $this->bookingService->getTherapistsByPostcode($postcode->postcode, $count = true);
+            if ($therapistsCount == 0) {
+                $result = false;
+                $message = 'Sorry, we do not have any therapists in your area at the moment.';
+            }
+        }
+
+        return response()->json([
+            'data' => [
+                'result' => $result,
+                'message' => $message,
+                'postcode_id' => $postcode->id ?? null,
+                'supplement' => $postcode->supplement ?? 0,
+                'count' => $therapistsCount
+            ]
+        ]);
     }
 
     public function bookingInfo(Request $request)
     {
         if (!$request->session()->has('booking')) {
             return redirect(route('bookingPostcode'))->with('message', 'Sorry, your session has expired. Please try again.');
-        }
-
-        if ($request->isMethod('post')) {
-
-            $request->session()->put('booking.duration', $request->duration);
-            $request->session()->put('booking.treatment', $request->treatment);
-            $request->session()->put('booking.date', $request->date);
-            $request->session()->put('booking.time', $request->time);
-            $request->session()->put('booking.therapist_id', $request->therapist_id);
-
-            return redirect(route('bookingCheckout'));
-            if (Auth::user())
-                return redirect(route('bookingCheckout'));
-            else
-                return redirect(route('login'));
         }
 
         $params = [
@@ -98,6 +125,33 @@ class BookingController extends Controller
             'blockedIp' => $blockedIp,
         ]);
     }
+
+    public function bookingInfoSubmit(Request $request)
+    {
+        if (!$request->session()->has('booking')) {
+            return redirect(route('bookingPostcode'))->with('message', 'Sorry, your session has expired. Please try again.');
+        }
+
+        $request->validate([
+            'duration' => 'required',
+            'treatment' => 'required',
+            'date' => 'required',
+            'time' => 'required',
+            'therapist_id' => 'required'
+        ]);
+
+        $request->session()->put('booking.duration', $request->duration);
+        $request->session()->put('booking.treatment', $request->treatment);
+        $request->session()->put('booking.date', $request->date);
+        $request->session()->put('booking.time', $request->time);
+        $request->session()->put('booking.therapist_id', $request->therapist_id);
+
+        if (Auth::user())
+            return redirect(route('bookingCheckout'));
+        else
+            return redirect(route('auth.login'));
+    }
+
 
     public function bookingCheckout(Request $request)
     {
@@ -159,6 +213,22 @@ class BookingController extends Controller
             return redirect(route('bookingPostcode'))->with('message', 'Sorry, your session has expired. Please try again.');
         }
 
+        $begin = session('booking.begin');
+        $currentTime = microtime(true);
+        $timeTaken = ($currentTime - $begin) / 60;
+
+        if ($timeTaken > config('custom.booking_timeout')) {
+            return ['result' => 0, 'message' => 'Sorry, your session has expired. Please try again.'];
+        }
+
+        // Block booking if ip or mobile is black listed
+        $mobile = $request->mobile;
+        if (substr($mobile, 0, 3) == '+44') {
+            $mobile = str_replace('+44', 0, $mobile);
+        }
+        $mobile = str_replace(' ', '', $mobile);
+
+        // refresh charges
         $this->charges($request);
 
         $trainingDate = Carbon::createFromFormat('Y-m-d H:i', session('booking.date') . ' ' . session('booking.time'));
@@ -169,6 +239,26 @@ class BookingController extends Controller
         $discountAmount = $this->formatService->parseFloat(session('booking.discount_amount'));
         $totalCost = $this->formatService->parseFloat($sessionCost - $discountAmount);
 
+        // gift card
+        $giftDiscountAmount = $this->formatService->parseFloat(session('booking.gift_voucher_amount'));
+        $giftDiscountRemainingAmount = null;
+        $giftVoucherCode = session('booking.gift_voucher_code');
+        if ($request->session()->has('booking.gift_voucher_code')) {
+            $params = [];
+            $params['where'] = [
+                'gift_code' => $request->session()->get('booking.gift_voucher_code'),
+                'payment_status' => 'paid'
+            ];
+            $giftCode = $this->giftCertificateService->getByParams($params)->first();
+            if ($giftCode && $giftCode->remaining_amount > 0 && $giftCode->expire_at > now()) {
+                $giftDiscountRemainingAmount = $giftCode->remaining_amount - $giftDiscountAmount;
+                $giftCode->remaining_amount = $giftDiscountRemainingAmount;
+                $giftCode->used_amount = $giftCode->used_amount + $giftDiscountAmount;
+                $giftCode->save();
+            }
+        }
+
+        // fees
         $therapist = $this->databaseService->find(User::class, session('booking.therapist_id'));
         $feeColumn = 'fee_therapist_' . (int) $request->session_duration;
         $feeTmr = $therapist->$feeColumn;
@@ -182,18 +272,6 @@ class BookingController extends Controller
         if ($discountAmount) {
             $feeTmr = $feeTmr - $discountAmount;
         }
-
-        $mobile = $request->mobile;
-        if (substr($mobile, 0, 3) == '+44') {
-            $mobile = str_replace('+44', 0, $mobile);
-        }
-        $mobile = str_replace(' ', '', $mobile);
-
-        // gift card
-        $giftDiscountAmount = $this->formatService->parseFloat(session('booking.gift_voucher_amount'));
-        $giftDiscountRemainingAmount = null;
-        $giftVoucherCode = session('booking.gift_voucher_code');
-
 
         $params = [];
         $params['treatment_id'] = session('booking.treatment');
@@ -230,7 +308,57 @@ class BookingController extends Controller
         $params['status'] = 'processing';
         $params['device'] = 'desktop';
 
+        if (Auth::user()) {
+            $params['user_id'] = Auth::id();
+        }
+
         $booking = $this->databaseService->save(Booking::class, $params);
+
+        $payableAmount = $totalCost + $travelSupp;
+        $paymentMethod = 'cash';
+        $paymentStatus = 'pending';
+        if ($request->payment_method == 'credit_card') {
+            $paymentMethod = 'stripe';
+        } else if ($request->payment_method == 'gift_voucher') {
+            $paymentMethod = 'gift_voucher';
+            if ($payableAmount <= $giftDiscountAmount) {
+                $paymentStatus = 'paid';
+            } else {
+                $payableAmount = $payableAmount - $giftDiscountAmount;
+            }
+        }
+
+        $paymentParams = [];
+        $paymentParams['booking_id'] = $booking->id;
+        $paymentParams['amount'] = $payableAmount * 100;
+        $paymentParams['gift_discount_amount'] = $giftDiscountAmount;
+        $paymentParams['status'] = $paymentStatus;
+        $paymentParams['payment_type'] = $paymentMethod;
+        $payment = $this->databaseService->save(Payment::class, $paymentParams);
+
+        if (Auth::user()) {
+
+            $user = User::where('id', Auth::id())->first();
+            $nameParts = explode(' ', $request->name);
+            $user->first_name = $nameParts[0];
+            if (isset($nameParts[1])) {
+                $user->last_name = $nameParts[1];
+            }
+            $user->ip_address = $request->ip();
+            $user->save();
+
+
+            
+
+            // $userProfile = UserProfile::where('user_id', Auth::id())->first();
+            // $userProfile->postcode = $request->postcode;
+            // $userProfile->mobile = $request->mobile;
+            // $userProfile->flat_no = $request->flat_no;
+            // $userProfile->street_number = $request->street_number;
+            // $userProfile->street_name = $request->street_name;
+            // $userProfile->town = $request->town;
+            // $userProfile->save();
+        }
 
         session(['bookingId' => $booking->id]);
 
@@ -304,36 +432,6 @@ class BookingController extends Controller
         return response()->json($response);
     }
 
-    public function checkPostcode(Request $request)
-    {
-        $result = true;
-        $message = '';
-        $therapistsCount = null;
-
-        $postcode = $this->bookingService->checkPostalCodeCovered($request->postcode);
-        if (!$postcode) {
-            $result = false;
-            $message = 'Sorry, we do not cover this area yet.';
-            $this->mailService->sendPostcodeNotCoveredMail($request->postcode);
-        } else {
-            $therapistsCount = $this->bookingService->getTherapistsByPostcode($postcode->postcode, $count = true);
-            if ($therapistsCount == 0) {
-                $result = false;
-                $message = 'Sorry, we do not have any therapists in your area at the moment.';
-            }
-        }
-
-        return response()->json([
-            'data' => [
-                'result' => $result,
-                'message' => $message,
-                'postcode_id' => $postcode->id ?? null,
-                'supplement' => $postcode->supplement ?? 0,
-                'count' => $therapistsCount
-            ]
-        ]);
-    }
-
 
     public function getDays(Request $request)
     {
@@ -356,7 +454,11 @@ class BookingController extends Controller
 
     public function getFreeTherapists(Request $request)
     {
-        $therapists = $this->bookingService->getFreeTherapists($date = null, $time = null);
+        $date = $request->input('date', null);
+        $time = $request->input('time', null);
+        $treatment = $request->input('treatment', null);
+
+        $therapists = $this->bookingService->getFreeTherapists($date, $time, $treatment);
         $therapistView = View::make('frontend.modules.booking.partials.therapists', [
             'therapists' => $therapists,
         ])->render();

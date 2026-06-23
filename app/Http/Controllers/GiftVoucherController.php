@@ -7,32 +7,32 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 
-use App\Repositories\GiftCertificateRepository;
-use App\Repositories\PaymentRepository;
-use App\Repositories\TariffPlanRepository;
 
 use App\Services\FormatService;
+use App\Services\GiftCertificateService;
 use App\Services\MailService;
+use App\Services\PaymentService;
+use App\Services\TariffPlanService;
 
 class GiftVoucherController extends Controller
 {
-    protected GiftCertificateRepository $giftCertificateRepository;
-    protected PaymentRepository $paymentRepository;
-    protected TariffPlanRepository $tariffPlanRepository;
+    protected GiftCertificateService $giftCertificateService;
+    protected PaymentService $paymentService;
+    protected TariffPlanService $tariffPlanService;
     protected FormatService $formatService;
     protected MailService $mailService;
 
     public function __construct(
-        GiftCertificateRepository $giftCertificateRepository,
-        PaymentRepository $paymentRepository,
-        TariffPlanRepository $tariffPlanRepository,
+        GiftCertificateService $giftCertificateService,
+        PaymentService $paymentService,
+        TariffPlanService $tariffPlanService,
         FormatService $formatService,
         MailService $mailService
 
     ) {
-        $this->giftCertificateRepository = $giftCertificateRepository;
-        $this->paymentRepository = $paymentRepository;
-        $this->tariffPlanRepository = $tariffPlanRepository;
+        $this->giftCertificateService = $giftCertificateService;
+        $this->paymentService = $paymentService;
+        $this->tariffPlanService = $tariffPlanService;
         $this->formatService = $formatService;
         $this->mailService = $mailService;
     }
@@ -40,7 +40,7 @@ class GiftVoucherController extends Controller
     public function gifts(Request $request)
     {
         $request->session()->forget('giftCertificateId');
-        $tariffs = $this->tariffPlanRepository->getByParams();
+        $tariffs = $this->tariffPlanService->getByParams();
         return view('frontend.modules.gifts.form', [
             'tariff' =>  $tariffs
         ]);
@@ -62,7 +62,7 @@ class GiftVoucherController extends Controller
             $params['send_at'] = null;
             $params['expire_at'] = Carbon::now()->addYear();
         }
-        $giftCertificate = $this->giftCertificateRepository->save($params);
+        $giftCertificate = $this->giftCertificateService->save($params);
         session(['giftCertificateId' => $giftCertificate->id]);
         return redirect()->route('gifts_payment');
     }
@@ -79,7 +79,7 @@ class GiftVoucherController extends Controller
 
     public function giftsPaymentPost(Request $request)
     {
-        $gift = $this->giftCertificateRepository->getById(session('giftCertificateId'));
+        $gift = $this->giftCertificateService->getById(session('giftCertificateId'));
         $productName = 'Gift Card';
         $amount = $gift->gift_amount;
         $customerEmail = $gift->sender_email;
@@ -87,7 +87,7 @@ class GiftVoucherController extends Controller
         $successUrl = route('gifts_payment_stripe_return') . '?session_id={CHECKOUT_SESSION_ID}';
         $cancelUrl = route('gifts');
         \Stripe\Stripe::setApiKey(config('custom.stripe_secret_key'));
-        $stripeSession = $this->paymentRepository->createStripeSession($productName, $amount, $customerEmail, $successUrl, $cancelUrl);
+        $stripeSession = $this->paymentService->createStripeSession($productName, $amount, $customerEmail, $successUrl, $cancelUrl);
         return response()->json($stripeSession);
     }
 
@@ -102,7 +102,7 @@ class GiftVoucherController extends Controller
 
         if ($stripeSession->payment_status == 'paid') {
 
-            $giftCertificate = $this->giftCertificateRepository->getById($request->session()->get('giftCertificateId'));
+            $giftCertificate = $this->giftCertificateService->getById($request->session()->get('giftCertificateId'));
             $giftCertificate->payment_status = 'paid';
             $giftCertificate->charge_id = $stripeSession->payment_intent;
             $giftCertificate->save();
@@ -123,7 +123,7 @@ class GiftVoucherController extends Controller
         if (!$request->session()->has('giftCertificateId')) {
             return redirect(route('gifts'));
         }
-        $giftCertificate = $this->giftCertificateRepository->getById($request->session()->get('giftCertificateId'));
+        $giftCertificate = $this->giftCertificateService->getById($request->session()->get('giftCertificateId'));
         $giftCertificate->payment_status = 'paid';
         $giftCertificate->payment_method = 'paypal';
         $giftCertificate->charge_id = $request->order_id;
@@ -144,7 +144,7 @@ class GiftVoucherController extends Controller
         if (!$request->session()->has('giftCertificateId')) {
             return redirect(route('gifts'));
         }
-        $giftCertificate = $this->giftCertificateRepository->getById($request->session()->get('giftCertificateId'));
+        $giftCertificate = $this->giftCertificateService->getById($request->session()->get('giftCertificateId'));
         return view('frontend.modules.gifts.success', [
             'giftCertificate' => $giftCertificate,
         ]);
@@ -152,7 +152,7 @@ class GiftVoucherController extends Controller
 
     public function giftsPaymentPrint(Request $request)
     {
-        $giftCertificate = $this->giftCertificateRepository->getById($request->id);
+        $giftCertificate = $this->giftCertificateService->getById($request->id);
         return view('frontend.modules.gifts.print', [
             'giftCertificate' => $giftCertificate,
         ]);

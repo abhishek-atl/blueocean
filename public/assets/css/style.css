@@ -1,15 +1,17 @@
 /* Variables */
 :root {
     --text-color: #333;
-    --dark-color: #243536;
-    --muted-color: rgba(51, 51, 51, 0.68);
-    --primary-color: #688A8C;
-    --secondary-color: #bc9f78;
-    --light-color: #f3efe5;
-    --grad-start: #e8d7b4;
-    --grad-end: #875856;
-    --shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.06);
+    --text-muted-color: #555;
+    --bo-blue: #546b80;
+    --bo-gray: #6f8396;
+    --bo-lightblue: #c7d9e5;
+    --bo-yellow: #e3dbcf;
     --body-bg: #eee;
+
+    --grad-start: #e3dbcf;
+    --grad-end: #546b80;
+    --shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.06);
+
 }
 
 body {
@@ -19,11 +21,30 @@ body {
 }
 
 a {
-    color: var(--primary-color);
+    color: var(--bo-blue);
     text-decoration: none;
+    position: relative;
 }
 
-a:hover {}
+a.hover-effect::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    border-radius: 2px;
+    background-color: var(--bo-lightblue);
+    bottom: 0;
+    left: 0;
+    transform-origin: right;
+    transform: scaleX(0);
+    transition: transform .3s ease-in-out;
+}
+
+a.hover-effect:hover::before {
+    transform-origin: left;
+    transform: scaleX(1);
+}
+
 
 /* Utilities */
 
@@ -38,7 +59,7 @@ a:hover {}
 
 .feature-icon {
     align-items: center;
-    background: var(--primary-color);
+    background: var(--bo-blue);
     border-radius: 50%;
     box-shadow: 0 12px 26px rgba(104, 138, 140, 0.25);
     color: #fff;
@@ -59,19 +80,12 @@ a:hover {}
 }
 
 .page-hero {
-    background: url('../img/bg-pattern.png') repeat center center;
+    background: url('../img/bg/pattern1.png') repeat center center;
     color: #fff;
     padding: 84px 0 76px;
 }
 
-.page-detail-hero {
-    background: url('../img/bg-pattern.png') repeat center center;
-    color: var(--light-color);
-    padding: 90px 0;
-}
-
-.page-hero p,
-.page-detail-hero p {
+.page-hero p {
     color: rgba(255, 255, 255, 0.9);
     font-size: 1.1rem;
 }
@@ -85,7 +99,7 @@ a:hover {}
     display: inline-flex;
     align-items: center;
     gap: 10px;
-    color: var(--primary-color);
+    color: var(--bo-blue);
     font-size: 0.78rem;
     font-weight: 800;
     letter-spacing: 0;
@@ -99,7 +113,7 @@ a:hover {}
     display: block;
     width: 34px;
     height: 2px;
-    background: var(--secondary-color);
+    background: var(--bo-gray);
 }
 
 .content-panel {
@@ -118,53 +132,55 @@ a:hover {}
 }
 
 .text-primary {
-    color: var(--primary-color) !important;
+    color: var(--bo-blue) !important;
 }
 
 /* buttons */
+
+.btn-check:checked+.btn,
+.btn.active,
+.btn.show,
+.btn:first-child:active,
+:not(.btn-check)+.btn:active {
+    color: var(--bs-btn-active-color);
+    background-color: var(--bo-blue);
+    border-color: var(--bo-blue);
+}
+
 .btn-primary {
-    background: var(--primary-color) !important;
-    border: none !important;
-    border-radius: 12px !important;
-    color: white !important;
-    font-weight: 600 !important;
-    padding: 10px 24px !important;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    background-color: var(--bo-blue);
+    border: none;
+    border-radius: 24px;
+    color: white;
+    font-weight: 600;
+    padding: 10px 24px;
 }
 
-.btn-primary:hover {
-    transform: translateY(-2px) !important;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2) !important;
-}
-
+.btn-primary:hover,
 .btn-primary:active {
-    transform: translateY(0) !important;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2) !important;
+    color: white;
+    background-color: var(--bo-blue);
+    border-color: var(--bo-blue);
 }
 
 .btn-secondary {
-    background-size: 200% auto;
-    background-image:
-        linear-gradient(45deg,
-            var(--secondary-color) 0%,
-            var(--grad-start) 51%,
-            var(--secondary-color) 100%);
-    transition: 0.5s;
-    border: none !important;
-    border-radius: 12px !important;
-    color: white !important;
-    font-weight: 600 !important;
-    padding: 10px 24px !important;
+    background-color: var(--bo-yellow);
+    border: none;
+    border-radius: 24px;
+    color: var(--text-color);
+    font-weight: 600;
+    padding: 10px 24px;
 }
 
-.btn-secondary:hover {
-    background-position: right center;
-    color: #fff;
-    text-decoration: none;
-}
-
+.btn-secondary:hover,
 .btn-secondary:active {
-    transform: scale(0.95);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2) !important;
+    color: var(--text-color);
+    background-color: var(--bo-yellow);
+    border-color: var(--bo-yellow);
 }
+
 
 /* Forms */
 
@@ -175,7 +191,7 @@ a:hover {}
 }
 
 .form-control:focus {
-    border-color: var(--primary-color);
+    border-color: var(--bo-blue);
     box-shadow: 0 0 0 4px rgba(104, 138, 140, 0.14);
 }
 
@@ -185,26 +201,26 @@ a:hover {}
 }
 
 .nav-pills .nav-link {
-    color: var(--primary-color);
+    color: var(--bo-blue);
     font-weight: 600;
     border: 1px solid rgba(104, 138, 140, 0.22);
-    border-radius: 8px;
+    border-radius: 24px;
     transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .nav-pills .nav-link:hover,
 .nav-pills .nav-link:focus {
     color: #fff;
-    background-color: var(--primary-color);
-    border-color: var(--primary-color);
+    background-color: var(--bo-blue);
+    border-color: var(--bo-blue);
     box-shadow: 0 8px 18px rgba(104, 138, 140, 0.22);
 }
 
 .nav-pills .nav-link.active,
 .nav-pills .show>.nav-link {
     color: #fff;
-    background-color: var(--primary-color);
-    border-color: var(--primary-color);
+    background-color: var(--bo-blue);
+    border-color: var(--bo-blue);
     box-shadow: 0 10px 22px rgba(104, 138, 140, 0.28);
 }
 
@@ -250,7 +266,7 @@ a:hover {}
 }
 
 .custom-card-body h2 {
-    color: var(--primary-color);
+    color: var(--bo-blue);
     font-size: 1.35rem;
     font-weight: 700;
     margin-bottom: 10px;
@@ -263,7 +279,7 @@ a:hover {}
 }
 
 .custom-card-summary {
-    color: var(--muted-color);
+    color: var(--text-muted);
     margin-bottom: 22px;
 }
 
@@ -288,10 +304,9 @@ a:hover {}
     padding: 34px;
     margin-top: 20px;
     overflow: hidden;
-    background: var(--light-color);
-    border: 1px solid var(--dark-color);
-    border-radius: 8px;
-    box-shadow: var(--shadow);
+    background: rgb(229, 236, 240, 0.6);
+    border-radius: 24px;
+
 }
 
 .featurette-heading {
@@ -351,7 +366,7 @@ a:hover {}
     font-size: 0.78rem;
     font-weight: 800;
     line-height: 1;
-    background: var(--primary-color);
+    background: var(--bo-blue);
     border-radius: 50%;
     transform: translateY(-50%);
 }
@@ -388,7 +403,8 @@ a:hover {}
 /**********************************************/
 nav,
 .navbar {
-    background-color: var(--light-color);
+    background-color: #fff;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
 
 .navbar-brand {
@@ -417,14 +433,14 @@ nav,
 }
 
 .btn-user-toggle {
-    color: var(--primary-color);
+    color: var(--bo-blue);
     width: 35px;
     height: 35px;
     border-radius: 50%;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    border: solid 1px var(--primary-color);
+    border: solid 1px var(--bo-blue);
 }
 
 .navbar .dropdown-toggle::after {
@@ -440,14 +456,14 @@ nav,
 /* footer */
 /**********************************************/
 footer {
-    background-color: var(--primary-color);
+    background-color: var(--bo-blue);
     color: white;
     padding: 60px 20px 20px;
     font-size: 15px;
 }
 
 footer h4 {
-    color: var(--light-color);
+    color: var(--bo-yellow);
     font-size: 1.1rem;
     font-weight: 700;
     margin-bottom: 16px;
@@ -572,7 +588,7 @@ footer ul li {
     margin-bottom: 80px;
     background:
         linear-gradient(135deg, rgba(104, 138, 140, 0.95), rgba(33, 49, 50, 0.95)),
-        var(--primary-color);
+        var(--bo-blue);
     border-radius: 8px;
     box-shadow: 0 26px 70px rgba(33, 49, 50, 0.18);
 }
@@ -631,7 +647,7 @@ footer ul li {
     display: block;
     width: 34px;
     height: 2px;
-    background: var(--secondary-color);
+    background: var(--bo-gray);
 }
 
 .home-cta h2 {

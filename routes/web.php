@@ -4,7 +4,6 @@ use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 
-use App\Http\Controllers\BookingController;
 use App\Http\Controllers\GiftVoucherController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PaypalPaymentController;
@@ -12,20 +11,10 @@ use App\Http\Controllers\PaypalPaymentController;
 
 use Illuminate\Support\Facades\Route;
 
-Route::get('login', [LoginController::class, 'showUserLoginForm'])->name('auth.login');
-Route::post('login', [LoginController::class, 'postUserlogin'])->name('auth.login');
-Route::get('logout', [LoginController::class, 'logout'])->name('auth.logout');
 
-Route::get('/register', [RegisterController::class, 'showRegisterForm'])->name('auth.register');
-Route::post('/postRegister', [RegisterController::class, 'postRegister'])->name('post-register');
-Route::get('/account/verify/{token}', [RegisterController::class, 'verifyAccount'])->name('user.verify');
-Route::get('/account/send-verification-link/{id}', [RegisterController::class, 'sendVerificationLink'])->name('user.send_verification_link');
+include __DIR__ . '/auth.php';
 
-Route::get('/forgot-password', [ForgotPasswordController::class, 'forgotPassword'])->name('forgot-password');
-Route::post('/post-forgot-password', [ForgotPasswordController::class, 'postForgotPassword'])->name('post-forgot-password');
-Route::get('/reset-password/{token}', [ForgotPasswordController::class, 'getPasswordResetLink'])->name('get-password-reset-link');
-Route::post('/post-reset-password', [ForgotPasswordController::class, 'postPasswordResetLink'])->name('post-reset-password');
-
+include __DIR__ . '/booking.php';
 
 // frontend
 Route::get('/', [HomeController::class, 'home'])->name('home');
@@ -36,25 +25,8 @@ Route::get('/treatment/{slug}', [HomeController::class, 'treatmentDetail'])->nam
 Route::get('/join-us', [HomeController::class, 'joinUs'])->name('join_us');
 Route::post('/join-us', [HomeController::class, 'joinUsPost'])->name('join_us_post');
 
-// booking
-Route::get('/booking-postcode', [BookingController::class, 'bookingPostcode'])->name('bookingPostcode');
-Route::post('/booking-postcode', [BookingController::class, 'bookingPostcode'])->name('bookingPostcodePost');
+Route::get('/legal/legal.html', [HomeController::class, 'terms_conditions'])->name('terms_conditions');
 
-Route::get('/booking-info', [BookingController::class, 'bookingInfo'])->name('bookingInfo');
-Route::post('/booking-info', [BookingController::class, 'bookingInfo'])->name('bookingInfoPost');
-
-Route::get('/booking/checkout', [BookingController::class, 'bookingCheckout'])->name('bookingCheckout');
-Route::post('/booking/checkout', [BookingController::class, 'bookingCheckoutPost'])->name('bookingCheckoutPost');
-
-Route::get('/booking/success', [BookingController::class, 'bookingSuccess'])->name('bookingSuccess');
-
-
-Route::post('/check-postal-code', [BookingController::class, 'checkPostcode'])->name('checkPostcode');
-Route::post('get-days', [BookingController::class, 'getDays'])->name('getDays');
-Route::post('/get-time', [BookingController::class, 'getTime'])->name('getTime');
-Route::post('/free-therapists', [BookingController::class, 'getFreeTherapists'])->name('getFreeTherapists');
-Route::post('/therapist', [BookingController::class, 'therapistInfo'])->name('therapistInfo');
-Route::post('/booking-charges', [BookingController::class, 'charges'])->name('bookingCharges');
 
 // gift card
 Route::get('buy-gift-card', [GiftVoucherController::class, 'gifts'])->name('gifts');
@@ -72,6 +44,3 @@ Route::get('buy-gift-card/print/gift-card/{id}', [GiftVoucherController::class, 
 
 Route::post('paypal/order/create', [PaypalPaymentController::class, 'create'])->name('paypal.create');
 Route::post('paypal/order/capture', [PaypalPaymentController::class, 'capture'])->name('paypal.capture');
-
-// legal
-Route::get('/legal/legal.html', [HomeController::class, 'terms_conditions'])->name('terms_conditions');
