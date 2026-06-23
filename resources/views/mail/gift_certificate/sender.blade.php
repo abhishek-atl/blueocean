@@ -59,7 +59,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td colspan="2">If you have any questions with regards to your order, please email us at <a href="#">info@themassagerooms.com</a></td>
+                        <td colspan="2">If you have any questions with regards to your order, please email us at <a href="#">{{ config('mail.to.admin_address') }}</a></td>
                     </tr>
                     <tr>
                         <td colspan="2">

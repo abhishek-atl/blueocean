@@ -133,7 +133,7 @@
     <center>
         <table border="0" cellpadding="0" cellspacing="0" class="body">
             <tr align="center">
-                <td class="padding-default"><img src="{{ asset('/assets/img/mail/email_confirmations_logo.jpg')}}" alt="The Massage Rooms" /></td>
+                <td class="padding-default"><img src="{{ asset('/assets/img/mail/email_confirmations_logo.jpg')}}" alt="{{ config('app.name') }}" /></td>
             </tr>
             <tr>
                 <td valign="top">

@@ -7,6 +7,7 @@ use App\Models\Booking;
 use App\Models\Payment;
 use App\Models\PaymentReceived;
 use App\Models\Postcode;
+use App\Models\Promocode;
 use App\Models\TariffPlan;
 use App\Models\Treatment;
 use App\Models\User;
@@ -347,9 +348,6 @@ class BookingController extends Controller
             $user->ip_address = $request->ip();
             $user->save();
 
-
-            
-
             // $userProfile = UserProfile::where('user_id', Auth::id())->first();
             // $userProfile->postcode = $request->postcode;
             // $userProfile->mobile = $request->mobile;
@@ -362,7 +360,10 @@ class BookingController extends Controller
 
         session(['bookingId' => $booking->id]);
 
-        return redirect(route('bookingSuccess'));
+        return response()->json([
+            'success' => 1,
+            'payment' => $payment,
+        ]);
     }
 
     public function bookingSuccess(Request $request)
@@ -405,6 +406,144 @@ class BookingController extends Controller
         }
     }
 
+    public function createStripeSession(Request $request)
+    {
+        \Stripe\Stripe::setApiKey(config('custom.stripe_secret_key'));
+        $booking = $this->databaseService->getByParams(Booking::class, ['id' => session('bookingId')]);
+        $style = $this->databaseService->getByParams(Treatment::class, ['id' => $booking->treatment_id]);
+
+        $productName = $style->title;
+        $amount = ($booking->cost + $booking->travel_supp) - ($booking->gift_discount_amount);
+        $customerEmail = $booking->email;
+        $successUrl = route('bookingReturnFromStripe') . '?session_id={CHECKOUT_SESSION_ID}';
+        $cancelUrl = route('bookingPostcode');
+
+        $metadata = ['booking_id' => $booking->id];
+        $stripeSession = $this->paymentService->createStripeSession($productName, $amount, $customerEmail, $successUrl, $cancelUrl, $metadata);
+        return response()->json($stripeSession);
+    }
+
+    public function returnFromStripe(Request $request)
+    {
+        if ($request->session()->has('bookingId')) {
+            \Stripe\Stripe::setApiKey(config('custom.stripe_secret_key'));
+
+            $stripeSession = \Stripe\Checkout\Session::retrieve($request->session_id);
+            //$customer = \Stripe\Customer::retrieve($session->customer);
+
+            if ($stripeSession->payment_status == 'paid') {
+                $booking = $this->databaseService->getByParams(Booking::class, ['id' => session('bookingId')]);
+                $booking->status = 'new';
+                $booking->save();
+
+                $payment = $this->databaseService->getByParams(Payment::class, ['where' => ['booking_id' => session('bookingId')]])->first();
+                $payment['status'] = 'completed';
+                $payment['charge_id'] = $stripeSession->payment_intent;
+                $payment->save();
+                return redirect(route('bookingSuccess'));
+            }
+        }
+        return redirect(route('booking_postal_code'));
+    }
+
+    public function updatePaymentMethod(Request $request)
+    {
+        session(['booking.payment_method' => $request->payment_method]);
+        $request->session()->forget([
+            'booking.gift_voucher_code',
+            'booking.gift_voucher_amount'
+        ]);
+        $response = $this->charges($request);
+        return $response;
+    }
+
+    public function checkPromocode(Request $request)
+    {
+        if ($request->isMethod('post') && !empty($request->input('promocode'))) {
+
+            $tarif = $this->databaseService->getByParams(TariffPlan::class, ['id' => $request->input('tariff')]);
+            $promocode = $this->databaseService->getByParams(Promocode::class, [
+                'where' =>  [
+                    'code' => $request->input('promocode'),
+                    'active' => true,
+                    'used' => false
+                ]
+            ])->first();
+
+            $discount = 0;
+            $offPeak = 0;
+
+            if ($promocode) {
+                $checkDate = new \DateTime('now');
+                if ($promocode->used || ($promocode->expiry_day != null && $promocode->expiry_day < $checkDate)) {
+                    return response()->json(['success' => false, 'message' => 'Sorry, discount code ' . $request->input('promocode') . ' is not recognised']);
+                }
+
+                if ($promocode->off_peak) {
+                    $stringDay = $request->input('date');
+                    $tranDay = $now = new \DateTime($stringDay);
+                    $offPeak = 1;
+                    //$res = $this->bookingRepository->checkSchedule($promocode->getSchedule(), $tranDay);
+                    $res = false;
+                    if (!$res) {
+                        return response()->json(['success' => false, 'message' => 'Sorry, discount code ' . $request->input('promocode') . ' is not recognised']);
+                    }
+                }
+                if ($promocode->single_use) {
+                    $promocode->single_use = true;
+                    $promocode->save();
+                }
+                // foreach ($tarif->getPromocodes() as $value) {
+                //     if ($value->getId() == $promocode->getId()) {
+                //         $discount = $promocode->getAmount();
+                //     }
+                // }
+            }
+
+            if ($discount > 0) {
+                if (session('booking.gift_voucher_amount')) {
+                    $newGiftVoucherAmount = session('booking.gift_voucher_amount') - $discount;
+                    session(['booking.gift_voucher_amount' => $newGiftVoucherAmount]);
+                }
+                session(['booking.discount_amount' => $discount]);
+                session(['booking.promocode' => $request->input('promocode')]);
+            }
+
+            if ($discount > 0) {
+                return response()->json(['success' => true, 'discountAmount' => $discount, 'offPeak' => $offPeak]);
+            } elseif ($promocode && $discount == 0) {
+                return response()->json(['success' => false, 'message' => 'Sorry, the discount code ' . $request->input('promocode') . ' is not valid for ' . $tarif->duration . ' min bookings']);
+            } elseif ($discount < 0) {
+                return response()->json(['success' => true, 'discountAmount' => $discount, 'offPeak' => $offPeak]);
+            } else {
+                return response()->json(['success' => false, 'message' => 'Sorry, discount code ' . $request->input('promocode') . ' is not recognised']);
+            }
+        }
+        return response()->json(['success' => false, 'message' => 'Wrong request!']);
+    }
+
+    public function checkGiftcode(Request $request)
+    {
+        $travelSupp = session('booking.travel_sup', 0);
+        $sessionCost = session('booking.session_cost');
+        $discountAmount = session('booking.discount_amount', 0);
+        $totalCost = $sessionCost + $travelSupp - $discountAmount;
+
+        if ($request->isMethod('post') && !empty($request->input('giftcode'))) {
+            $giftCode = $request->input('giftcode');
+            $result = $this->giftCertificateService->checkGiftCode($totalCost, $giftCode);
+
+            if ($result['success']) {
+                session(['booking.gift_voucher_code' => $giftCode]);
+                session(['booking.gift_voucher_amount' => $result['discountAmount']]);
+                return response()->json(['success' => true, 'discountAmount' => $result['discountAmount'], 'message' => $result['message']]);
+            } else {
+                return response()->json(['success' => false, 'message' => $result['message']]);
+            }
+        }
+        return response()->json(['success' => false, 'message' => 'Wrong request!']);
+    }
+
     public function charges(Request $request)
     {
         try {
@@ -431,7 +570,6 @@ class BookingController extends Controller
         }
         return response()->json($response);
     }
-
 
     public function getDays(Request $request)
     {

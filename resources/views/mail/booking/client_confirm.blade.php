@@ -3,7 +3,7 @@
 <table cellpadding="5" cellspacing="5" width="100%" border="0" align="center" bgcolor="#e7e7e7">
     <tr align="center">
         <td colspan="2">
-            <a href="{{ route('home') }}" target="_blank"><img src="{{ asset('assets/img/mail/massage_room_small_logo.png') }}" height="150"></a>
+            <a href="{{ route('home') }}" target="_blank"><img src="{{ asset('assets/img/mail/small_logo.png') }}" height="150"></a>
         </td>
     </tr>
     <tr align="center">
@@ -171,10 +171,10 @@
                 </span>
                 <br>Access the Terms &amp; Conditions of your booking by
                 <span style="color: #ff8400;">
-                    <a href="https://www.themassagerooms.com/legal/legal.html" style="color: #ff8400;">clicking here</a>
+                    <a href="{{ route('home') }}" style="color: #ff8400;">clicking here</a>
                 </span>
             </p>
-            <img src="{{ asset('assets/img/mail/massage_room_logo.jpg') }}" width="100" height="100">
+            <img src="{{ asset('assets/img/mail/small_logo.jpg') }}" width="100" height="100">
         </td>
     </tr>
 </table>

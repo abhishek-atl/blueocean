@@ -29,7 +29,7 @@ class SendBookingMailToClient extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Your Booking with TheMassageRooms',
+            subject: 'Your Booking with ' . config('app.name'),
         );
     }
 
@@ -38,7 +38,7 @@ class SendBookingMailToClient extends Mailable
      */
     public function content(): Content
     {
-          return new Content(
+        return new Content(
             view: 'mail.booking.client_confirm',
             with: [
                 'booking' => $this->booking,

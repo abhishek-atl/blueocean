@@ -85,6 +85,11 @@ a.hover-effect:hover::before {
     padding: 84px 0 76px;
 }
 
+.bg-lightblue {
+    background-color: var(--bo-lightblue);
+    
+}
+
 .page-hero p {
     color: rgba(255, 255, 255, 0.9);
     font-size: 1.1rem;

@@ -2,8 +2,14 @@
 
 @inject('format','App\Services\FormatService')
 
-@section('title','Massage Gift Cards for Every Occasion - TheMassageRooms')
-@section('description','Give an instant gift of relaxation with a gift card from The Massage Rooms. These massage gift cards are perfect for birthdays, anniversaries, romantic weekends or pregnant partners.')
+@section('title')
+Massage Gift Cards for Every Occasion - {{ config('app.name') }}
+@endsection
+
+@section('description')
+Give an instant gift of relaxation with a gift card from {{ config('app.name') }}. These massage gift cards
+are perfect for birthdays, anniversaries, romantic weekends or pregnant partners.
+@endsection
 
 @section('content')
 

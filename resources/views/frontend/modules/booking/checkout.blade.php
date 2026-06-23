@@ -1,7 +1,13 @@
 @extends('frontend.layouts.default')
 
-@section('title', 'Massage Booking Checkout Page | TheMassageRooms')
-@section('description', 'Checkout page for massage')
+@section('title')
+Massage Booking Checkout Page | {{ config('app.name') }}
+@endsection
+
+@section('description')
+Checkout page for massage
+@endsection
+
 
 @section('content')
 
@@ -83,26 +89,27 @@
                         </div>
                     </div>
 
-                    {{--
-                <div class="form-row">
-                    <div class="form-group col-md-12">
-                        <label for="Comment" class="col-form-label">Comment</label>
-                        <textarea name="comment" id="comment" cols="30" rows="3" class="form-control" placeholder="Please state any medical conditions or other comments here"></textarea>
-                    </div>
-                    <div class="form-group col-md-6">
-                        <label for="discount_code" class="col-form-label">Discount code</label>
-                        <div class="input-group">
-                            <input type="text" name="discount_code" id="discount_code" class="form-control" placeholder="Enter your code">
-                            <div class="input-group-append">
-                                <button class="btn btn-outline-primary discountCode_apply" type="button">Apply</button>
-                            </div>
+
+                    <div class="form-row">
+                        <div class="form-group col-md-12">
+                            <label for="Comment" class="col-form-label">Comment</label>
+                            <textarea name="comment" id="comment" cols="30" rows="3" class="form-control" placeholder="Please state any medical conditions or other comments here"></textarea>
                         </div>
-                        <small class="discount_code_message"></small>
+                        <div class="form-group col-md-6">
+                            <label for="discount_code" class="col-form-label">Discount code</label>
+                            <div class="input-group">
+                                <input type="text" name="discount_code" id="discount_code" class="form-control" placeholder="Enter your code">
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-primary discountCode_apply" type="button">Apply</button>
+                                </div>
+                            </div>
+                            <small class="discount_code_message"></small>
+                        </div>
                     </div>
-                </div>
-                --}}
+
 
                     <div class="d-lg-none d-md-block">
+
                         <div class="form-group row py-0 my-0">
                             <label class="col-5 col-form-label">Cost</label>
                             <div class="col-3">
@@ -134,6 +141,7 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <label for="payment_method_cash" class="col-form-label">Payment Method</label>
@@ -141,37 +149,36 @@
                                 <input class="form-check-input" type="radio" name="payment_method" id="payment_method_cash" value="cash" @if (($paymentMethod && $paymentMethod=='cash' ) || !$paymentMethod) checked="checked" @endif>
                                 <label class="form-check-label" for="payment_method_cash">Cash</label>
                             </div>
-                            {{--
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="payment_method" id="payment_method_cc" value="credit_card" @if ($paymentMethod && $paymentMethod=='credit_card' ) checked="checked" @endif>
-                            <label class="form-check-label" for="payment_method_cc">Credit Card</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="payment_method" id="gift_voucher" value="gift_voucher" @if ($paymentMethod && $paymentMethod=='gift_voucher' ) checked="checked" @endif>
-                            <label class="form-check-label" for="gift_voucher">Gift Card</label>
-                        </div>
-                        <div class="form-group gift_voucher_block hide-elem mt-3">
-                            <div class="input-group">
-                                <input type="text" name="gift_code" id="gift_code" class="form-control" placeholder="Enter your gift code">
-                                <div class="input-group-append">
-                                    <button class="btn btn-outline-primary giftCode_apply" type="button">Check</button>
-                                </div>
+
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="payment_method" id="payment_method_cc" value="credit_card" @if ($paymentMethod && $paymentMethod=='credit_card' ) checked="checked" @endif>
+                                <label class="form-check-label" for="payment_method_cc">Credit Card</label>
                             </div>
-                            <small class="gift_code_message"></small>
-                        </div>
-                        --}}
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="payment_method" id="gift_voucher" value="gift_voucher" @if ($paymentMethod && $paymentMethod=='gift_voucher' ) checked="checked" @endif>
+                                <label class="form-check-label" for="gift_voucher">Gift Card</label>
+                            </div>
+                            <div class="form-group gift_voucher_block hide-elem mt-3">
+                                <div class="input-group">
+                                    <input type="text" name="gift_code" id="gift_code" class="form-control" placeholder="Enter your gift code">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-outline-primary giftCode_apply" type="button">Check</button>
+                                    </div>
+                                </div>
+                                <small class="gift_code_message"></small>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="form-row">
+                    <div class="form-row mt-3">
                         <div class="col">
-                            <p class="textCash m-0 p-3">Your therapist will collect <span id="cost_massage_val"></span> in cash from you directly.</p>
-                            <p class="textCreditCard bg-secondary m-0 p-3" style="display:none;">
+                            <p class="textCash bg-lightblue p-3">Your therapist will collect <span id="cost_massage_val"></span> in cash from you directly.</p>
+                            <p class="textCreditCard bg-lightblue p-3" style="display:none;">
                                 <i class="fa fa-lock"></i>
                                 We process all credit cards directly through <a href="https://stripe.com/gb" target="_blank" class="text-white text-dark">STRIPE</a>, a globally trusted secure
                                 payment processor.
                             </p>
-                            <p class="textGiftVoucher bg-secondary m-0 p-3" style="display:none;">
+                            <p class="textGiftVoucher bg-lightblue p-3" style="display:none;">
                                 Please enter your gift card code and press "Check"
                             </p>
                         </div>
@@ -250,6 +257,7 @@
                     Click <a href="{{ route('bookingInfo') }}">here</a> if you want to make changes in booking
                     information.
                 </div>
+
             </div>
         </form>
     </div>
@@ -262,13 +270,13 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Information</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body"></div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
@@ -287,6 +295,49 @@
 
 <script>
     $(document).ready(function() {
+
+        var input = document.querySelector("#mobile");
+        // initialise plugin
+        var iti = intlTelInput(input, {
+            preferredCountries: ['gb', 'us'],
+            utilsScript: "{{ asset('assets/js/utils.js') }}",
+            initialCountry: "gb",
+        });
+
+        function paymentMethodChanged() {
+            $('.loading').show();
+            let paymentMethod = $('[name="payment_method"]:checked').val();
+            let paymentMethodChangedRoute = "{{ route('updatePaymentMethod') }}?payment_method=" +
+                paymentMethod;
+            $.post(paymentMethodChangedRoute, function(response) {
+                if (response.result === 1) {
+                    var sessionCost = '£' + parseFloat(response.data.session_cost).toFixed(2);
+                    var travelSupp = '£' + parseFloat(response.data.travel_supp).toFixed(2);
+                    var discountAmount = '£' + parseFloat(response.data.discount_amount).toFixed(2);
+                    var giftVoucherAmount = '£' + parseFloat(response.data.gift_voucher_amount).toFixed(
+                        2);
+                    var totalCost = '£' + parseFloat(response.data.total_cost).toFixed(2);
+
+                    $('[name="session_cost"]').val(sessionCost);
+                    $('[name="travel_supp"]').val(travelSupp);
+                    $('[name="discount_amount"]').val(discountAmount);
+                    $('[name="gift_voucher_amount"]').val(giftVoucherAmount);
+                    $('[name="total_cost"]').val(totalCost);
+                    $('#cost_massage_val').text('£' + parseFloat(response.data.total_cost).toFixed(2));
+
+                    $('#gift_code').val('');
+                    $('.gift_code_message').html('');
+
+                }
+            }).fail(function(xhr, status, error) {
+                if (xhr.status == 419) {
+                    alert(xhr.responseJSON.message);
+                    window.location.reload();
+                }
+            }).always(function() {
+                $('.loading').hide();
+            });
+        }
 
         function calcCharges() {
             var chargesRoute = "{{ route('bookingCharges') }}";
@@ -319,7 +370,7 @@
         calcCharges();
 
         $('[name="payment_method"]').change(function() {
-            //paymentMethodChanged();
+            paymentMethodChanged();
             if ($(this).val() == 'credit_card') {
                 $('.textCreditCard').show();
                 $('.textCash').hide();
@@ -341,6 +392,163 @@
 
             }
         });
+
+        $('.discountCode_apply').click(function() {
+            if (!$('#discount_code').val().trim()) {
+                return;
+            }
+            var promocode = $('#discount_code').val();
+            var tariff = "{{ session('booking.duration') }}";
+            var date = "{{ $dateTime->format('d-m-Y H:i:s') }}";
+            $.post("{{ route('checkPromocode') }}", {
+                'promocode': promocode,
+                'tariff': tariff,
+                'date': date
+            }).fail(function(xhr, status, error) {
+                if (xhr.status == 419) {
+                    alert(xhr.responseJSON.message);
+                    window.location.reload();
+                }
+            }).done(function(data) {
+                if (data.success) {
+                    calcCharges();
+                    let discountAmount = data.discountAmount;
+                    $('.discount_code_message').addClass('text-success');
+                    $('.discount_code_message').removeClass('text-danger');
+                    $('.discount_code_message').removeClass('hide-elem');
+                    $('.discount_code_message').html('Discount code applied successfully for ' +
+                        '£' + discountAmount.toFixed(2));
+                } else {
+                    $('.discount_code_message').addClass('text-danger');
+                    $('.discount_code_message').removeClass('text-success');
+                    $('.discount_code_message').removeClass('hide-elem');
+                    $('.discount_code_message').html(data.message);
+                }
+            });
+        })
+
+        $('.giftCode_apply').click(function() {
+            if (!$('#gift_code').val().trim()) {
+                return;
+            }
+            var giftcode = $('#gift_code').val();
+            $.post("{{ route('checkGiftcode') }}", {
+                'giftcode': giftcode
+            }).done(function(data) {
+                let totalCost = $('#total_cost').val();
+                if (data.success) {
+                    calcCharges();
+                    $('.btnSubmit').prop('disabled', false);
+                    $('.gift_code_message').addClass('text-success');
+                    $('.gift_code_message').removeClass('text-danger');
+                    $('.gift_code_message').removeClass('hide-elem');
+                    $('.gift_code_message').html(data.message);
+
+                } else {
+                    $('.gift_code_message').addClass('text-danger');
+                    $('.gift_code_message').removeClass('text-success');
+                    $('.gift_code_message').removeClass('hide-elem');
+                    $('.gift_code_message').html(data.message);
+                }
+            }).fail(function(xhr, status, error) {
+                if (xhr.status == 419) {
+                    alert(xhr.responseJSON.message);
+                    window.location.reload();
+                }
+            });
+        });
+
+        function createStripeSession() {
+            var stripe = Stripe($('#spk').val());
+            $.post("{{ route('bookingCreateStripeSession') }}", function(response) {
+                if (response.success) {
+                    return stripe.redirectToCheckout({
+                        sessionId: response.session.id
+                    });
+                } else {
+                    return false;;
+                }
+            }).fail(function(xhr, status, error) {
+                if (xhr.status == 419) {
+                    alert(xhr.responseJSON.message);
+                    window.location.reload();
+                }
+            });
+        }
+
+        function validate() {
+            let msg = '';
+            let mail_pattern = /^([a-z0-9_\.-])+@[a-z0-9-]+\.([a-z]{2,6}\.)?[a-z]{2,6}$/i;
+
+            if (!$('#name').val().length) {
+                msg += 'Please enter your name<br/>';
+            }
+            if (!$('#mobile').val().length) {
+                msg += 'Please enter your mobile number<br/>';
+
+            }
+            if (!iti.isValidNumber()) {
+                msg += 'Your mobile number is invalid<br/>';
+            }
+            if (!$('#street_number').val().length) {
+                msg += 'Please enter your street number<br/>';
+            }
+            if (!$('#street_name').val().length) {
+                msg += 'Please enter your street name<br/>';
+            }
+            if (!$('#town').val().length) {
+                msg += 'Please enter your town<br/>';
+            }
+            if (!$('#postcode').val().length) {
+                msg += 'Please enter your postcode<br/>';
+            }
+            if (msg) {
+                $('#modal_common .modal-body').empty();
+                $('#modal_common .modal-body').html(msg);
+                $('#modal_common').modal('show');
+                return false;
+            }
+
+            $('.btnSubmit').prop('disabled', true);
+            $('.btnSubmit').html('Please wait..');
+            return true;
+        }
+
+        $('#frmCheckout').submit(function(e) {
+            e.preventDefault();
+            var number = iti.getNumber();
+            $('#mobile').val(number);
+            if (validate()) {
+                $('.loading').show();
+                var formSerialize = $(this).serialize();
+                $.post("{{ route('bookingCheckoutPost') }}", formSerialize, function(response) {
+                    if (response.result === 0) {
+                        alert(response.message);
+                        window.location.replace("{{ route('bookingPostcode') }}");
+                        return false;
+                    }
+                    if (response.payment.payment_type == 'stripe' && response.payment.status ==
+                        'pending') {
+                        createStripeSession();
+                    } else if (response.payment.payment_type == 'gift_voucher' && response
+                        .payment.status == 'pending') {
+                        createStripeSession();
+                    } else {
+                        window.location.replace("{{ route('bookingSuccess') }}");
+                    }
+                }).fail(function(xhr, status, error) {
+                    if (xhr.status == 419) {
+                        alert(xhr.responseJSON.message);
+                        window.location.reload();
+                    }
+                }).always(function() {
+
+                });
+            }
+        });
+
+
+
 
     });
 </script>

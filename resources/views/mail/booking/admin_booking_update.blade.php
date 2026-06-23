@@ -6,7 +6,7 @@
             <tr>
                 <td align="left">
                     <div>
-                        <img src="{{ asset('/assets/img/mail/email_confirmations_logo.jpg')}}" alt="The Massage Rooms" />
+                        <img src="{{ asset('/assets/img/mail/email_confirmations_logo.jpg')}}" alt="{{ config('app.name') }}" />
                     </div>
                 </td>
             </tr>

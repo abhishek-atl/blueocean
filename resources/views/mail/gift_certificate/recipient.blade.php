@@ -65,7 +65,7 @@
                 <table border="0" cellpadding="0" cellspacing="0" class="table-centered pt15">
                     <tr>
                         <td>
-                            <p>Simply redeem your gift card at <a href="{{ route('home') }}">TheMassageRooms.com</a> and enter your gift card code at checkout to redeem.</p>
+                            <p>Simply redeem your gift card at <a href="{{ route('home') }}">{{ config('app.name') }}</a> and enter your gift card code at checkout to redeem.</p>
                         </td>
                     </tr>
                 </table>

@@ -1,19 +1,13 @@
 <?php
 
-use App\Http\Controllers\Auth\ForgotPasswordController;
-use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\Auth\RegisterController;
-
 use App\Http\Controllers\GiftVoucherController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PaypalPaymentController;
-
 
 use Illuminate\Support\Facades\Route;
 
 
 include __DIR__ . '/auth.php';
-
 include __DIR__ . '/booking.php';
 
 // frontend
