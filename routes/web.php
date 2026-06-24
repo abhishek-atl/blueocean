@@ -13,11 +13,18 @@ include __DIR__ . '/booking.php';
 // frontend
 Route::get('/', [HomeController::class, 'home'])->name('home');
 
+// treatments
 Route::get('/treatments', [HomeController::class, 'treatments'])->name('treatments');
 Route::get('/treatment/{slug}', [HomeController::class, 'treatmentDetail'])->name('treatment_detail');
 
+// therapists
+Route::get('/therapists', [HomeController::class, 'therapists'])->name('therapists');
+Route::get('/therapist/{slug}', [HomeController::class, 'therapistDetail'])->name('therapist_detail');
+
+// Join Us
 Route::get('/join-us', [HomeController::class, 'joinUs'])->name('join_us');
 Route::post('/join-us', [HomeController::class, 'joinUsPost'])->name('join_us_post');
+
 
 Route::get('/legal/legal.html', [HomeController::class, 'terms_conditions'])->name('terms_conditions');
 

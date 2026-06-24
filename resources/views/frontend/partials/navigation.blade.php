@@ -15,6 +15,9 @@
                       <a class="nav-link hover-effect {{ request()->routeIs('treatments', 'treatment_detail') ? 'active' : '' }}" href="{{ route('treatments') }}">Treatments</a>
                   </li>
                   <li class="nav-item">
+                      <a class="nav-link hover-effect {{ request()->routeIs('therapists', 'therapist_detail') ? 'active' : '' }}" href="{{ route('therapists') }}">Therapists</a>
+                  </li>
+                  <li class="nav-item">
                       <a class="nav-link hover-effect {{ request()->routeIs('gifts') ? 'active' : '' }}" href="{{ route('gifts') }}">Gift Cards</a>
                   </li>
                   <li class="nav-item">

@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 
 use App\Models\Treatment;
 use App\Models\TreatmentCategory;
+use App\Models\User;
 use App\Services\MailService;
 use App\Services\UploadService;
 
@@ -30,8 +31,23 @@ class HomeController extends Controller
             ->orderBy('name')
             ->limit(6)
             ->get();
+
+        $therapists = User::query()
+            ->where('user_type', User::TYPE_THERAPIST)
+            ->where('active', true)
+            ->whereHas('therapist_profile', function ($query) {
+                $query->where('on_therapist_page', true);
+            })
+            ->with(['user_profile', 'therapist_profile'])
+            ->orderBy('first_name')
+            ->orderBy('last_name')
+            ->get();
+
+
+
         return view('frontend.modules.home.index', [
-            'treatments' => $treatments
+            'treatments' => $treatments,
+            'therapists' => $therapists
         ]);
     }
 
@@ -72,6 +88,43 @@ class HomeController extends Controller
 
         return view('frontend.modules.treatments.detail', [
             'treatment' => $treatment
+        ]);
+    }
+
+    public function therapists()
+    {
+        $therapists = User::query()
+            ->where('user_type', User::TYPE_THERAPIST)
+            ->where('active', true)
+            ->whereHas('therapist_profile', function ($query) {
+                $query->where('on_therapist_page', true);
+            })
+            ->with(['user_profile', 'therapist_profile'])
+            ->orderBy('first_name')
+            ->orderBy('last_name')
+            ->get();
+
+        return view('frontend.modules.therapists.index', [
+            'therapists' => $therapists,
+        ]);
+    }
+
+    public function therapistDetail(string $slug)
+    {
+        $therapist = User::query()
+            ->where('user_type', User::TYPE_THERAPIST)
+            ->where('active', true)
+            ->whereHas('therapist_profile', function ($query) use ($slug) {
+                $query->where('on_therapist_page', true)
+                    ->where('slug', $slug);
+            })
+            ->with(['user_profile', 'therapist_profile', 'treatments' => function ($query) {
+                $query->where('active', true)->orderBy('name');
+            }])
+            ->firstOrFail();
+
+        return view('frontend.modules.therapists.detail', [
+            'therapist' => $therapist,
         ]);
     }
 

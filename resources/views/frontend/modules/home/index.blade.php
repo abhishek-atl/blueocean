@@ -31,6 +31,10 @@ treatments with genuine care, from just £59
 </div>
 
 <div class="container">
+    @include('frontend.modules.home.therapists')
+</div>
+
+<div class="container">
     @include('frontend.modules.home.home-treatments')
 </div>
 
