@@ -21,7 +21,7 @@
             </a>
             @endif
 
-            <div class="custom-card-body">
+            <div class="custom-card-body text-center">
                 <h2>{{ $therapist->first_name }} {{ $therapist->last_name }}</h2>
 
                 @if($therapist->therapist_profile->about)
@@ -30,8 +30,8 @@
                 </div>
                 @endif
 
-                <div class="custom-card-actions">
-                    <div class="custom-card-details-link ms-auto">
+                <div class="custom-card-actions justify-content-center">
+                    <div class="custom-card-details-link">
                         <a href="{{ route('therapist_detail', $therapist->therapist_profile->slug) }}" class="btn btn-primary">View Therapist</a>
                     </div>
                 </div>

@@ -87,7 +87,16 @@ a.hover-effect:hover::before {
 
 .bg-lightblue {
     background-color: var(--bo-lightblue);
-    
+}
+
+table tr:hover>* {
+    background: var(--bo-lightblue) !important;
+    cursor: pointer;
+}
+
+table tr.selected>* {
+    background: var(--bo-lightblue) !important;
+    cursor: pointer;
 }
 
 .page-hero p {

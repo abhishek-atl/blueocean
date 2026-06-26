@@ -77,7 +77,7 @@
     <script src="{{ asset('admin/js/popper.min.js') }}"></script>
     <script src="{{ asset('assets/js/tempus-dominus.min.js') }}"></script>
     <script src="{{ asset('assets/js/moment.min.js') }}"></script>
-
+    <script src="{{ asset('assets/js/jquery.raty.js') }}"></script>
 
     <script src="{{ asset('assets/js/app.js') }}"></script>
 

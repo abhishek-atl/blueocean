@@ -33,7 +33,8 @@
                           <div class="p-3 text-center">
                               <p><a href="{{ route('auth.logout') }}" class="btn btn-primary">Logout</a></p>
                               <hr />
-                              <p><a href="">Profile</a></p>
+                              <p><a href="{{ route('account') }}">Profile</a></p>
+                              <p><a href="{{ route('bookings') }}">Bookings</a></p>
                           </div>
                           @endauth
                           @guest

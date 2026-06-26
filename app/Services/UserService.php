@@ -2,10 +2,11 @@
 
 namespace App\Services;
 
+use App\Models\Booking;
 use App\Models\User;
 use App\Models\UserVerify;
 use Illuminate\Support\Carbon;
-
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 class UserService
@@ -17,6 +18,14 @@ class UserService
         MailService $mailService,
     ) {
         $this->mailService = $mailService;
+    }
+
+    function logout($request)
+    {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        return true;
     }
 
     public function sendVerificationLink($id)
@@ -33,7 +42,27 @@ class UserService
         return true;
     }
 
-    public function rateBooking($bookingId, $score)
+    public function rateTherapist($bookingId, $score)
+    {
+        $result = false;
+        try {
+            $booking = Booking::whereId($bookingId)->with('therapist')->first();
+            $booking->update([
+                'therapist_rating' => $score
+            ]);
+            $avg = $booking->therapist->bookings()
+                ->whereNotNull('therapist_rating')
+                ->avg('therapist_rating');
+            $booking->therapist->update([
+                'avg_rating' => number_format($avg, 2)
+            ]);
+            $result = true;
+        } catch (Exception $e) {
+        }
+        return $result;
+    }
+
+    public function rateCustomer($bookingId, $score)
     {
         $result = false;
         try {

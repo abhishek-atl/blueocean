@@ -1,9 +1,10 @@
 <form method="post" action="{{ route('bookingPostcodeSubmit') }}" id="postcode_form" class="postcode-form">
     @csrf
     <div class="row g-2 postcode-search">
-        <div class="col-12 col-sm">
+        <div class="col-12 col-sm postcode-input-wrap">
             <label for="input_postcode" class="visually-hidden">Enter your postcode</label>
             <input type="text" name="input_postcode" id="input_postcode" class="form-control form-control-lg" placeholder="Enter your postcode">
+            <div id="postcode_suggestions" class="postcode-suggestions list-group d-none"></div>
         </div>
         <div class="col-12 col-sm-auto">
             <button class="btn btn-light btn-lg postcode-button w-100" disabled="disabled">Book Now</button>
@@ -18,6 +19,5 @@
 </form>
 
 @push('pageScripts')
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDWEvQU0xphr90Ijr21eYLHZ0-WWiLzKt8&libraries=places&callback=initAutocomplete" async defer></script>
-<script src="{{ asset('assets/js/google_location.js') }}?v=1.9"></script>
+<script src="{{ asset('assets/js/google_location.js') }}"></script>
 @endpush

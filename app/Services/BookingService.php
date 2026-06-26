@@ -2,14 +2,23 @@
 
 namespace App\Services;
 
+use App\Models\Booking;
 use App\Models\Postcode;
 use App\Models\TherapistHoliday;
 use App\Models\User;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
-class BookingService
+class BookingService extends BaseService
 {
+
+    protected $booking;
+
+    public function __construct(Booking $booking)
+    {
+        parent::__construct($booking);
+        $this->booking = $booking;
+    }
 
     /* 
     * Check if postcode is covered for service
@@ -110,7 +119,7 @@ class BookingService
         return $timeSlots;
     }
 
-     /**
+    /**
      * Get available therapists for a given date and time
      * Considers therapist schedules, holidays, and existing bookings
      *

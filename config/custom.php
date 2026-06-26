@@ -2,6 +2,8 @@
 
 return [
 
+    'google_maps_api_key' => env('GOOGLE_MAPS_API_KEY'),
+    
     'stripe_public_key' => env('STRIPE_PUBLIC_KEY'),
     'stripe_secret_key' => env('STRIPE_SECRET_KEY'),
 

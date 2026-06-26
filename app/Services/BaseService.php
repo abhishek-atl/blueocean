@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Repositories;
+namespace App\Services;
 
 use Exception;
 use Illuminate\Support\Arr;
 
-abstract class BaseRepository
+abstract class BaseService
 {
     protected $entity;
 
@@ -168,7 +168,7 @@ abstract class BaseRepository
                 $query->orWhereRelation($value[0], $value[1], $value[2], $value[3]);
             }
         }
-        
+
         if (isset($params['return'])) {
             if ($params['return'] == 'qb') {
                 return $query;

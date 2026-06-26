@@ -6,10 +6,8 @@ namespace App\Services;
 use App\Models\Payment;
 use App\Models\PaymentReceived;
 use App\Models\TherapistsMandate;
-use App\Repositories\BaseRepository;
-use PhpOffice\PhpSpreadsheet\Calculation\Statistical\Distributions\F;
 
-class PaymentService extends BaseRepository
+class PaymentService extends BaseService
 {
     protected $payment;
     protected $therapistsMandate;

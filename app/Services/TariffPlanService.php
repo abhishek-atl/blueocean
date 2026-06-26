@@ -4,9 +4,8 @@
 namespace App\Services;
 
 use App\Models\TariffPlan;
-use App\Repositories\BaseRepository;
 
-class TariffPlanService extends BaseRepository
+class TariffPlanService extends BaseService
 {
 
     protected $tariffPlan;

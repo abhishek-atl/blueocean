@@ -20,10 +20,11 @@ Route::get('/booking/checkout', [BookingController::class, 'bookingCheckout'])->
 Route::post('/booking/checkout', [BookingController::class, 'bookingCheckoutPost'])->name('bookingCheckoutPost');
 
 Route::get('/booking/success', [BookingController::class, 'bookingSuccess'])->name('bookingSuccess');
-
 Route::post('/booking-create-payment-session', [BookingController::class, 'createStripeSession'])->name('bookingCreateStripeSession');
 Route::get('/booking-return-from-strip', [BookingController::class, 'returnFromStripe'])->name('bookingReturnFromStripe');
 
+
+Route::post('/booking/{id}', [BookingController::class, 'booking'])->name('booking');
 Route::post('/booking-charges', [BookingController::class, 'charges'])->name('bookingCharges');
 Route::post('/update-payment-method', [BookingController::class, 'updatePaymentMethod'])->name('updatePaymentMethod');
 Route::post('/check-promo-code', [BookingController::class, 'checkPromocode'])->name('checkPromocode');

@@ -4,9 +4,8 @@
 namespace App\Services;
 
 use App\Models\GiftCertificate;
-use App\Repositories\BaseRepository;
 
-class GiftCertificateService extends BaseRepository
+class GiftCertificateService extends BaseService
 {
     protected $giftCertificate;
 

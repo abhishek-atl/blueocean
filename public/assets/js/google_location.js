@@ -1,89 +1,232 @@
-var autocomplete;
+(function ($) {
+    'use strict';
 
-function initAutocomplete() {
-    autocomplete = new google.maps.places.Autocomplete(
-        (document.getElementById('input_postcode')), {
-        componentRestrictions: {
-            country: 'UK'
-        },
-        fields: ['address_components']
-    });
-    autocomplete.addListener('place_changed', fillInAddress);
-}
+    var $input = $('#input_postcode');
+    var $suggestions = $('#postcode_suggestions');
+    var sessionToken = createSessionToken();
+    var activeRequest = null;
+    var selectedIndex = -1;
 
-var componentForm = {
-    administrative_area_level_1: 'short_name',
-    postal_town: 'long_name',
-    country: 'long_name',
-    postal_code: 'short_name',
-};
-
-function fillInAddress() {
-
-    var place = autocomplete.getPlace();
-    //console.log(place);
-    var val = {};
-    for (var i = 0; i < place.address_components.length; i++) {
-        var addressType = place.address_components[i].types[0];
-        if (componentForm[addressType]) {
-            val[addressType] = place.address_components[i][componentForm[addressType]];
-        }
+    if (!$input.length || !$suggestions.length) {
+        return;
     }
-    if (val['postal_code']) {
-        $('.loading').show();
-        $('#postcode_error').removeClass("show-elem").addClass("hide-elem");
 
-        $.post("/check-postal-code", {
-            postcode: val['postal_code']
-        }, function (response) {
-            if (response.data.result == true) {
-                $('#postcode').val(val['postal_code']);
-                $('#postcode_id').val(response.data.postcode_id);
-                $('#travel_sup').val(response.data.supplement);
-                if (val['postal_town'] != undefined) {
-                    $('#town').val(val['postal_town']);
-                }
-                $('.postcode-button').attr('disabled', false);
+    function createSessionToken() {
+        if (window.crypto && window.crypto.randomUUID) {
+            return window.crypto.randomUUID();
+        }
 
-            } else {
-                $('#postcode_error').html(response.data.message);
-                $('#postcode_error').removeClass("hide-elem").addClass("show-elem");
+        return Math.random().toString(36).slice(2) + Date.now().toString(36);
+    }
 
-                $('#postcode').val('');
-                $('#postcode_id').val('');
-                $('#travel_sup').val('');
-                $('#town').val('');
-
-                $('.postcode-button').attr('disabled', true);
-            }
-        }).fail(function (xhr, status, error) {
-            if (xhr.status == 419) {
-                alert(xhr.responseJSON.message);
-                window.location.reload();
-            }
-        }).always(function () {
-            $('.loading').hide();
-        });
-    } else {
-        $('#postcode_error').text('Please enter your FULL postcode');
-        $('#postcode_error').removeClass("hide-elem").addClass("show-elem");
-
+    function resetBookingFields() {
         $('#postcode').val('');
         $('#postcode_id').val('');
         $('#travel_sup').val('');
         $('#town').val('');
-
         $('.postcode-button').attr('disabled', true);
     }
-}
 
-$("#input_postcode_clear").click(function () {
-    $("#input_postcode").val('');
-    $('#postcode_error').empty();
-    $('#postcode_error').removeClass("show-elem").addClass("hide-elem");
-    $('#postcode').val('');
-    $('#postcode_id').val('');
-    $('#travel_sup').val('');
-    $('#town').val('');
-    $('.postcode-button').attr('disabled', true);
-});
+    function showError(message) {
+        $('#postcode_error').text(message).removeClass('hide-elem').addClass('show-elem');
+    }
+
+    function clearError() {
+        $('#postcode_error').empty().removeClass('show-elem').addClass('hide-elem');
+    }
+
+    function hideSuggestions() {
+        $suggestions.empty().addClass('d-none');
+        selectedIndex = -1;
+    }
+
+    function renderSuggestions(suggestions) {
+        $suggestions.empty();
+
+        suggestions.forEach(function (suggestion) {
+            var prediction = suggestion.placePrediction;
+            if (!prediction || !prediction.placeId) {
+                return;
+            }
+
+            $('<button>', {
+                type: 'button',
+                class: 'postcode-suggestion list-group-item list-group-item-action',
+                text: prediction.text && prediction.text.text ? prediction.text.text : '',
+                'data-place-id': prediction.placeId
+            }).appendTo($suggestions);
+        });
+
+        if ($suggestions.children().length) {
+            $suggestions.removeClass('d-none');
+        } else {
+            hideSuggestions();
+        }
+    }
+
+    function findAddressComponent(components, type) {
+        return (components || []).find(function (component) {
+            return component.types && component.types.indexOf(type) !== -1;
+        });
+    }
+
+    function componentValue(component) {
+        if (!component) {
+            return '';
+        }
+
+        return component.shortText || component.longText || component.short_name || component.long_name || '';
+    }
+
+    function checkPostcode(postcode, town) {
+        $('.loading').show();
+        clearError();
+
+        $.post('/check-postal-code', {
+            postcode: postcode
+        }, function (response) {
+            if (response.data.result === true) {
+                $('#postcode').val(postcode);
+                $('#postcode_id').val(response.data.postcode_id);
+                $('#travel_sup').val(response.data.supplement);
+                $('#town').val(town || '');
+                $('.postcode-button').attr('disabled', false);
+            } else {
+                showError(response.data.message);
+                resetBookingFields();
+            }
+        }).fail(function (xhr) {
+            if (xhr.status === 419 && xhr.responseJSON) {
+                alert(xhr.responseJSON.message);
+                window.location.reload();
+                return;
+            }
+
+            showError('Unable to check this postcode. Please try again.');
+            resetBookingFields();
+        }).always(function () {
+            $('.loading').hide();
+        });
+    }
+
+    function loadSuggestions() {
+        var postcode = $.trim($input.val());
+
+        clearError();
+        resetBookingFields();
+
+        if (postcode.length < 2) {
+            hideSuggestions();
+            return;
+        }
+
+        if (activeRequest) {
+            activeRequest.abort();
+        }
+
+        activeRequest = $.post('/google-places', {
+            postcode: postcode,
+            sessionToken: sessionToken
+        }, function (response) {
+            renderSuggestions(response.suggestions || []);
+        }).fail(function (xhr) {
+            if (xhr.statusText !== 'abort') {
+                hideSuggestions();
+            }
+        });
+    }
+
+    function selectSuggestion($suggestion) {
+        var placeId = $suggestion.data('place-id');
+
+        if (!placeId) {
+            return;
+        }
+
+        $input.val($suggestion.text());
+        hideSuggestions();
+        $('.loading').show();
+
+        $.get('/google-places/details', {
+            placeId: placeId,
+            sessionToken: sessionToken
+        }, function (place) {
+            var postcode = componentValue(findAddressComponent(place.addressComponents, 'postal_code'));
+            var town = componentValue(findAddressComponent(place.addressComponents, 'postal_town'));
+
+            if (!town) {
+                town = componentValue(findAddressComponent(place.addressComponents, 'locality'));
+            }
+
+            if (!postcode) {
+                showError('Please enter your FULL postcode');
+                resetBookingFields();
+                return;
+            }
+
+            $input.val(postcode);
+            checkPostcode(postcode, town);
+            sessionToken = createSessionToken();
+        }).fail(function () {
+            showError('Unable to load postcode details. Please try again.');
+            resetBookingFields();
+        }).always(function () {
+            $('.loading').hide();
+        });
+    }
+
+    var loadSuggestionsDebounced = (function () {
+        var timeout = null;
+
+        return function () {
+            clearTimeout(timeout);
+            timeout = setTimeout(loadSuggestions, 250);
+        };
+    })();
+
+    $input.on('input', loadSuggestionsDebounced);
+
+    $input.on('keydown', function (event) {
+        var $items = $suggestions.children();
+
+        if (!$items.length || $suggestions.hasClass('d-none')) {
+            return;
+        }
+
+        if (event.key === 'ArrowDown') {
+            event.preventDefault();
+            selectedIndex = Math.min(selectedIndex + 1, $items.length - 1);
+        } else if (event.key === 'ArrowUp') {
+            event.preventDefault();
+            selectedIndex = Math.max(selectedIndex - 1, 0);
+        } else if (event.key === 'Enter' && selectedIndex >= 0) {
+            event.preventDefault();
+            selectSuggestion($items.eq(selectedIndex));
+            return;
+        } else if (event.key === 'Escape') {
+            hideSuggestions();
+            return;
+        } else {
+            return;
+        }
+
+        $items.removeClass('active').eq(selectedIndex).addClass('active');
+    });
+
+    $suggestions.on('click', '.postcode-suggestion', function () {
+        selectSuggestion($(this));
+    });
+
+    $(document).on('click', function (event) {
+        if (!$(event.target).closest('#input_postcode, #postcode_suggestions').length) {
+            hideSuggestions();
+        }
+    });
+
+    $('#input_postcode_clear').on('click', function () {
+        $input.val('');
+        clearError();
+        resetBookingFields();
+        hideSuggestions();
+    });
+})(jQuery);

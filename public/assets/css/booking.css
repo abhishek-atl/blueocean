@@ -21,6 +21,10 @@
     align-items: stretch;
 }
 
+.booking-section .postcode-input-wrap {
+    position: relative;
+}
+
 .booking-section .form-control-lg {
     min-height: 58px;
     padding: 14px 18px;
@@ -68,6 +72,25 @@
     border: 0;
     border-radius: 8px;
     font-weight: 600;
+}
+
+.booking-section .postcode-suggestions {
+    position: absolute;
+    top: calc(100% + 6px);
+    right: 0;
+    left: 0;
+    z-index: 30;
+    max-height: 260px;
+    overflow-y: auto;
+    border-radius: 8px;
+    box-shadow: 0 18px 36px rgba(33, 49, 50, 0.16);
+}
+
+.booking-section .postcode-suggestion {
+    padding: 13px 16px;
+    color: var(--text-color);
+    font-weight: 600;
+    line-height: 1.35;
 }
 
 .booking-how-it-works {

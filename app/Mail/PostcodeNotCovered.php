@@ -40,7 +40,7 @@ class PostcodeNotCovered extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'mail.postcode_not_covered',
+            view: 'mail.booking.postcode_not_covered',
             with: [
                 'postcode' => $this->postcode,
             ],

@@ -1,14 +1,50 @@
 <?php
 
+use App\Http\Controllers\AccountController;
 use App\Http\Controllers\GiftVoucherController;
+use App\Http\Controllers\GooglePlacesController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PaypalPaymentController;
-
+use App\Http\Middleware\AdminMiddleware;
 use Illuminate\Support\Facades\Route;
 
 
 include __DIR__ . '/auth.php';
 include __DIR__ . '/booking.php';
+
+Route::group([
+    'middleware' => [AdminMiddleware::class]
+], function () {
+
+    // client
+    Route::get('/my-account', [AccountController::class, 'account'])->name('account');
+    Route::post('/my-account', [AccountController::class, 'accountPost'])->name('accountPost');
+
+    Route::post('/my-account-password', [AccountController::class, 'accountPasswordPost'])->name('accountPasswordPost');
+    Route::post('/my-account-download', [AccountController::class, 'accountDataDownload'])->name('accountDataDownload');
+
+    // client, therapist
+    Route::get('/my-bookings', [AccountController::class, 'bookings'])->name('bookings');
+    Route::post('/rate', [AccountController::class, 'rateBooking'])->name('rate_booking');
+
+    // therapist
+    Route::get('/mandates', [AccountController::class, 'mandates'])->name('mandates');
+    Route::post('/mandate-setup', [AccountController::class, 'createMandateSetupStripeSession'])->name('mandate_setup');
+    Route::get('/mandate-setup-success', [AccountController::class, 'mandateSetupSuccess'])->name('mandate_setup_success');
+    Route::post('/mandate-cancel', [AccountController::class, 'mandateCancel'])->name('mandate_cancel');
+
+    Route::get('/profile', [AccountController::class, 'profile'])->name('profile');
+    Route::get('/postcodes', [AccountController::class, 'postcodes'])->name('postcodes');
+    Route::get('/schedules', [AccountController::class, 'schedules'])->name('schedules');
+    Route::post('/schedules', [AccountController::class, 'schedulesPost'])->name('schedulesPost');
+    Route::get('/calendar', [AccountController::class, 'calendar'])->name('calendar');
+    Route::post('/calendar', [AccountController::class, 'calendarPost'])->name('calendarPost');
+    Route::get('/holidays', [AccountController::class, 'holidays'])->name('holidays');
+    Route::post('/late', [AccountController::class, 'late'])->name('late');
+    Route::post('/cancel', [AccountController::class, 'cancel'])->name('cancel');
+    Route::post('/extend', [AccountController::class, 'extend'])->name('extend');
+    Route::post('/booking-update', [AccountController::class, 'bookingUpdate'])->name('booking_update');
+});
 
 // frontend
 Route::get('/', [HomeController::class, 'home'])->name('home');
@@ -45,3 +81,6 @@ Route::get('buy-gift-card/print/gift-card/{id}', [GiftVoucherController::class, 
 
 Route::post('paypal/order/create', [PaypalPaymentController::class, 'create'])->name('paypal.create');
 Route::post('paypal/order/capture', [PaypalPaymentController::class, 'capture'])->name('paypal.capture');
+
+Route::post('google-places', [GooglePlacesController::class, 'autoComplete'])->name('googleAutoComplete');
+Route::get('google-places/details', [GooglePlacesController::class, 'placeDetails'])->name('googlePlaceDetails');

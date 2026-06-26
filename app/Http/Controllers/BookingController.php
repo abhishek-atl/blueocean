@@ -406,6 +406,14 @@ class BookingController extends Controller
         }
     }
 
+    public function booking(Request $request, $id)
+    {
+        $booking = $this->bookingService->getById($id);
+        $booking->load(['therapist', 'treatment', 'payment']);
+        return $booking;
+    }
+
+
     public function createStripeSession(Request $request)
     {
         \Stripe\Stripe::setApiKey(config('custom.stripe_secret_key'));
