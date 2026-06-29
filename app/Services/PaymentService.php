@@ -99,7 +99,6 @@ class PaymentService extends BaseService
         $response = $stripe->customers->create($object);
         $user->mandate()->create([
             'user_id' => $user->id,
-            'therapist_id' => $user->therapist->id,
             'stripe_customer_id' => $response->id,
             'stripe_status' => 'pending'
         ]);

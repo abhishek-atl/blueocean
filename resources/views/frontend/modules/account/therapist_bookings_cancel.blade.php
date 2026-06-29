@@ -28,14 +28,14 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 <button type="button" class="btn btn-primary btnSubmitCancel">Yes</button>
                 <input type="hidden" name="cancel_booking_id" value="" />
             </div>
         </div>
     </div>
 </div>
-@push('footerJs')
+@push('pageScripts')
 <script>
     // cancellation functions
     $('.btn_cancel').click(function (e) {

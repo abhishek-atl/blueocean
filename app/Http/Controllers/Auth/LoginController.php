@@ -80,7 +80,7 @@ class LoginController extends Controller
         if (session('booking')) {
             return redirect(route('bookingCheckout'));
         }
-        if ($user->hasRole(['Therapist'])) {
+        if ($user->hasRole(['Therapist']) || $user->hasRole(['Customer']) ) {
             return redirect(route('bookings'));
         }
 

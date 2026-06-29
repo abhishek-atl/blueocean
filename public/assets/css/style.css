@@ -89,12 +89,12 @@ a.hover-effect:hover::before {
     background-color: var(--bo-lightblue);
 }
 
-table tr:hover>* {
+table.booking_detail tr:hover>* {
     background: var(--bo-lightblue) !important;
     cursor: pointer;
 }
 
-table tr.selected>* {
+table.booking_detail tr.selected>* {
     background: var(--bo-lightblue) !important;
     cursor: pointer;
 }

@@ -6,33 +6,45 @@
 
 @section('content')
 
-<div class="container pt50 mb40">
-
-    <div class="row mb-3">
-        <div class="col-3">
-            <h1 class="text-primary mb-4">Holidays</h1>
-        </div>
-        <div class="col-9 text-right">
-            <a class="btn btn-secondary" href="{{ route('holidays') }}">Booked</a>
-            <a class="btn btn-primary" href="{{ route('calendar') }}">Book New</a>
+<section class="page-hero">
+    <div class="container">
+        <div class="row justify-content-center text-center">
+            <div class="col-lg-8">
+                <h1>Holidays</h1>
+            </div>
         </div>
     </div>
+</section>
 
-    <div class="unselectable" id='calendar'></div>
+<section class="page-section">
 
-    <div class="row mt-4">
-        <div class="col-md-12">
-            <p><b>Instructions</b></p>
-            <p>In the calendar above, any days that have a light orange bar across the bottom, are those that you already have some time booked off.</p>
-            <p><b>Booking one whole day off</b>: Press and hold the EMPTY space on that day until it turns blue. Then let go and confirm. You can only book full days off for tomorrow onwards.</p>
-            <p><b>Booking several days off</b>: Press and hold the EMPTY space on the first day until it turns blue. Then still pressing, move your finger across until all the days you want are blue. Then let go and confirm.</p>
-            <p><b>Booking just a few hours off</b>: Click the date at the top of the day. For example, on 6 June, you can click the '6'. Then, in the Day View, scroll to the time you want to start time off. Press and hold until a blue box appears and then move your finger down until the whole time you want off is selected. Let go and confirm.</p>
-            <p>To change from Day View back to Month View, click the name of the Month above the calendar (eg Jun 2023).</p>
+    <div class="container">
+
+        <div class="row mb-3">
+            <div class="col-9 text-right">
+                <a class="btn btn-secondary" href="{{ route('holidays') }}">Booked</a>
+                <a class="btn btn-primary" href="{{ route('calendar') }}">Book New</a>
+            </div>
         </div>
+
+        <div class="unselectable" id='calendar'></div>
+
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <p><b>Instructions</b></p>
+                <p>In the calendar above, any days that have a light orange bar across the bottom, are those that you already have some time booked off.</p>
+                <p><b>Booking one whole day off</b>: Press and hold the EMPTY space on that day until it turns blue. Then let go and confirm. You can only book full days off for tomorrow onwards.</p>
+                <p><b>Booking several days off</b>: Press and hold the EMPTY space on the first day until it turns blue. Then still pressing, move your finger across until all the days you want are blue. Then let go and confirm.</p>
+                <p><b>Booking just a few hours off</b>: Click the date at the top of the day. For example, on 6 June, you can click the '6'. Then, in the Day View, scroll to the time you want to start time off. Press and hold until a blue box appears and then move your finger down until the whole time you want off is selected. Let go and confirm.</p>
+                <p>To change from Day View back to Month View, click the name of the Month above the calendar (eg Jun 2023).</p>
+            </div>
+        </div>
+
+
     </div>
 
+</section>
 
-</div>
 @endsection
 
 @push('headCss')
@@ -71,14 +83,13 @@
 <script src="{{ asset('assets/js/fullcalendar.global.min.js') }}"></script>
 @endpush
 
-@push('footerJs')
+@push('pageScripts')
 
 <script>
-
-
+    
     let jsonEvents = {!! $events !!};
 
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function() {
         var calendarEl = document.getElementById('calendar');
 
         var calendar = new FullCalendar.Calendar(calendarEl, {
@@ -93,7 +104,10 @@
             footerToolbar: {
                 end: 'dayGridMonth timeGridDay'
             },
-            titleFormat: { year: 'numeric', month: 'short' },
+            titleFormat: {
+                year: 'numeric',
+                month: 'short'
+            },
             longPressDelay: 500,
             showNonCurrentDates: false,
             navLinks: true,
@@ -114,7 +128,7 @@
                 }
             },
             selectable: true,
-            select: function (arg) {
+            select: function(arg) {
                 let start_date = moment(arg.start).format(moment_date_time_format);
                 if (moment(arg.start) < moment()) {
                     calendar.unselect();
@@ -122,7 +136,10 @@
                 }
                 let end_date;
                 if (arg.allDay)
-                    end_date = moment(arg.end).subtract(1, "days").set({ hour: 23, minute: 59 }).format(moment_date_time_format);
+                    end_date = moment(arg.end).subtract(1, "days").set({
+                        hour: 23,
+                        minute: 59
+                    }).format(moment_date_time_format);
                 else
                     end_date = moment(arg.end).format(moment_date_time_format);
                 var conf = confirm('Are you sure you want to add a holiday from ' + start_date + ' to ' + end_date + '?');
@@ -132,9 +149,9 @@
                         'start_date': start_date,
                         'end_date': end_date,
                         'type': 'add'
-                    }, function (response) {
+                    }, function(response) {
 
-                    }).always(function () {
+                    }).always(function() {
                         $('.loading').hide();
                         toastr.success('Holiday added successfully', 'Event');
                         setTimeout(() => {
@@ -145,8 +162,7 @@
                 }
                 calendar.unselect()
             },
-            eventClick: function (arg) {
-            },
+            eventClick: function(arg) {},
             validRange: {
                 start: new Date()
             },
@@ -155,12 +171,11 @@
 
         calendar.render();
 
-        $('.fc-toolbar-title').click(function () {
+        $('.fc-toolbar-title').click(function() {
             calendar.changeView('dayGridMonth');
         })
 
 
     });
-
 </script>
 @endpush

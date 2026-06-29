@@ -40,11 +40,14 @@ Route::group([
     Route::get('/calendar', [AccountController::class, 'calendar'])->name('calendar');
     Route::post('/calendar', [AccountController::class, 'calendarPost'])->name('calendarPost');
     Route::get('/holidays', [AccountController::class, 'holidays'])->name('holidays');
+
     Route::post('/late', [AccountController::class, 'late'])->name('late');
     Route::post('/cancel', [AccountController::class, 'cancel'])->name('cancel');
     Route::post('/extend', [AccountController::class, 'extend'])->name('extend');
     Route::post('/booking-update', [AccountController::class, 'bookingUpdate'])->name('booking_update');
 });
+
+Route::post('/stripe-webhook', [AccountController::class, 'stripeWebhook'])->name('stripe_webhook');
 
 // frontend
 Route::get('/', [HomeController::class, 'home'])->name('home');

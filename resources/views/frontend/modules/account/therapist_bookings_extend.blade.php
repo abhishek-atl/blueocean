@@ -21,14 +21,14 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
                 <button type="button" class="btn btn-primary btnSubmitExtend">Yes</button>
                 <input type="hidden" name="extend_booking_id" value="" />
             </div>
         </div>
     </div>
 </div>
-@push('footerJs')
+@push('pageScripts')
 <script>
     // Extend functions
     $('.btn_extend').click(function (e) {

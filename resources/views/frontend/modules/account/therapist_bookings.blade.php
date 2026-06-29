@@ -4,180 +4,189 @@
 
 @section('title', 'Therapist Dashboard | My Bookings')
 
-@push('headCss')
-<style>
-    tr.alink.selected {
-        cursor: pointer;
-        font-weight: bold;
-    }
-
-    .alink:hover {
-        cursor: pointer;
-    }
-</style>
-@endpush
-
 @section('content')
 
-<div class="container pt50 mb40">
-    <div class="pb-2">
-        <h1 class="text-primary mb-4">Bookings</h1>
+
+<section class="page-hero">
+    <div class="container">
+        <div class="row justify-content-center text-center">
+            <div class="col-lg-8">
+                <h1>Bookings</h1>
+            </div>
+        </div>
     </div>
-    <div class="row">
+</section>
 
-        @if($bookings->count() > 0)
-        <div class="col-md-7">
+<section class="page-section">
 
-            <form method="get" class="form-inline mb-3">
+    <div class="container">
 
-                <div>
-                    <input type="text" class="form-control" id="search_bookings" name="search_bookings" value="{{ Request::get('search_bookings')}}">
-                </div>
 
-                @if(Request::get('search_bookings'))
-                <a href="{{ route('bookings') }}" class="btn btn-primary">Clear</a>
-                @else
-                <button type="submit" class="btn btn-primary">Search</button>
-                @endif
-            </form>
+        <div class="row g-3">
 
-            <div class="table-responsive" v-if="items && items.length > 0">
-                <table class="table table-sm">
-                    <thead>
-                        <tr>
-                            <th>Date</th>
-                            <th>Time</th>
-                            <th>Client</th>
-                            <th>Mobile</th>
-                            <th>Postcode</th>
-                        </tr>
-                        @foreach($bookings as $booking)
-                        @php
-                        $bgcolor = '';
-                        if($booking->training_day > now())
-                        $bgcolor = 'lightyellow';
-                        elseif($booking->training_day < now() && $booking->training_finish > now())
-                            $bgcolor = 'lightgreen';
-                            elseif($booking->training_finish < now()) $bgcolor='lightgray' ; if($booking->status == "new" && $booking->cancellation_requested_at) {
-                                $bgcolor='#fa9884';
+            @if($bookings->count() > 0)
+            <div class="col-md-7">
+
+                <form method="get" class="form-inline mb-3">
+                    <div class="row">
+                        <div class="col-8">
+                            <input type="text" class="form-control" id="search_bookings" name="search_bookings" value="{{ Request::get('search_bookings')}}">
+                        </div>
+                        <div class="col-4">
+                            @if(Request::get('search_bookings'))
+                                <a href="{{ route('bookings') }}" class="btn btn-primary">Clear</a>
+                            @else
+                                <button type="submit" class="btn btn-primary">Search</button>
+                            @endif
+                        </div>
+                    </div>
+                </form>
+
+                <div class="table-responsive">
+                    <table class="table booking_detail">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Time</th>
+                                <th>Client</th>
+                                <th>Mobile</th>
+                                <th>Postcode</th>
+                            </tr>
+                            @foreach($bookings as $booking)
+                                @php
+                                $class = '';
+                                if($booking->appointment_start > now())
+                                $class = 'table-success';
+                                elseif($booking->training_day < now() && $booking->training_finish > now())
+                                $class = 'table-warning';
+                                elseif($booking->training_finish < now())
+                                $class='table-danger' ;
+                                if($booking->status == "new" && $booking->cancellation_requested_at) {
+                                    $class='table-danger' ;
                                 }
                                 if($booking->is_extension_paid === 0) {
-                                $bgcolor='#fa9884';
+                                    $class='table-danger' ;
                                 }
                                 @endphp
-                                <tr class="alink" style="background-color: {{ $bgcolor }};" data-id="{{ $booking->id}}" data-url="{{ route('booking', ['id' => $booking->id]) }}">
+                                <tr class="alink {{ $class }}" data-id="{{ $booking->id}}" data-url="{{ route('booking', ['id' => $booking->id]) }}">
                                     <td>{{ $format->date($booking->training_day, 'd/m/y') }}</td>
                                     <td>{{ $format->time($booking->training_day) }}</td>
                                     <td>{{ $booking->name }}</td>
                                     <td>{{ $booking->phone }}</td>
                                     <td>{{ $booking->postcode }}</td>
                                 </tr>
-                                @endforeach
-                    </thead>
+                            @endforeach
+                        </thead>
+                    </table>
+                </div>
+                <div class="col-md-12 d-flex justify-content-center">
+                    {{ $bookings->onEachSide(0)->links() }}
+                </div>
+                @if(Request::get('type') === 'cancelled')
+                <div class="text-center text-lg-left my-3">
+                    <a href="{{ route('bookings',['search_bookings' => Request::get('search_bookings')]) }}" class="btn btn-primary">See Successful Bookings</a>
+                </div>
+                @endif
+                @if(Request::get('type') != 'cancelled' && $cancelledBookings->count() > 0)
+                <div class="text-center text-lg-left my-3">
+                    <a href="{{ route('bookings', ['type' => 'cancelled', 'search_bookings' => Request::get('search_bookings')]) }}" class="btn btn-primary">See Cancelled Bookings</a>
+                </div>
+                @endif
+            </div>
+            
+            <div class="col-md-5">
+                <h2>Booking Details</h2>
+                <table class="table">
+                    <tr>
+                        <td width="40%">Date</td>
+                        <td id="date"></td>
+                    </tr>
+                    <tr>
+                        <td>Time</td>
+                        <td id="time"></td>
+                    </tr>
+                    <tr>
+                        <td>Session</td>
+                        <td id="duration"></td>
+                    </tr>
+                    <tr>
+                        <td>Price</td>
+                        <td id="total_price"></td>
+                    </tr>
+                    <tr>
+                        <td>Name</td>
+                        <td id="name"></td>
+                    </tr>
+                    <tr>
+                        <td>Mobile</td>
+                        <td id="mobile"></td>
+                    </tr>
+                    <tr>
+                        <td>Address</td>
+                        <td id="address"></td>
+                    </tr>
+                    <tr>
+                        <td>Postcode</td>
+                        <td id="postcode"></td>
+                    </tr>
+                    <tr>
+                        <td>Style</td>
+                        <td id="style"></td>
+                    </tr>
+                    <tr>
+                        <td>Focus</td>
+                        <td id="focus_area"></td>
+                    </tr>
+                    <tr>
+                        <td>Comments </td>
+                        <td id="comments"></td>
+                    </tr>
                 </table>
-            </div>
-            <div class="col-md-12 d-flex justify-content-center">
-                {{ $bookings->onEachSide(0)->links() }}
-            </div>
-            @if(Request::get('type') === 'cancelled')
-            <div class="text-center text-lg-left my-3">
-                <a href="{{ route('bookings',['search_bookings' => Request::get('search_bookings')]) }}" class="btn btn-primary">See Successful Bookings</a>
-            </div>
-            @endif
-            @if(Request::get('type') != 'cancelled' && $cancelledBookings->count() > 0)
-            <div class="text-center text-lg-left my-3">
-                <a href="{{ route('bookings', ['type' => 'cancelled', 'search_bookings' => Request::get('search_bookings')]) }}" class="btn btn-primary">See Cancelled Bookings</a>
-            </div>
-            @endif
-        </div>
-        <div class="col-md-5">
-            <h2>Booking Details</h2>
-            <table class="table">
-                <tr>
-                    <td width="40%">Date</td>
-                    <td id="date"></td>
-                </tr>
-                <tr>
-                    <td>Time</td>
-                    <td id="time"></td>
-                </tr>
-                <tr>
-                    <td>Session</td>
-                    <td id="duration"></td>
-                </tr>
-                <tr>
-                    <td>Price</td>
-                    <td id="total_price"></td>
-                </tr>
-                <tr>
-                    <td>Name</td>
-                    <td id="name"></td>
-                </tr>
-                <tr>
-                    <td>Mobile</td>
-                    <td id="mobile"></td>
-                </tr>
-                <tr>
-                    <td>Address</td>
-                    <td id="address"></td>
-                </tr>
-                <tr>
-                    <td>Postcode</td>
-                    <td id="postcode"></td>
-                </tr>
-                <tr>
-                    <td>Style</td>
-                    <td id="style"></td>
-                </tr>
-                <tr>
-                    <td>Focus</td>
-                    <td id="focus_area"></td>
-                </tr>
-                <tr>
-                    <td>Comments </td>
-                    <td id="comments"></td>
-                </tr>
 
                 @if(Request::get('type') !== 'cancelled')
-                <tr>
-                    <td>Rated</td>
-                    <td>
-                        <div class="rate_client hide-elem">
-                            <div id="rating" class="rating"></div>
-                            <input type="text" class="form-control" name="evaluation" id="evaluation" style="opacity: 0; height:0px !important;" />
-                            <span class="rate_client_msg"></span>
-                            <a href="#" class="btn btn-primary btn_rate_client">Rate Customer</a>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td colspan="2">
-                        <table class="table table-borderless">
-                            <tr>
-                                <td><a href="#" class="btn btn-primary btn_late">Late</a></td>
-                                <td><a href="#" class="btn btn-primary btn_extend">Extend</a></td>
-                                <td><a href="#" class="btn btn-primary btn_cancel">Cancel</a></td>
-                            </tr>
-                            <tr>
-                                <td colspan="3"><a href="#" class="btn btn-primary btn_other_update">Other Update</a></td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
+                <table class="table">
+                    <tr>
+                        <td>Rated</td>
+                        <td>
+                            <div class="rate_client hide-elem">
+                                <div id="rating" class="rating"></div>
+                                <input type="text" class="form-control" name="evaluation" id="evaluation" style="opacity: 0; height:0px !important;" />
+                                <span class="rate_client_msg"></span>
+                                <a href="#" class="btn btn-primary btn_rate_client">Rate Customer</a>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <table class="table table-borderless">
+                                <tr>
+                                    <td><a href="#" class="btn btn-primary btn_late">Late</a></td>
+                                    <td><a href="#" class="btn btn-primary btn_extend">Extend</a></td>
+                                    <td><a href="#" class="btn btn-primary btn_cancel">Cancel</a></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3"><a href="#" class="btn btn-primary btn_other_update">Other Update</a></td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
                 @endif
-            </table>
-        </div>
-        @else
-        <div class="col-md-12 text-center">
-            <p>There are no bookings saved under this account yet.</p>
-            @if(Request::get('type') != 'cancelled' && $cancelledBookings->count() > 0)
-            <a href="{{ route('bookings', ['type' => 'cancelled', 'search_bookings' => Request::get('search_bookings')]) }}" class="btn btn-primary">See Cancelled Bookings</a>
-            @endif
-        </div>
-        @endif
 
+            </div>
+            @else
+            <div class="col-md-12 text-center">
+                <p>There are no bookings saved under this account yet.</p>
+                @if(Request::get('type') != 'cancelled' && $cancelledBookings->count() > 0)
+                <a href="{{ route('bookings', ['type' => 'cancelled', 'search_bookings' => Request::get('search_bookings')]) }}" class="btn btn-primary">See Cancelled Bookings</a>
+                @endif
+            </div>
+            @endif
+
+        </div>
     </div>
-</div>
+
+</section>
 
 @include('frontend.modules.account.therapist_bookings_cancel')
 @include('frontend.modules.account.therapist_bookings_late')
@@ -186,13 +195,12 @@
 
 @endsection
 
-@push('footerJs')
+@push('pageScripts')
 <script>
+    @if(isset($booking) && $booking->count())
 
-    @if ($bookings -> count())
-
-        var datetime;
-    $('.btn_rate_client').click(function (e) {
+    var datetime;
+    $('.btn_rate_client').click(function(e) {
         e.preventDefault();
         if (!$('#evaluation').val()) {
             alert("Please select rating from 1 (poor) to 5 (excellent)");
@@ -202,22 +210,22 @@
         let booking_id = $('tr.selected').attr('data-id');
         let evaluation = $('#evaluation').val();
         let url = "{{ route('rate_booking') }}" + '?booking_id=' + booking_id + '&evaluation=' + evaluation;
-        $.post(url, function (response) {
+        $.post(url, function(response) {
             $('.loading').show();
             $('.btn_rate_client').hide();
             $('.rate_client_msg').html('Your ratings has been saved. Thank You!');
-        }).always(function () {
+        }).always(function() {
             $('.loading').hide();
         });
 
     });
 
-    $('.alink').click(function () {
+    $('.alink').click(function() {
         $('.loading').show();
         $('.alink').removeClass('selected');
         $(this).addClass('selected');
         let url = $(this).attr('data-url');
-        $.post(url, function (response) {
+        $.post(url, function(response) {
 
             let totalPrice = parseFloat(response.cost);
             if (response.travel_supp)
@@ -240,7 +248,7 @@
             $('#price').html('£' + (response.cost));
             $('#travel_supp').html('£' + (response.travel_supp));
             $('#total_price').html('£' + totalPrice.toFixed(2) + ' ' + paymentMethod);
-            $('#therapist').html(response.therapist[0].first_name);
+            $('#therapist').html(response.therapist.first_name);
 
             $('.rate_client').removeClass('hide-elem');
             $('.rate_client_msg').html('');
@@ -269,13 +277,15 @@
                 });
             }
 
-        }).always(function () {
+        }).always(function() {
             $('.loading').hide();
         })
     });
-    $(document).ready(function () {
+
+    $(document).ready(function() {
         $('.alink').first().trigger('click');
     })
+
     @endif
 </script>
 <script src="{{ asset('assets/js/jquery.raty.js') }}"></script>

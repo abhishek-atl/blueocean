@@ -5,15 +5,19 @@ namespace App\Http\Controllers;
 use App\Exports\AccountUserExport;
 use App\Http\Requests\Auth\AccountRequest;
 use App\Models\PaymentReceived;
+use App\Models\Setting;
 use App\Models\StripeEventsLog;
 use App\Models\TherapistsMandate;
 use App\Models\UserProfile;
 
 use App\Services\BookingMailService;
 use App\Services\BookingService;
+use App\Services\DatabaseService;
 use App\Services\MailService;
 use App\Services\PaymentService;
+use App\Services\PostcodeDistrictService;
 use App\Services\SmsService;
+use App\Services\TherapistsHolidayService;
 use App\Services\UserService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -27,6 +31,10 @@ class AccountController extends Controller
     protected BookingService $bookingService;
     protected UserService $userService;
     protected PaymentService $paymentService;
+    protected PostcodeDistrictService $postcodeDistrictService;
+    protected TherapistsHolidayService $therapistHolidayService;
+    protected DatabaseService $databaseService;
+
     protected BookingMailService $bookingMailService;
     protected MailService $mailService;
     protected SmsService $smsService;
@@ -35,13 +43,22 @@ class AccountController extends Controller
         BookingService $bookingService,
         UserService $userService,
         PaymentService $paymentService,
+        PostcodeDistrictService $postcodeDistrictService,
+        TherapistsHolidayService $therapistHolidayService,
+        DatabaseService $databaseService,
+
         MailService $mailService,
         BookingMailService $bookingMailService,
-        SmsService $smsService
+        SmsService $smsService,
+
     ) {
         $this->bookingService = $bookingService;
         $this->userService = $userService;
         $this->paymentService = $paymentService;
+        $this->postcodeDistrictService = $postcodeDistrictService;
+        $this->therapistHolidayService = $therapistHolidayService;
+        $this->databaseService = $databaseService;
+
         $this->mailService = $mailService;
         $this->bookingMailService = $bookingMailService;
         $this->smsService = $smsService;
@@ -223,10 +240,10 @@ class AccountController extends Controller
 
     public function mandates()
     {
-        abort_if(!Auth::user()->hasRole('therapist'), 403);
+        abort_if(!Auth::user()->hasRole('Therapist'), 403);
         $user = Auth::user();
         $mandate = $user->mandate;
-        $lastPayment = PaymentReceived::where('therapist_id', $user->therapist->id)->latest()->first();
+        $lastPayment = PaymentReceived::where('user_id', $user->id)->latest()->first();
         return view('frontend.modules.account.therapist_mandates', [
             'spk' => config('custom.stripe_public_key'),
             'mandate' => $mandate,
@@ -236,7 +253,7 @@ class AccountController extends Controller
 
     public function createMandateSetupStripeSession()
     {
-        abort_if(!Auth::user()->hasRole('therapist'), 403);
+        abort_if(!Auth::user()->hasRole('Therapist'), 403);
 
         $user = Auth::user();
 
@@ -258,14 +275,14 @@ class AccountController extends Controller
 
     public function mandateSetupSuccess(Request $request)
     {
-        abort_if(!Auth::user()->hasRole('therapist'), 403);
+        abort_if(!Auth::user()->hasRole('Therapist'), 403);
         return redirect()->route('mandates')->with('success', 'Mandate submitted successfully');
     }
 
     function mandateCancel()
     {
-        $therapist = Auth::user()->therapist;
-        $mandate = TherapistsMandate::where('therapist_id', $therapist->id)->first();
+        $therapist = Auth::user();
+        $mandate = TherapistsMandate::where('user_id', $user->id)->first();
         $stripe = new \Stripe\StripeClient(config('custom.stripe_secret_key'));
         $stripe->paymentMethods->detach($mandate->payment_method_id, []);
         $mandate->stripe_status = 'inactive';
@@ -277,25 +294,25 @@ class AccountController extends Controller
 
     public function profile(Request $request)
     {
-        abort_if(!Auth::user()->hasRole('therapist'), 403);
+        abort_if(!Auth::user()->hasRole('Therapist'), 403);
         $user = Auth::user();
-        $user->load('therapist.treatments:name');
+        $user->load('treatments:name');
         return view('frontend.modules.account.therapist_profile', [
-            'therapist' => $user->therapist,
-            'treatments' => $user->therapist->treatments
+            'therapist' => $user,
+            'treatments' => $user->treatments
         ]);
     }
 
     public function postcodes()
     {
         $user = Auth::user();
-        $user->load('therapist.postcodes');
+        $user->load('postcodes');
 
         $params = [];
         $params['order_by'] = request('order_by') ? request('order_by') : 'id';
         $params['order'] = request('order') ? request('order') : 'asc';
-        $params['with'] = ['postcodes.zone'];
-        $districts = $this->postalDistrictRepository->getByParams($params);
+        //$params['with'] = ['postcodes.zone'];
+        $districts = $this->postcodeDistrictService->getByParams($params);
 
         return view('frontend.modules.account.therapist_postcodes', [
             'therapist' => $user->therapist,
@@ -305,7 +322,7 @@ class AccountController extends Controller
 
     public function schedules()
     {
-        $therapist = Auth::user()->therapist;
+        $therapist = Auth::user();
         $therapist->load('schedule');
         $timeSlots = $this->bookingService->getTime();
         $days =
@@ -350,7 +367,7 @@ class AccountController extends Controller
         $therapist->schedule_id = $scheduleId;
         $therapist->save();
 
-        $email = $this->settingRepository->getByParams(['where' => ['param_key' => 'therapist_update_email']])->first()->value;
+        $email = $this->databaseService->getByParams(['where' => ['param_key' => 'therapist_update_email']])->first()->value;
         $this->mailService->sendScheduleUpdateToAdmin($email, $therapist);
 
         return redirect()->back()->with('success_msg', 'Schedule updated successfully');
@@ -359,7 +376,7 @@ class AccountController extends Controller
 
     private function therapist_bookings($request)
     {
-        $therapist = Auth::user()->therapist;
+        $therapist = Auth::user();
         $status = $request->get('type', 'new');
         $bookings = $this->bookingService->getTherapistBookings($therapist, $status, $request->get('search_bookings'));
         $bookings->appends(['type' => $status, 'search_bookings' => $request->get('search_bookings')]);
@@ -403,7 +420,7 @@ class AccountController extends Controller
 
     public function late(Request $request)
     {
-        abort_if(!Auth::user()->hasRole('therapist'), 403);
+        abort_if(!Auth::user()->hasRole('Therapist'), 403);
         $booking = $this->bookingService->getById($request->booking_id);
         abort_if(!$booking, 404);
 
@@ -421,19 +438,19 @@ class AccountController extends Controller
         // } catch (\Exception $e) {
         // }
 
-        return $booking->training_day->format('H:i');
+        return $booking->appointment_start->format('H:i');
     }
 
     public function extend(Request $request)
     {
-        abort_if(!Auth::user()->hasRole('therapist'), 403);
+        abort_if(!Auth::user()->hasRole('Therapist'), 403);
         $booking = $this->bookingService->getById($request->booking_id);
         abort_if(!$booking, 404);
 
         if ($booking->payment->payment_type == 'stripe' || $booking->payment->payment_type == 'gift_voucher') {
             $booking->is_extension_paid = 0;
             $booking->save();
-            $this->smsService->sendExtendSmsToClient($booking);
+            //$this->smsService->sendExtendSmsToClient($booking);
             if ($booking->email)
                 $this->bookingMailService->sendExtendEmailToClient($booking);
         } else {
@@ -445,8 +462,8 @@ class AccountController extends Controller
                 $this->bookingMailService->sendReconfirmMailClient($booking);
             }
             $this->bookingMailService->sendReconfirmMailTherapist($booking);
-            // $this->bookingMailService->sendReconfirmMailAdmin($booking);
-            $this->smsService->sendSmsToTherapist($booking);
+            $this->bookingMailService->sendReconfirmMailAdmin($booking);
+            //$this->smsService->sendSmsToTherapist($booking);
         }
         $booking->load('payment');
         return $booking;
@@ -455,7 +472,7 @@ class AccountController extends Controller
 
     public function cancel(Request $request)
     {
-        abort_if(!Auth::user()->hasRole('therapist'), 403);
+        abort_if(!Auth::user()->hasRole('Therapist'), 403);
         $booking = $this->bookingService->getById($request->booking_id);
         abort_if(!$booking, 404);
 
@@ -463,24 +480,24 @@ class AccountController extends Controller
         $booking->cancel_reason = $request->cancel_reason;
         $booking->save();
         $this->bookingMailService->sendCancellationRequestMailToAdmin($booking);
-        $this->smsService->sendCancellationRequestSMSToAdmin($booking);
+        //$this->smsService->sendCancellationRequestSMSToAdmin($booking);
         return $booking;
     }
 
     public function bookingUpdate(Request $request)
     {
-        abort_if(!Auth::user()->hasRole('therapist'), 403);
+        abort_if(!Auth::user()->hasRole('Therapist'), 403);
         $booking = $this->bookingService->getById($request->booking_id);
         abort_if(!$booking, 404);
 
-        $this->smsService->sendBookingUpdateSmsToAdmin($booking, $request->update);
+        //$this->smsService->sendBookingUpdateSmsToAdmin($booking, $request->update);
         return $booking;
     }
 
     public function calendar(Request $request)
     {
-        abort_if(!Auth::user()->hasRole('therapist'), 403);
-        $therapist = Auth::user()->therapist;
+        abort_if(!Auth::user()->hasRole('Therapist'), 403);
+        $therapist = Auth::user();
         $upcomingHoldiays = $therapist->holidays()
             ->whereDate('start_date', '>=', now())
             ->selectRaw('start_date as start, end_date as end, "backgroud" as display')->get();
@@ -505,26 +522,34 @@ class AccountController extends Controller
 
     public function calendarPost(Request $request)
     {
-        abort_if(!Auth::user()->hasRole('therapist'), 403);
-        $therapist = Auth::user()->therapist;
+        abort_if(!Auth::user()->hasRole('Therapist'), 403);
+        $therapist = Auth::user();
 
         if ($request->type == 'add') {
             $params = [];
-            $params['therapists_id'] = $therapist->id;
+            $params['user_id'] = $therapist->id;
             $params['start_date'] = Carbon::createFromFormat(config('custom.format.date_time'), $request->start_date);
             $params['end_date'] = Carbon::createFromFormat(config('custom.format.date_time'), $request->end_date);
-            $holiday = $this->therapistsHolidayRepository->save($params);
+            $holiday = $this->therapistHolidayService->save($params);
             $holiday->load('therapist');
 
-            $email = $this->settingRepository->getByParams(['where' => ['param_key' => 'therapist_update_email']])->first()->value;
+            $email = $this->databaseService->getByParams(
+                Setting::class,
+                [
+                    'where' =>
+                    [
+                        'param_key' => 'therapist_update_email'
+                    ]
+                ]
+            )->first()->param_value;
             $this->mailService->SendHolidayUpdateToAdmin($email, $holiday, $request->type);
             $this->mailService->SendHolidayUpdateToTherapist($holiday, $request->type);
         } elseif ($request->type == 'delete') {
-            $holiday = $this->therapistsHolidayRepository->getById($request->id);
+            $holiday = $this->therapistHolidayService->getById($request->id);
             abort_if(!$holiday, 404);
             $holiday->load('therapist');
-            $this->therapistsHolidayRepository->delete($holiday->id);
-            $email = $this->settingRepository->getByParams(['where' => ['param_key' => 'therapist_update_email']])->first()->value;
+            $this->therapistHolidayService->delete($holiday->id);
+            $email = $this->databaseService->getByParams(Setting::class, ['where' => ['param_key' => 'therapist_update_email']])->first()->param_value;
             $this->mailService->SendHolidayUpdateToAdmin($email, $holiday, $request->type);
             $this->mailService->SendHolidayUpdateToTherapist($holiday, $request->type);
             //$this->smsService->sendHolidayCancelSmsToAdmin($holiday);
@@ -535,8 +560,8 @@ class AccountController extends Controller
 
     public function holidays(Request $request)
     {
-        abort_if(!Auth::user()->hasRole('therapist'), 403);
-        $therapist = Auth::user()->therapist;
+        abort_if(!Auth::user()->hasRole('Therapist'), 403);
+        $therapist = Auth::user();
         $holidays = $therapist->holidays()->orderBy('start_date', 'desc')->paginate(10);
         return view('frontend.modules.account.therapist_holidays', [
             'holidays' => $holidays

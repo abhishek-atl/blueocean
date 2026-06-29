@@ -16,14 +16,14 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                 <button type="button" class="btn btn-primary btnSubmitOtherUpdate">Save</button>
                 <input type="hidden" name="other_update_booking_id" value="" />
             </div>
         </div>
     </div>
 </div>
-@push('footerJs')
+@push('pageScripts')
 <script>
     // Other Updates
     $('.btn_other_update').click(function (e) {

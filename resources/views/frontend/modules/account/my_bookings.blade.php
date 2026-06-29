@@ -48,7 +48,7 @@
             <div class="col-md-6">
                 <h2>Your Bookings</h2>
                 <div class="table-responsive">
-                    <table class="table table-sm">
+                    <table class="table booking_detail">
                         <thead>
                             <tr>
                                 <th>Date</th>

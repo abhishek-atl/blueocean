@@ -30,12 +30,22 @@
                       <i class="fa fa-chevron-down arrow-down"></i>
                       <ul class="dropdown-menu btn-user">
                           @auth
+                          @if(Auth::user()->hasRole('Customer'))
                           <div class="p-3 text-center">
-                              <p><a href="{{ route('auth.logout') }}" class="btn btn-primary">Logout</a></p>
-                              <hr />
-                              <p><a href="{{ route('account') }}">Profile</a></p>
+                              <p><a href="{{ route('account') }}">Account</a></p>
                               <p><a href="{{ route('bookings') }}">Bookings</a></p>
+                              <hr />
+                              <p><a href="{{ route('auth.logout') }}" class="btn btn-primary">Logout</a></p>
                           </div>
+                          @elseif(Auth::user()->hasRole('Therapist'))
+                          <div class="p-3 text-center">
+                              <p><a href="{{ route('profile') }}">Profile</a></p>
+                              <p><a href="{{ route('bookings') }}">Bookings</a></p>
+                              <p><a href="{{ route('bookings') }}">Holidays</a></p>
+                              <hr />
+                              <p><a href="{{ route('auth.logout') }}" class="btn btn-primary">Logout</a></p>
+                          </div>
+                          @endif
                           @endauth
                           @guest
                           <div class="p-3 text-center">

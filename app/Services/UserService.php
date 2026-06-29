@@ -66,7 +66,7 @@ class UserService
     {
         $result = false;
         try {
-            $booking = $this->booking::whereId($bookingId)->with('client')->first();
+            $booking = Booking::whereId($bookingId)->with('client')->first();
             $booking->update([
                 'client_rating' => $score
             ]);

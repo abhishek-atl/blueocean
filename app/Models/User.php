@@ -29,6 +29,11 @@ class User extends Authenticatable
         return $this->hasOne(UserProfile::class);
     }
 
+    public function client_bookings()
+    {
+        return $this->hasMany(Booking::class);
+    }
+
     public function therapist_profile()
     {
         return $this->hasOne(TherapistProfile::class);
@@ -62,6 +67,11 @@ class User extends Authenticatable
     public function active()
     {
         return $this->active;
+    }
+
+    public function mandate()
+    {
+        return $this->hasOne(TherapistsMandate::class, 'user_id');
     }
 
     public function isAdmin()

@@ -13,6 +13,7 @@ use App\Mail\SendBookingSmsFailedMailToAdmin;
 use App\Mail\SendGiftCertificateAdmin;
 use App\Mail\SendGiftCertificateRecipient;
 use App\Mail\SendGiftCertificateSender;
+use App\Mail\SendHolidayUpdateToAdmin;
 use App\Mail\TherapistApplication;
 use Illuminate\Support\Facades\Mail;
 
@@ -92,5 +93,15 @@ class MailService
     public function sendMailGiftCertificateRecipient($giftCertificate)
     {
         Mail::to($giftCertificate->recipient_email)->send(new SendGiftCertificateRecipient($giftCertificate));
+    }
+
+    public function SendHolidayUpdateToAdmin($email, $holiday, $action)
+    {
+        Mail::to($email)->send(new SendHolidayUpdateToAdmin($holiday, $action));
+    }
+
+    public function SendHolidayUpdateToTherapist($holiday, $action)
+    {
+        Mail::to($holiday->therapist->email)->send(new SendHolidayUpdateToTherapist($holiday, $action));
     }
 }

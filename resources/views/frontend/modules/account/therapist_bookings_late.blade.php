@@ -26,7 +26,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 <button type="button" class="btn btn-primary btnSubmitLate">Yes</button>
                 <input type="hidden" name="late_booking_id" value="" />
             </div>
@@ -34,7 +34,7 @@
     </div>
 </div>
 
-@push('footerJs')
+@push('pageScripts')
 <script>
     // Late functions
     $('.btn_late').click(function (e) {

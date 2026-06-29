@@ -9,7 +9,7 @@ use App\Mail\SendBookingSmsFailedEmailToAdmin;
 use App\Mail\SendCancellationMailAdmin;
 use App\Mail\SendCancellationMailClient;
 use App\Mail\SendCancellationMailTherapist;
-use App\Mail\sendCancellationRequestMailToAdmin;
+use App\Mail\SendCancellationRequestMailToAdmin;
 use App\Mail\SendExtendEmailToClient;
 use App\Mail\SendReconfirmMailAdmin;
 use App\Mail\SendReconfirmMailClient;
@@ -57,7 +57,7 @@ class BookingMailService
 
     public function sendReconfirmMailTherapist($booking)
     {
-        Mail::to($booking->therapist[0]->email)->send(new SendReconfirmMailTherapist($booking));
+        Mail::to($booking->therapist->email)->send(new SendReconfirmMailTherapist($booking));
     }
 
     /***********************************************************/
@@ -66,7 +66,7 @@ class BookingMailService
 
     public function sendCancellationRequestMailToAdmin($booking)
     {
-        Mail::to(config('mail.to.admin_address'))->send(new sendCancellationRequestMailToAdmin($booking));
+        Mail::to(config('mail.to.admin_address'))->send(new SendCancellationRequestMailToAdmin($booking));
     }
 
     public function sendCancellationMailToClient($booking, $giftCode=null)

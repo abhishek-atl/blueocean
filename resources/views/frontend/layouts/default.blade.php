@@ -36,11 +36,14 @@
     <link rel="stylesheet" href="{{ asset('assets/css/solid.min.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/css/brands.min.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/css/tempus-dominus.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/toastr.min.css') }}">
 
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/booking.css') }}">
 
     @stack('pageCss')
+    
+    @stack('headJs')
 
 </head>
 
@@ -78,6 +81,7 @@
     <script src="{{ asset('assets/js/tempus-dominus.min.js') }}"></script>
     <script src="{{ asset('assets/js/moment.min.js') }}"></script>
     <script src="{{ asset('assets/js/jquery.raty.js') }}"></script>
+    <script src="{{ asset('assets/js/toastr.min.js') }}"></script>
 
     <script src="{{ asset('assets/js/app.js') }}"></script>
 

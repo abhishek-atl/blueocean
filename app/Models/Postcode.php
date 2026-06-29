@@ -12,4 +12,9 @@ class Postcode extends Model
     {
         return $this->belongsTo(PostcodeDistrict::class, 'district_id');
     }
+
+    public function zone()
+    {
+        //return $this->hasOne(PostcodeZoneShortcut::class, 'postcodes_id', 'id');
+    }
 }

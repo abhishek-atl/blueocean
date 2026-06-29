@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Booking;
 use App\Models\Postcode;
+use App\Models\Setting;
 use App\Models\TherapistHoliday;
 use App\Models\User;
 use Illuminate\Support\Carbon;
@@ -301,5 +302,86 @@ class BookingService extends BaseService
 
         // Check if appointment falls within working hours
         return $startDateTime >= $workStart && $endDateTime <= $workEnd;
+    }
+
+    public function getTherapistBookings($therapist, $status = 'new', $search = null)
+    {
+        $qb = Booking::whereRaw('1=1');
+        $qb->whereStatus($status);
+        $qb->whereDate('appointment_start', '>=', Carbon::now()->startOfWeek());
+        if ($search) {
+            $qb->where(function ($query) use ($search) {
+                $query->where('name', 'like', '%' . $search . '%');
+                $query->orWhere('phone', 'like', '%' . $search . '%');
+                $query->orWhere('postcode', 'like', '%' . $search . '%');
+                $query->orWhere('email', 'like', '%' . $search . '%');
+            });
+        }
+        $qb->whereRelation('therapist', 'id', '=', $therapist->id);
+        $qb->orderBy('appointment_start', 'desc');
+        $bookings = $qb->paginate(10);
+        return $bookings;
+    }
+
+    public function markForCancel($booking)
+    {
+        $booking->cancellation_requested_at = now();
+        $booking->save();
+        return $booking;
+    }
+
+    public function lateBooking($booking)
+    {
+        $start = Carbon::createFromDate($booking->appointment_start)->addMinutes(30);
+        $finish = Carbon::createFromDate($booking->appointment_end)->addMinutes(30);
+        $booking->update([
+            'appointment_start' => $start,
+            'appointment_end' => $finish,
+        ]);
+        return $booking;
+    }
+
+    public function extendBooking($booking)
+    {
+        $extCost = Setting::select('param_value')->where('param_key', 'extend_cost')->first()->param_value;
+        $newExtensionMin = session('booking.extend_time', 30);
+        $multiple = ($newExtensionMin / 30);
+        $charge =  $multiple * $extCost;
+
+        $feeToTmrCost = $booking->therapist->extend_cost;
+        if (!$feeToTmrCost)
+            $feeToTmrCost = 0;
+
+        if ($feeToTmrCost > 0) {
+            $feeTMRExt = $multiple * $feeToTmrCost;
+            $feeTherapistExt = $charge - $feeTMRExt;
+        } else {
+            $feeTherapistExt = $feeTMRExt = $charge / 2; // split 50 50
+        }
+
+        $extendTime = Carbon::createFromDate($booking->appointment_end)->addMinutes((int)$newExtensionMin);
+        $extraDuration = $booking->extra_duration + $newExtensionMin;
+        $cost = (float) $booking->cost + (float) $charge;
+        $feeTmr = $booking->fee_tmr + $feeTMRExt;
+        $feeTherapist = $booking->fee_therapist + $feeTherapistExt;
+
+        $feeTmrExt = $booking->fee_tmr_extension + $feeTMRExt;
+        $feeTherapistExt = $booking->fee_therapist_extension + $feeTherapistExt;
+
+        $booking->update([
+            'fee_tmr' => $feeTmr,
+            'fee_therapist' => $feeTherapist,
+            'fee_tmr_extension' => $feeTmrExt,
+            'fee_therapist_extension' => $feeTherapistExt,
+            'training_finish' => $extendTime,
+            'extra_duration' => $extraDuration,
+            'cost' => $cost
+        ]);
+
+        $prevPayment = $booking->payment->amount;
+        $booking->payment->update([
+            'amount' => (float) $prevPayment +  ((float) $charge * 100)
+        ]);
+        return $booking;
     }
 }
