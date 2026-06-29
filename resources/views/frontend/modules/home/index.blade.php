@@ -9,6 +9,14 @@ Book a relaxing, professional massage at home in London. Our trusted mobile ther
 treatments with genuine care, from just £59
 @endsection
 
+@if($banner)
+@section('banner')
+<div class="alert alert-info alert-dismissible fade show m-0" role="alert">
+    <div class="text-center">{!! $banner->text !!}</div>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+@endsection
+@endif
 
 @section('content')
 

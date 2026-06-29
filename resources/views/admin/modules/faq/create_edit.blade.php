@@ -52,45 +52,41 @@
                         @enderror
                     </div>
 
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label class="form-label" for="order_by">Display Order</label>
-                                <input type="number" name="order_by" id="order_by" class="form-control" placeholder="0" value="{{ old('order_by', $faq->order_by ?? 0) }}" />
-                                @error('order_by')
-                                <div class="text-danger">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="mb-3 col-12">
-                                <label class="form-label required">Status</label>
-                                <div class="form-check form-check-inline radio-style mb-20">
-                                    <input type="radio" name="status" id="status_active" value="1" @if(!isset($faq) || $faq->status) checked @endif>
-                                    <label class="form-check-label" for="status_active">Active</label>
-                                </div>
-                                <div class="form-check form-check-inline radio-style mb-20">
-                                    <input type="radio" name="status" id="status_inactive" value="0" @if(isset($faq) && !$faq->status) checked @endif>
-                                    <label class="form-check-label" for="status_inactive">Inactive</label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-
-            <div class="col-lg-12">
-                <div class="card-style mb-30">
                     <div class="mb-3">
-                        <button type="submit" class="btn btn-primary">Save</button>
-                        <a href="{{ route('admin.faqs.index') }}" class="btn btn-secondary">Cancel</a>
+                        <label class="form-label" for="display_order">Display Order</label>
+                        <input type="number" name="display_order" id="display_order" class="form-control" placeholder="0" value="{{ old('display_order', $faq->display_order ?? 0) }}" />
+                        @error('display_order')
+                        <div class="text-danger">{{ $message }}</div>
+                        @enderror
                     </div>
+
+                    <div class="mb-3 col-12">
+                        <label class="form-label required">Active</label>
+                        <div class="form-check form-check-inline radio-style mb-20">
+                            <input type="radio" name="active" id="active_yes" value="1" @if(!isset($faq) || $faq->active) checked @endif>
+                            <label class="form-check-label" for="active_yes">Active</label>
+                        </div>
+                        <div class="form-check form-check-inline radio-style mb-20">
+                            <input type="radio" name="active" id="active_no" value="0" @if(isset($faq) && !$faq->active) checked @endif>
+                            <label class="form-check-label" for="active_no">Inactive</label>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="col-lg-12">
+            <div class="card-style mb-30">
+                <div class="mb-3">
+                    <button type="submit" class="btn btn-primary">Save</button>
+                    <a href="{{ route('admin.faqs.index') }}" class="btn btn-secondary">Cancel</a>
                 </div>
             </div>
         </div>
-    </form>
+</div>
+</form>
 
 </div>
 @endsection

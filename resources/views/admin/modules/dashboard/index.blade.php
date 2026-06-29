@@ -24,11 +24,8 @@
                 </div>
                 <div class="content">
                     <h6 class="mb-10">New Bookings</h6>
-                    <h3 class="text-bold mb-10">120</h3>
-                    <p class="text-sm text-success">
-                        <i class="fa-solid fa-chevron-up"></i> +2.00%
-                        <span class="text-gray">(30 days)</span>
-                    </p>
+                    <h3 class="text-bold mb-10">{{ $bookings->count() }}</h3>
+                    <p class="text-sm text-gray">Last 7 days</p>
                 </div>
             </div>
         </div>
@@ -39,11 +36,8 @@
                 </div>
                 <div class="content">
                     <h6 class="mb-10">Total Income</h6>
-                    <h3 class="text-bold mb-10">$74,567</h3>
-                    <p class="text-sm text-success">
-                        <i class="fa-solid fa-chevron-up"></i> +5.45%
-                        <span class="text-gray">Increased</span>
-                    </p>
+                    <h3 class="text-bold mb-10">&pound;{{ number_format($totalIncome/100, 2) }}</h3>
+                    <p class="text-sm text-gray">From recent bookings</p>
                 </div>
             </div>
         </div>
@@ -54,11 +48,8 @@
                 </div>
                 <div class="content">
                     <h6 class="mb-10">Total Payout</h6>
-                    <h3 class="text-bold mb-10">$24,567</h3>
-                    <p class="text-sm text-danger">
-                        <i class="fa-solid fa-chevron-down"></i> -2.00%
-                        <span class="text-gray">Expense</span>
-                    </p>
+                    <h3 class="text-bold mb-10">&pound;{{ number_format($totalPayout, 2) }}</h3>
+                    <p class="text-sm text-gray">Settled therapist payout</p>
                 </div>
             </div>
         </div>
@@ -68,12 +59,9 @@
                     <i class="fa-solid fa-user"></i>
                 </div>
                 <div class="content">
-                    <h6 class="mb-10">New User</h6>
-                    <h3 class="text-bold mb-10">34567</h3>
-                    <p class="text-sm text-danger">
-                        <i class="fa-solid fa-chevron-down"></i></i> -25.00%
-                        <span class="text-gray"> Earning</span>
-                    </p>
+                    <h6 class="mb-10">New Users</h6>
+                    <h3 class="text-bold mb-10">{{ $newUsers }}</h3>
+                    <p class="text-sm text-gray">Last 7 days</p>
                 </div>
             </div>
         </div>
@@ -84,26 +72,18 @@
             <div class="card-style mb-30">
                 <div class="title d-flex flex-wrap align-items-center justify-content-between">
                     <div class="left">
-                        <h6 class="text-medium mb-30">Recent Bookings</h6>
-                    </div>
-                    <div class="right">
-                        <div class="select-style-1">
-                            <div class="select-position select-sm">
-                                <select class="light-bg">
-                                    <option value="">Today</option>
-                                    <option value="">Yesterday</option>
-                                </select>
-                            </div>
-                        </div>
+                        <h6 class="text-medium mb-30">Recent New Bookings</h6>
                     </div>
                 </div>
                 <div class="table-responsive">
                     <table class="table top-selling-table">
                         <thead>
                             <tr>
+                                <th>ID</th>
                                 <th>Customer Name</th>
                                 <th>Therapist Name</th>
                                 <th>Treatment</th>
+                                <th>Booked At</th>
                                 <th>Status</th>
                                 <th>
                                     <h6 class="text-sm text-medium text-end">
@@ -113,78 +93,27 @@
                             </tr>
                         </thead>
                         <tbody>
+                            @forelse($bookings as $booking)
                             <tr>
-                                <td>John Doe</td>
-                                <td>Jenniffer</td>
-                                <td>Classic Swwedish Massage</td>
-                                <td><span class="status-btn success-btn">Completed</span></td>
+                                <td>{{ $booking->id }}</td>
+                                <td>{{ $booking->name }}</td>
+                                <td>{{ $booking->therapist->first_name ?? 'N/A' }} {{ $booking->therapist->last_name ?? '' }}</td>
+                                <td>{{ $booking->treatment->name ?? 'N/A' }}</td>
+                                <td>{{ $booking->created_at ? $booking->created_at->format('d M Y H:i') : 'N/A' }}</td>
+                                <td><span class="status-btn active-btn">{{ ucfirst($booking->status ?? 'new') }}</span></td>
                                 <td>
                                     <div class="action justify-content-end">
-                                        <button class="edit">
-                                            <i class="fa fa-pencil"></i>
-                                        </button>
-                                        <button class="more-btn ml-10 dropdown-toggle" id="moreAction1" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <a href="{{ route('admin.bookings.edit', ['id' => $booking->id]) }}" class="more-btn ml-10">
                                             <i class="fa fa-eye"></i>
-                                        </button>
-                                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="moreAction1">
-                                            <li class="dropdown-item">
-                                                <a href="#0" class="text-gray">Remove</a>
-                                            </li>
-                                            <li class="dropdown-item">
-                                                <a href="#0" class="text-gray">Edit</a>
-                                            </li>
-                                        </ul>
+                                        </a>
                                     </div>
                                 </td>
                             </tr>
+                            @empty
                             <tr>
-                                <td>John Doe</td>
-                                <td>Jenniffer</td>
-                                <td>Classic Swwedish Massage</td>
-                                <td><span class="status-btn success-btn">Completed</span></td>
-                                <td>
-                                    <div class="action justify-content-end">
-                                        <button class="edit">
-                                            <i class="fa fa-pencil"></i>
-                                        </button>
-                                        <button class="more-btn ml-10 dropdown-toggle" id="moreAction1" data-bs-toggle="dropdown" aria-expanded="false">
-                                            <i class="fa fa-eye"></i>
-                                        </button>
-                                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="moreAction1">
-                                            <li class="dropdown-item">
-                                                <a href="#0" class="text-gray">Remove</a>
-                                            </li>
-                                            <li class="dropdown-item">
-                                                <a href="#0" class="text-gray">Edit</a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </td>
+                                <td colspan="7" class="text-center">No new bookings found from the last 7 days.</td>
                             </tr>
-                            <tr>
-                                <td>John Doe</td>
-                                <td>Jenniffer</td>
-                                <td>Classic Swwedish Massage</td>
-                                <td><span class="status-btn success-btn">Completed</span></td>
-                                <td>
-                                    <div class="action justify-content-end">
-                                        <button class="edit">
-                                            <i class="fa fa-pencil"></i>
-                                        </button>
-                                        <button class="more-btn ml-10 dropdown-toggle" id="moreAction1" data-bs-toggle="dropdown" aria-expanded="false">
-                                            <i class="fa fa-eye"></i>
-                                        </button>
-                                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="moreAction1">
-                                            <li class="dropdown-item">
-                                                <a href="#0" class="text-gray">Remove</a>
-                                            </li>
-                                            <li class="dropdown-item">
-                                                <a href="#0" class="text-gray">Edit</a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </td>
-                            </tr>
+                            @endforelse
                         </tbody>
                     </table>
                 </div>

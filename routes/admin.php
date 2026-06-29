@@ -1,5 +1,6 @@
 <?php
 
+
 use App\Http\Controllers\Admin\CustomerController;
 use Illuminate\Support\Facades\Route;
 
@@ -18,6 +19,7 @@ use App\Http\Controllers\Admin\PostCommentController;
 use App\Http\Controllers\Admin\PostTagController;
 use App\Http\Controllers\Admin\ReviewController;
 use App\Http\Controllers\Admin\FAQController;
+use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\TariffPlanController;
 use App\Http\Controllers\Admin\GiftCertificateController;
 use App\Http\Controllers\Admin\BlacklistController;
@@ -156,6 +158,13 @@ Route::middleware([AdminMiddleware::class])->group(function () {
     Route::get('/tariff-plans/edit/{id}', [TariffPlanController::class, 'createEdit'])->name('tariff_plans.edit');
     Route::post('/tariff-plans/store', [TariffPlanController::class, 'store'])->name('tariff_plans.store');
     Route::get('/tariff-plans/destroy/{id}', [TariffPlanController::class, 'destroy'])->name('tariff_plans.destroy');
+
+    // banners
+    Route::get('/banners', [BannerController::class, 'index'])->name('banners.index');
+    Route::get('/banners/create', [BannerController::class, 'createEdit'])->name('banners.create');
+    Route::get('/banners/edit/{id}', [BannerController::class, 'createEdit'])->name('banners.edit');
+    Route::post('/banners/store', [BannerController::class, 'store'])->name('banners.store');
+    Route::get('/banners/destroy/{id}', [BannerController::class, 'destroy'])->name('banners.destroy');
 
     // Gift Certificates
     Route::get('/gift-certificates', [GiftCertificateController::class, 'index'])->name('gift_certificates.index');

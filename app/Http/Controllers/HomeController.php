@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreTherapistApplication;
+use App\Models\Banner;
+use App\Models\FAQ;
 use Illuminate\Http\Request;
 
 use App\Models\Treatment;
@@ -43,11 +45,18 @@ class HomeController extends Controller
             ->orderBy('last_name')
             ->get();
 
+        $banner = Banner::where('placement', 'home')
+            ->where('active', true)->first();
 
+        $faqs = FAQ::where('active', true)
+            ->orderBy('display_order')
+            ->get();
 
         return view('frontend.modules.home.index', [
             'treatments' => $treatments,
-            'therapists' => $therapists
+            'therapists' => $therapists,
+            'banner' => $banner,
+            'faqs' => $faqs
         ]);
     }
 

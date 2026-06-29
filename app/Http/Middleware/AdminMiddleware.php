@@ -16,13 +16,9 @@ class AdminMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (Auth::check()) {
+        if (Auth::check() && Auth::user()->hasRole('Admin')) {
             return $next($request);
         }
-
-        // Redirect or abort if not an admin
-        return redirect(route('auth.login'))->with('error', 'Login is required.');
-        // Alternatively, you can abort with a 403 Forbidden error:
-        // abort(403, 'Unauthorized action.');
+        return redirect(route('admin.login'))->with('error', 'Login is required.');
     }
 }

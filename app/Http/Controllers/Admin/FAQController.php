@@ -19,7 +19,7 @@ class FAQController extends Controller
     public function index(Request $request)
     {
         $params = [];
-        $params['sort_by'] = $request->get('sort_by', 'order_by');
+        $params['sort_by'] = $request->get('sort_by', 'display_order');
         $params['sort_order'] = $request->get('sort_order', 'asc');
 
         if (null != $request->get('search')) {

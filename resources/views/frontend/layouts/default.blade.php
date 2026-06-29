@@ -42,7 +42,7 @@
     <link rel="stylesheet" href="{{ asset('assets/css/booking.css') }}">
 
     @stack('pageCss')
-    
+
     @stack('headJs')
 
 </head>
