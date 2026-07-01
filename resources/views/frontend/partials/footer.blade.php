@@ -55,3 +55,9 @@
         </div>
     </div>
 </div>
+
+<div class="row">
+    <div class="col-12 text-center">
+        <a href="https://www.acetechnolabs.com/" target="_blank" rel="nofollow noopener noreferrer" class="credit">Site by AceTechnolabs</a>
+    </div>
+</div>

@@ -7,57 +7,53 @@
               <span class="navbar-toggler-icon"></span>
           </button>
           <div class="collapse navbar-collapse" id="navbarNav">
-              <ul class="navbar-nav ms-auto">
+              <ul class="navbar-nav mx-lg-auto">
                   <li class="nav-item">
-                      <a class="nav-link hover-effect {{ request()->routeIs('home') ? 'active' : '' }}" href="{{ route('home') }}">Home</a>
+                      <a class="nav-link {{ request()->routeIs('home') ? 'active' : '' }}" href="{{ route('home') }}">Home</a>
                   </li>
                   <li class="nav-item">
-                      <a class="nav-link hover-effect {{ request()->routeIs('treatments', 'treatment_detail') ? 'active' : '' }}" href="{{ route('treatments') }}">Treatments</a>
+                      <a class="nav-link {{ request()->routeIs('treatments', 'treatment_detail') ? 'active' : '' }}" href="{{ route('treatments') }}">Treatments</a>
                   </li>
                   <li class="nav-item">
-                      <a class="nav-link hover-effect {{ request()->routeIs('therapists', 'therapist_detail') ? 'active' : '' }}" href="{{ route('therapists') }}">Therapists</a>
+                      <a class="nav-link {{ request()->routeIs('therapists', 'therapist_detail') ? 'active' : '' }}" href="{{ route('therapists') }}">Therapists</a>
                   </li>
                   <li class="nav-item">
-                      <a class="nav-link hover-effect {{ request()->routeIs('gifts') ? 'active' : '' }}" href="{{ route('gifts') }}">Gift Cards</a>
+                      <a class="nav-link {{ request()->routeIs('gifts') ? 'active' : '' }}" href="{{ route('gifts') }}">Gift Cards</a>
                   </li>
                   <li class="nav-item">
-                      <a class="nav-link hover-effect {{ request()->routeIs('join_us') ? 'active' : '' }}" href="{{ route('join_us') }}">Join Us</a>
+                      <a class="nav-link {{ request()->routeIs('join_us') ? 'active' : '' }}" href="{{ route('join_us') }}">Join Us</a>
                   </li>
+              </ul>
+              <ul class="navbar-nav align-items-lg-center">
                   <li class="nav-item dropdown">
-                      <a class="nav-link dropdown-toggle btn-user-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                          <i class="fa fa-user"></i>
+                      <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                          User
                       </a>
-                      <i class="fa fa-chevron-down arrow-down"></i>
-                      <ul class="dropdown-menu btn-user">
+                      <ul class="dropdown-menu dropdown-menu-lg-end">
                           @auth
                           @if(Auth::user()->hasRole('Customer'))
-                          <div class="p-3 text-center">
-                              <p><a href="{{ route('account') }}">Account</a></p>
-                              <p><a href="{{ route('bookings') }}">Bookings</a></p>
-                              <hr />
-                              <p><a href="{{ route('auth.logout') }}" class="btn btn-primary">Logout</a></p>
-                          </div>
+                          <li><a class="dropdown-item" href="{{ route('account') }}">Account</a></li>
+                          <li><a class="dropdown-item" href="{{ route('bookings') }}">Bookings</a></li>
+                          <li><hr class="dropdown-divider"></li>
+                          <li class="px-3 py-2"><a href="{{ route('auth.logout') }}" class="btn btn-primary w-100">Logout</a></li>
                           @elseif(Auth::user()->hasRole('Therapist'))
-                          <div class="p-3 text-center">
-                              <p><a href="{{ route('profile') }}">Profile</a></p>
-                              <p><a href="{{ route('bookings') }}">Bookings</a></p>
-                              <p><a href="{{ route('bookings') }}">Holidays</a></p>
-                              <hr />
-                              <p><a href="{{ route('auth.logout') }}" class="btn btn-primary">Logout</a></p>
-                          </div>
+                          <li><a class="dropdown-item" href="{{ route('profile') }}">Profile</a></li>
+                          <li><a class="dropdown-item" href="{{ route('bookings') }}">Bookings</a></li>
+                          <li><a class="dropdown-item" href="{{ route('bookings') }}">Holidays</a></li>
+                          <li><hr class="dropdown-divider"></li>
+                          <li class="px-3 py-2"><a href="{{ route('auth.logout') }}" class="btn btn-primary w-100">Logout</a></li>
                           @endif
                           @endauth
                           @guest
-                          <div class="p-3 text-center">
-                              <p>Already have an account?</p>
-                              <p><a href="{{ route('auth.login') }}" class="btn btn-primary">Login</a></p>
-                              <hr />
-                              <p>No Account? <a href="{{ route('auth.register') }}">Signup Here</a></p>
-                          </div>
+                          <li><h6 class="dropdown-header">Already have an account?</h6></li>
+                          <li class="px-3 py-2"><a href="{{ route('auth.login') }}" class="btn btn-primary w-100">Login</a></li>
+                          <li><hr class="dropdown-divider"></li>
+                          <li><span class="dropdown-item-text">No Account?</span></li>
+                          <li><a class="dropdown-item" href="{{ route('auth.register') }}">Signup Here</a></li>
                           @endguest
                       </ul>
                   </li>
-                  <li class="nav-item">
+                  <li class="nav-item ms-lg-3">
                       <a class="btn btn-primary {{ request()->routeIs('booking*') ? 'active' : '' }}" href="{{ route('bookingPostcode') }}">Book Now</a>
                   </li>
               </ul>

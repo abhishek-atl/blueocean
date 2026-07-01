@@ -45,6 +45,11 @@ a.hover-effect:hover::before {
     transform: scaleX(1);
 }
 
+.credit {
+    font-size: 13px !important;
+    color: var(--bo-lightblue);
+
+}
 
 /* Utilities */
 
