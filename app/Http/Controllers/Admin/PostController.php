@@ -11,11 +11,13 @@ use App\Services\UploadService;
 
 class PostController extends Controller
 {
-    protected $databaseService;
-    protected $uploadService;
+    protected DatabaseService $databaseService;
+    protected UploadService $uploadService;
 
-    public function __construct(DatabaseService $databaseService, UploadService $uploadService)
-    {
+    public function __construct(
+        DatabaseService $databaseService,
+        UploadService $uploadService,
+    ) {
         $this->databaseService = $databaseService;
         $this->uploadService = $uploadService;
         abort_if(!auth()->user()->can('Content Management'), 403);
@@ -72,7 +74,7 @@ class PostController extends Controller
 
         if ($request->has('image')) {
             $file = $request->file('image');
-            $uploadPath = config('custom.upload.post_path', 'uploads/posts');
+            $uploadPath = config('custom.upload.post_path');
             $path = $this->uploadService->upload($file, $uploadPath);
             $params['image'] = $path;
         }

@@ -15,19 +15,8 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::table('users')->insert([
-            'first_name' => 'Administrator',
-            'last_name' => 'User',
-            'email' => 'admin@blueocean.com',
-            'password' => bcrypt('Testing123!'),
-            'user_type' => 'Admin',
-            'email_verified_at' => now()
-        ]);
-        $user = User::find(1);
-        $user->assignRole('Admin');
-
         User::factory()
-            ->count(10)
+            ->count(30)
             ->has(UserProfile::factory(), 'user_profile')
             ->create();
     }

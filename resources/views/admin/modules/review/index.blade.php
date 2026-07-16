@@ -72,7 +72,7 @@
                                 Profession
                             </th>
                             <th scope="col" style="width: 10%;">
-                                Status
+                                Active
                             </th>
                             <th scope="col">Actions</th>
                         </tr>
@@ -86,8 +86,8 @@
                             <td>{{ $review->location }}</td>
                             <td>{{ $review->profession }}</td>
                             <td>
-                                <span class="badge {{ $review->status ? 'bg-success' : 'bg-warning' }}">
-                                    {{ $review->status ? 'Approved' : 'Pending' }}
+                                <span class="badge {{ $review->active ? 'bg-success' : 'bg-warning' }}">
+                                    {{ $review->active ? 'Approved' : 'Pending' }}
                                 </span>
                             </td>
                             <td>

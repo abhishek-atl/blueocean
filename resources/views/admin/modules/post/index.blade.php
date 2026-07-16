@@ -57,12 +57,12 @@
                                     ID @if($sort_by == 'id') @if($sort_order == 'asc') <i class="fa fa-chevron-down"></i> @else <i class="fa fa-chevron-up"></i> @endif @endif
                                 </a>
                             </th>
-                            <th scope="col" style="width: 15%;">
+                            <th scope="col" style="width: 20%;">
                                 <a href="{{ route('admin.posts.index', array_merge(request()->query(), ['sort_by' => 'title', 'sort_order' => request('sort_order') === 'asc' ? 'desc' : 'asc'])) }}">
                                     Title @if($sort_by == 'title') @if($sort_order == 'asc') <i class="fa fa-chevron-down"></i> @else <i class="fa fa-chevron-up"></i> @endif @endif
                                 </a>
                             </th>
-                            <th scope="col" style="width: 12%;">
+                            <th scope="col" style="width: 20%;">
                                 <a href="{{ route('admin.posts.index', array_merge(request()->query(), ['sort_by' => 'slug', 'sort_order' => request('sort_order') === 'asc' ? 'desc' : 'asc'])) }}">
                                     Slug @if($sort_by == 'slug') @if($sort_order == 'asc') <i class="fa fa-chevron-down"></i> @else <i class="fa fa-chevron-up"></i> @endif @endif
                                 </a>
@@ -76,7 +76,9 @@
                             <th scope="col" style="width: 10%;">
                                 Active
                             </th>
-                            <th scope="col">Actions</th>
+                            <th scope="col">
+                                Actions
+                            </th>
                         </tr>
                     </thead>
                     <tbody>

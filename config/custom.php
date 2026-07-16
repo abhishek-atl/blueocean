@@ -19,8 +19,9 @@ return [
     'upload' => [
         'url' => env('DOWNLOAD_URL', '/storage/'),
         'disk' => env('STORAGE_DISK', 'public_uploads'),
-        'blog_path' => 'posts',
+        'post_path' => 'posts',
         'treatment_path' => 'treatments',
+        'treatment_category_path' => 'treatment-categories',
         'user_path' => 'users',
         'massage_locations_path' => 'mobileMassage',
         'job_application_path' => 'job-applications',

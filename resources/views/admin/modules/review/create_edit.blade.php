@@ -110,14 +110,6 @@
                         @enderror
                     </div>
 
-                    <div class="mb-3">
-                        <label class="form-label" for="reply">Admin Reply</label>
-                        <textarea name="reply" id="reply" class="form-control" rows="6" placeholder="Admin Reply">{{ old('reply', $review->reply ?? '') }}</textarea>
-                        @error('reply')
-                        <div class="text-danger">{{ $message }}</div>
-                        @enderror
-                    </div>
-
                 </div>
             </div>
 
@@ -148,15 +140,15 @@
             <div class="col-lg-12">
                 <div class="card-style mb-30">
 
-                    <div class="mb-3 col-3">
-                        <label class="form-label col-4 required">Status</label>
+                    <div class="mb-3 col-6">
+                        <label class="form-label col-4 required">Active</label>
                         <div class="form-check form-check-inline radio-style mb-20">
-                            <input type="radio" name="status" id="status_approved" value="1" @if(isset($review) && $review->status) checked @endif>
-                            <label class="form-check-label" for="status_approved">Approved</label>
+                            <input type="radio" name="active" id="active_yes" value="1" @if(isset($review) && $review->active) checked @endif>
+                            <label class="form-check-label" for="active_yes">Yes</label>
                         </div>
                         <div class="form-check form-check-inline radio-style mb-20">
-                            <input type="radio" name="status" id="status_pending" value="0" @if(!isset($review) || !$review->status) checked @endif>
-                            <label class="form-check-label" for="status_pending">Pending</label>
+                            <input type="radio" name="active" id="active_no" value="0" @if(!isset($review) || !$review->active) checked @endif>
+                            <label class="form-check-label" for="active_no">No</label>
                         </div>
                     </div>
 

@@ -15,7 +15,6 @@ use App\Http\Controllers\Admin\BookingController;
 use App\Http\Controllers\Admin\PaymentController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\PostController;
-use App\Http\Controllers\Admin\PostCommentController;
 use App\Http\Controllers\Admin\PostTagController;
 use App\Http\Controllers\Admin\ReviewController;
 use App\Http\Controllers\Admin\FAQController;
@@ -23,6 +22,7 @@ use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\TariffPlanController;
 use App\Http\Controllers\Admin\GiftCertificateController;
 use App\Http\Controllers\Admin\BlacklistController;
+use App\Http\Controllers\Admin\TreatmentCategoryController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Middleware\AdminMiddleware;
 
@@ -77,6 +77,12 @@ Route::middleware([AdminMiddleware::class])->group(function () {
     Route::post('/treatments/store', [TreatmentController::class, 'store'])->name('treatments.store');
     Route::get('/treatments/destroy/{id}', [TreatmentController::class, 'destroy'])->name('treatments.destroy');
 
+    Route::get('/treatment_category', [TreatmentCategoryController::class, 'index'])->name('treatment_categories.index');
+    Route::get('/treatment_categories/create', [TreatmentCategoryController::class, 'createEdit'])->name('treatment_categories.create');
+    Route::get('/treatment_categories/edit/{id}', [TreatmentCategoryController::class, 'createEdit'])->name('treatment_categories.edit');
+    Route::post('/treatment_categories/store', [TreatmentCategoryController::class, 'store'])->name('treatment_categories.store');
+    Route::get('/treatment_categories/destroy/{id}', [TreatmentCategoryController::class, 'destroy'])->name('treatment_categories.destroy');
+
     // Users
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
     Route::get('/users/create', [UserController::class, 'createEdit'])->name('users.create');
@@ -123,13 +129,6 @@ Route::middleware([AdminMiddleware::class])->group(function () {
     Route::get('/posts/edit/{id}', [PostController::class, 'createEdit'])->name('posts.edit');
     Route::post('/posts/store', [PostController::class, 'store'])->name('posts.store');
     Route::get('/posts/destroy/{id}', [PostController::class, 'destroy'])->name('posts.destroy');
-
-    // Post Comments
-    Route::get('/post-comments', [PostCommentController::class, 'index'])->name('post_comments.index');
-    Route::get('/post-comments/create', [PostCommentController::class, 'createEdit'])->name('post_comments.create');
-    Route::get('/post-comments/edit/{id}', [PostCommentController::class, 'createEdit'])->name('post_comments.edit');
-    Route::post('/post-comments/store', [PostCommentController::class, 'store'])->name('post_comments.store');
-    Route::get('/post-comments/destroy/{id}', [PostCommentController::class, 'destroy'])->name('post_comments.destroy');
 
     // Post Tags
     Route::get('/post-tags', [PostTagController::class, 'index'])->name('post_tags.index');

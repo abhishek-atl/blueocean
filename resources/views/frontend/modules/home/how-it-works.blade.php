@@ -9,7 +9,7 @@
 </div>
 
 <div class="row featurette">
-    <div class="col-md-7">
+    <div class="col-md-6">
         <h3 class="featurette-heading">
             Book in seconds.
         </h3>
@@ -23,15 +23,15 @@
             <li>Relax</li>
         </ul>
     </div>
-    <div class="col-md-5">
-        <img src="{{ asset('assets/img/massage-how-it-works.jpg') }}" class="featurette-image img-fluid" alt="Massage at home" />
+    <div class="col-md-6">
+        <img src="{{ asset('assets/img/how-it-works.png') }}" class="featurette-image img-fluid" alt="Massage at home" />
     </div>
 </div>
 
 <div class="row featurette">
-    <div class="col-md-7 order-md-2">
+    <div class="col-md-6 order-md-2">
         <h3 class="featurette-heading">
-            Why Massagefy.
+            Why BlueOcean?
         </h3>
         <p class="lead">
             We focus on what actually matters: quality therapists, smooth bookings, and a calm experience from start to finish.
@@ -43,13 +43,13 @@
             <li>Professional care</li>
         </ul>
     </div>
-    <div class="col-md-5 order-md-1">
-        <img src="{{ asset('assets/img/head-massage.jpg') }}" class="featurette-image img-fluid" alt="Massage at home" />
+    <div class="col-md-6 order-md-1">
+        <img src="{{ asset('assets/img/why-blueocean.png') }}" class="featurette-image img-fluid" alt="Massage at home" />
     </div>
 </div>
 
 <div class="row featurette">
-    <div class="col-md-7">
+    <div class="col-md-6">
         <h3 class="featurette-heading">
             Trusted Professionals.
         </h3>
@@ -63,8 +63,8 @@
             <li>Reliable</li>
         </ul>
     </div>
-    <div class="col-md-5">
-        <img src="{{ asset('assets/img/head-massage2.jpg') }}" class="featurette-image img-fluid" alt="Massage at home" />
+    <div class="col-md-6">
+        <img src="{{ asset('assets/img/trusted-professionals.png') }}" class="featurette-image img-fluid" alt="Massage at home" />
     </div>
 </div>
 

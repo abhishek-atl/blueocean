@@ -15,6 +15,6 @@ class Postcode extends Model
 
     public function zone()
     {
-        //return $this->hasOne(PostcodeZoneShortcut::class, 'postcodes_id', 'id');
+        return $this->belongsToMany(PostcodeZone::class, 'postcode_zones_postcodes', 'postcode_id', 'postcode_zone_id');
     }
 }

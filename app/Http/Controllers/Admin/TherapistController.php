@@ -156,9 +156,10 @@ class TherapistController extends Controller
     public function postcodes($id)
     {
         $user = $this->userService->find(request('id'));
-        $user->load('postcodes');
+        $user->load('postcodes.zone');
 
-        $districts = $this->databaseService->getByParams(PostcodeDistrict::class, ['all' => true]);
+        $districts = $this->databaseService->getByParams(PostcodeDistrict::class, ['all' => true, 'with' => ['postcodes']]);
+
         $zones = $this->databaseService->getByParams(PostcodeZone::class, ['all' => true]);
 
         return view('admin.modules.therapist.postcodes', [

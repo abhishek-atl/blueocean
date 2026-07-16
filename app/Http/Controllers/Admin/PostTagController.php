@@ -10,7 +10,7 @@ use Illuminate\Support\Str;
 
 class PostTagController extends Controller
 {
-    protected $databaseService;
+    protected DatabaseService $databaseService;
 
     public function __construct(DatabaseService $databaseService)
     {

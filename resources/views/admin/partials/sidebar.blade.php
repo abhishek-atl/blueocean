@@ -41,28 +41,27 @@
             @can('Manage Therapist')
             <li class="nav-item nav-item-has-children">
                 <a href="#" class="@if(!Request::routeIs('admin.therapists*') &&
-                !Request::routeIs('admin.treatments*')) collapsed @endif" data-bs-toggle="collapse" data-bs-target="#menu_therapists" aria-controls="ddmenu_2" aria-expanded="false" aria-label="Toggle navigation">
+                !Request::routeIs('admin.treatment*')) collapsed @endif" data-bs-toggle="collapse" data-bs-target="#menu_therapists" aria-controls="ddmenu_2" aria-expanded="false" aria-label="Toggle navigation">
                     <i class="fa fa-user-nurse me-2"></i> <span class="text">Therapists</span>
                 </a>
                 <ul id="menu_therapists" class="collapse @if(Request::routeIs('admin.therapists*') ||
-                    Request::routeIs('admin.treatments*')
+                    Request::routeIs('admin.treatment*')
                     ) show @endif dropdown-nav">
 
                     <li>
-                        <a href="{{ route('admin.therapists.index') }}" @if(Route::currentRouteName()=='admin.therapists.index' ||
-                            Route::currentRouteName()=='admin.therapists.create' ||
-                            Route::currentRouteName()=='admin.therapists.edit' ||
-                            Route::currentRouteName()=='admin.therapists.profile' ||
-                            Route::currentRouteName()=='admin.therapists.treatments' ||
-                            Route::currentRouteName()=='admin.therapists.postcodes' ||
-                            Route::currentRouteName()=='admin.therapists.schedules' ||
-                            Route::currentRouteName()=='admin.therapists.fees' ||
-                            Route::currentRouteName()=='admin.therapists.holidays' ) class="active" @endif>Therapists</a>
+                        <a href="{{ route('admin.therapists.index') }}" @if(Route::currentRouteName()=='admin.therapists.*' ) class="active" @endif>
+                            Therapists
+                        </a>
                     </li>
                     <li>
                         <a href="{{ route('admin.treatments.index') }}" @if(Route::currentRouteName()=='admin.treatments.index' ||
                             Route::currentRouteName()=='admin.treatments.create' ||
                             Route::currentRouteName()=='admin.treatments.edit' ) class="active" @endif>Treatments</a>
+                    </li>
+                    <li>
+                        <a href="{{ route('admin.treatment_categories.index') }}" @if(Route::currentRouteName()=='admin.treatment_categories.index' ||
+                            Route::currentRouteName()=='admin.treatment_categories.create' ||
+                            Route::currentRouteName()=='admin.treatment_categories.edit' ) class="active" @endif>Treatment Categories</a>
                     </li>
                 </ul>
             </li>
@@ -142,28 +141,13 @@
                 <a href="#" class="@if(!Request::routeIs('admin.post*') &&
                 !Request::routeIs('admin.reviews*') &&
                 !Request::routeIs('admin.faqs*') &&
-                !Request::routeIs('admin.banners*')) collapsed @endif" data-bs-toggle="collapse" data-bs-target="#menu_posts" aria-controls="ddmenu_2" aria-expanded="false" aria-label="Toggle navigation">
+                !Request::routeIs('admin.banners*')) collapsed @endif" data-bs-toggle="collapse" data-bs-target="#menu_content" aria-controls="ddmenu_2" aria-expanded="false" aria-label="Toggle navigation">
                     <i class="fa fa-envelope me-2"></i> <span class="text">Content</span>
                 </a>
-                <ul id="menu_posts" class="collapse @if(Request::routeIs('admin.post*') ||
+                <ul id="menu_content" class="collapse @if(Request::routeIs('admin.post*') ||
                     Request::routeIs('admin.reviews*') ||
                     Request::routeIs('admin.faqs*') ||
                     Request::routeIs('admin.banners*')) show @endif dropdown-nav">
-                    <li>
-                        <a href="{{ route('admin.post_tags.index') }}" @if(Route::currentRouteName()=='admin.post_tags.index' ||
-                            Route::currentRouteName()=='admin.post_tags.create' ||
-                            Route::currentRouteName()=='admin.post_tags.edit' ) class="active" @endif>Post Tags</a>
-                    </li>
-                    <li>
-                        <a href="{{ route('admin.posts.index') }}" @if(Route::currentRouteName()=='admin.posts.index' ||
-                            Route::currentRouteName()=='admin.posts.create' ||
-                            Route::currentRouteName()=='admin.posts.edit' ) class="active" @endif>Posts</a>
-                    </li>
-                    <li>
-                        <a href="{{ route('admin.post_comments.index') }}" @if(Route::currentRouteName()=='admin.post_comments.index' ||
-                            Route::currentRouteName()=='admin.post_comments.create' ||
-                            Route::currentRouteName()=='admin.post_comments.edit' ) class="active" @endif>Post Comments</a>
-                    </li>
                     <li>
                         <a href="{{ route('admin.reviews.index') }}" @if(Route::currentRouteName()=='admin.reviews.index' ||
                             Route::currentRouteName()=='admin.reviews.create' ||
@@ -178,6 +162,29 @@
                         <a href="{{ route('admin.banners.index') }}" @if(Route::currentRouteName()=='admin.banners.index' ||
                             Route::currentRouteName()=='admin.banners.create' ||
                             Route::currentRouteName()=='admin.banners.edit' ) class="active" @endif>Banners</a>
+                    </li>
+                </ul>
+            </li>
+            <li class="nav-item nav-item-has-children">
+                <a href="#" class="@if(!Request::routeIs('admin.post*') &&
+                !Request::routeIs('admin.reviews*') &&
+                !Request::routeIs('admin.faqs*') &&
+                !Request::routeIs('admin.banners*')) collapsed @endif" data-bs-toggle="collapse" data-bs-target="#menu_blog" aria-controls="ddmenu_2" aria-expanded="false" aria-label="Toggle navigation">
+                    <i class="fa fa-envelope me-2"></i> <span class="text">Blog</span>
+                </a>
+                <ul id="menu_blog" class="collapse @if(Request::routeIs('admin.post*') ||
+                    Request::routeIs('admin.reviews*') ||
+                    Request::routeIs('admin.faqs*') ||
+                    Request::routeIs('admin.banners*')) show @endif dropdown-nav">
+                    <li>
+                        <a href="{{ route('admin.posts.index') }}" @if(Route::currentRouteName()=='admin.posts.index' ||
+                            Route::currentRouteName()=='admin.posts.create' ||
+                            Route::currentRouteName()=='admin.posts.edit' ) class="active" @endif>Posts</a>
+                    </li>
+                    <li>
+                        <a href="{{ route('admin.post_tags.index') }}" @if(Route::currentRouteName()=='admin.post_tags.index' ||
+                            Route::currentRouteName()=='admin.post_tags.create' ||
+                            Route::currentRouteName()=='admin.post_tags.edit' ) class="active" @endif>Post Tags</a>
                     </li>
                 </ul>
             </li>

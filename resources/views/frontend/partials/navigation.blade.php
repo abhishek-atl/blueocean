@@ -27,7 +27,7 @@
               <ul class="navbar-nav align-items-lg-center">
                   <li class="nav-item dropdown">
                       <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                          User
+                          <i class="fa fa-user"></i>
                       </a>
                       <ul class="dropdown-menu dropdown-menu-lg-end">
                           @auth

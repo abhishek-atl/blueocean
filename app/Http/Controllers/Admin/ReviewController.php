@@ -57,6 +57,7 @@ class ReviewController extends Controller
     public function store(Request $request)
     {
         $params = $request->except('_token', 'photo');
+        $params['ip_address'] = $request->ip();
 
         if ($request->has('photo')) {
             $file = $request->file('photo');

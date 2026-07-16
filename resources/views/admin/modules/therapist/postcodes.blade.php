@@ -96,11 +96,17 @@
                         @foreach($district->postcodes as $postcode)
                         <div class="col-md-2">
                             <div class="form-check my-2">
-                                @php $class = ''; @endphp
+                                @php
+                                    $class = '';
+                                @endphp
+                                
                                 @if($user && $user->postcodes && $user->postcodes->contains('postcode',$postcode->postcode))
-                                @php $class = 'checked="checked"'; @endphp
+                                    @php
+                                        $class = 'checked="checked"';
+                                    @endphp
                                 @endif
-                                <input class="form-check-input" type="checkbox" name="postcodes[]" value="{{$postcode->id}}" id="{{$postcode->id}}" data-zone="{{ $postcode->zone ? $postcode->zone->shortcust_id : 0 }}" {{ $class }}>
+                                <input class="form-check-input" type="checkbox" name="postcodes[]" value="{{$postcode->id}}" id="{{$postcode->id}}" 
+                                 {{ $class }}>
                                 <label class="form-check-label" for="{{$postcode->id}}">
                                     {{ $postcode->postcode }}
                                 </label>

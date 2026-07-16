@@ -42,14 +42,17 @@ treatments with genuine care, from just £59
     @include('frontend.modules.home.therapists')
 </div>
 
+<div class="container-fluid page-section-bg">
+    <div class="container">
+        @include('frontend.modules.home.reviews')
+    </div>
+</div>
+
 <div class="container">
-    @include('frontend.modules.home.home-treatments')
+    @include('frontend.modules.home.treatment-categories')
 </div>
 
 <div class="container">
     @include('frontend.modules.home.cta')
 </div>
-
-
-
 @endsection

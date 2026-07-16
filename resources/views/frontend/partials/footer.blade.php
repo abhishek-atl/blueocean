@@ -7,7 +7,7 @@
             <li><a href="#">What To Wear</a></li>
             <li><a href="#">Preparing Your Room</a></li>
             <li><a href="#">Customer Reviews</a></li>
-            <li><a href="#">Blog</a></li>
+            <li><a href="{{ route('blog') }}">Blog</a></li>
         </ul>
     </div>
 
@@ -25,10 +25,10 @@
     <div class="col-12 col-md-3">
         <h4>Information</h4>
         <ul>
-            <li><a href="#">Frequently Asked Questions</a></li>
-            <li><a href="#">Apply to Work With Us</a></li>
+            <li><a href="{{ route('faq') }}">Frequently Asked Questions</a></li>
+            <li><a href="{{ route('join_us') }}">Apply to Work With Us</a></li>
             <li><a href="#">Coverage Areas</a></li>
-            <li><a href="#">Therapists</a></li>
+            <li><a href="{{ route('therapists') }}">Therapists</a></li>
         </ul>
     </div>
 

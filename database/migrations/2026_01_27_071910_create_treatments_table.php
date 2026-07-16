@@ -16,25 +16,20 @@ return new class extends Migration
             $table->string('name', 100);
             $table->string('title', 100);
             $table->string('slug', 255)->unique();
+            $table->longText('description');
+            $table->longText('technique');
+            $table->longText('ideal_for');
 
             $table->string('image')->nullable();
             $table->string('image_alt')->nullable();
             $table->string('image_title')->nullable();
-            $table->longText('description');
-            $table->longText('summary');
-
-            $table->text('cta_text')->nullable();
-            $table->boolean('cta_text_visible')->nullable();
-            $table->boolean('cta_button_visible')->nullable();
-            $table->string('cta_button_text', 255)->nullable();
-            $table->string('cta_button_url', 255)->nullable();
 
             $table->boolean('active')->default(0);
             $table->boolean('on_treatment_page')->default(0);
 
             $table->string('page_meta_title', 255);
-            $table->longText('page_meta_tag');
-            $table->string('extra_meta_tags', 255)->nullable();
+            $table->longText('page_meta_description');
+            $table->string('page_extra_meta_tags', 255)->nullable();
 
             $table->timestamps();
         });

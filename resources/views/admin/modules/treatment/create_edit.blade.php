@@ -80,36 +80,25 @@
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label required" for="summary">Summary</label>
-                        <textarea name="summary" id="summary" class="form-control editor" placeholder="Treatment Summary">{{ old('summary', $treatment->summary ?? '') }}</textarea>
-                        @error('summary')
-                        <div class="text-danger">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label required me-3" for="cta_text_visible">Show CTA Text</label>
-                        <label class="radio-inline me-3">
-                            <input type="radio" name="cta_text_visible" id="cta_text_visible_yes" value="1" @if($treatment && $treatment->cta_text_visible) checked @endif>Yes</label>
-                        <label class="radio-inline me-3">
-                            <input type="radio" name="cta_text_visible" id="cta_text_visible_no" value="0" @if($treatment && !$treatment->cta_text_visible) checked @endif> No</label>
-                        @error('cta_text_visible')
-                        <div class="text-danger">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label required" for="cta_text">CTA Text</label>
-                        <textarea name="cta_text" class="form-control editor" id="cta_text" placeholder="Enter CTA Text">@if($treatment){{ $treatment->cta_text ?? '' }}@endif</textarea>
-                        @error('cta_text')
-                        <div class="text-danger">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-                    <div class="mb-3">
                         <label class="form-label required me-3" for="description">Description</label>
                         <textarea name="description" class="form-control editor" id="description" placeholder="Enter Description">@if($treatment){{ $treatment->description ?? '' }}@endif</textarea>
                         @error('description')
+                        <div class="text-danger">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label required" for="technique">Technique</label>
+                        <input type="text" name="technique" id="technique" class="form-control" placeholder="Treatment Techniques" value="{{ old('technique', $treatment->technique ?? '') }}" />
+                        @error('technique')
+                        <div class="text-danger">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label required" for="ideal_for">Ideal For</label>
+                        <input type="text" name="ideal_for" id="ideal_for" class="form-control" placeholder="Ideal for" value="{{ old('ideal_for', $treatment->ideal_for ?? '') }}" />
+                        @error('ideal_for')
                         <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
@@ -123,6 +112,21 @@
                         <img id="showImage" src="#" style="height: 90px; max-width: 130px; display: none;" />
                         @endif
                         @error('image')
+                        <div class="text-danger">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="image_alt">Image Alt Text</label>
+                        <input type="text" name="image_alt" id="image_alt" class="form-control" placeholder="Image Alt Text" value="{{ old('image_alt', $entity->image_alt ?? '') }}" />
+                        @error('image_alt')
+                        <div class="text-danger">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label" for="image_title">Image Title</label>
+                        <input type="text" name="image_title" id="image_title" class="form-control" placeholder="Image Title" value="{{ old('image_title', $entity->image_title ?? '') }}" />
+                        @error('image_title')
                         <div class="text-danger">{{ $message }}</div>
                         @enderror
                     </div>
@@ -142,31 +146,6 @@
                             <label for="on_treatment_page" class="form-check-label">Show on Treatment Page</label>
                         </div>
                     </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">Show CTA Button</label>
-                        <div class="form-check">
-                            <input type="checkbox" name="show_cta_button" id="show_cta_button" class="form-check-input" value="1" @if($treatment && $treatment->show_cta_button) checked @endif>
-                            <label for="show_cta_button" class="form-check-label">Show CTA Button</label>
-                        </div>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">CTA Button Text</label>
-                        <input type="text" name="cta_button_text" id="cta_button_text" class="form-control" placeholder="CTA Button Text" value="{{ old('cta_button_text', $treatment->cta_button_text ?? '') }}" />
-                        @error('cta_button_text')
-                        <div class="text-danger">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">CTA Button URL</label>
-                        <input type="text" name="cta_button_url" id="cta_button_url" class="form-control" placeholder="CTA Button URL" value="{{ old('cta_button_url', $treatment->cta_button_url ?? '') }}" />
-                        @error('cta_button_url')
-                        <div class="text-danger">{{ $message }}</div>
-                        @enderror
-                    </div>
-
 
                 </div>
             </div>
@@ -189,24 +168,24 @@
 @push('pageScripts')
 
 <script>
-    $(document).ready(function () {
+    $(document).ready(function() {
 
-    $('#image').on('change', function (evt) {
-        const [file] = $('#image')[0].files
-        if (file) {
-            $('#showImage').css('display', '');
-            $('#showImage').attr('src', URL.createObjectURL(file))
-        }
-    })
+        $('#image').on('change', function(evt) {
+            const [file] = $('#image')[0].files
+            if (file) {
+                $('#showImage').css('display', '');
+                $('#showImage').attr('src', URL.createObjectURL(file))
+            }
+        })
 
-    $('#treatment_category_id').select2({
-        placeholder: 'Select Categories',
-    });
+        $('#treatment_category_id').select2({
+            placeholder: 'Select Categories',
+        });
 
-    @if ($treatment)
+        @if($treatment)
         let selectedTags = '{!! json_encode($treatmentCategoryIds) !!}'
-    $('#treatment_category_id').val(JSON.parse(selectedTags)).trigger('change');
-    @endif
+        $('#treatment_category_id').val(JSON.parse(selectedTags)).trigger('change');
+        @endif
     });
 </script>
 

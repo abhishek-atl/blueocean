@@ -21,9 +21,9 @@ return new class extends Migration
             $table->string('photo')->nullable();
             $table->string('location');
             $table->longText('comment');
-            $table->longText('reply')->nullable();
+            $table->tinyInteger('evaluation')->nullable();
             $table->string('ip_address');
-            $table->tinyInteger('status')->default(0);
+            $table->tinyInteger('active')->default(0);
             $table->timestamps();
         });
     }

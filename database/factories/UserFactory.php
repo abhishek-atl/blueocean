@@ -33,10 +33,7 @@ class UserFactory extends Factory
     public function configure(): static
     {
         return $this->afterCreating(function (User $user) {
-            if ($user->id == 1) {
-                $user->user_type = 'Admin';
-                $user->save();
-            } else if ($user->id <= 8) {
+            if ($user->id <= 20) {
                 $user->user_type = 'Customer';
                 $user->assignRole('Customer');
                 $user->save();

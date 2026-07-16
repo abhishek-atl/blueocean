@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\AccountController;
+use App\Http\Controllers\BlogController;
+use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\GiftVoucherController;
 use App\Http\Controllers\GooglePlacesController;
 use App\Http\Controllers\HomeController;
@@ -64,8 +66,13 @@ Route::get('/therapist/{slug}', [HomeController::class, 'therapistDetail'])->nam
 Route::get('/join-us', [HomeController::class, 'joinUs'])->name('join_us');
 Route::post('/join-us', [HomeController::class, 'joinUsPost'])->name('join_us_post');
 
+Route::get('/reviews', [ReviewController::class, 'index'])->name('reviews');
+Route::get('/leave/review', [ReviewController::class, 'addReview'])->name('add_review');
+Route::post('/leave/review', [ReviewController::class, 'addReviewPost'])->name('post_review');
+Route::get('/faq', [HomeController::class, 'faq'])->name('faq');
 
-Route::get('/legal/legal.html', [HomeController::class, 'terms_conditions'])->name('terms_conditions');
+Route::get('/blog', [BlogController::class, 'index'])->name('blog');
+Route::get('/blog/{slug}', [BlogController::class, 'blog_detail'])->name('blog_detail');
 
 
 // gift card

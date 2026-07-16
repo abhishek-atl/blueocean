@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreTherapistApplication;
 use App\Models\Banner;
 use App\Models\FAQ;
+use App\Models\Review;
 use Illuminate\Http\Request;
 
 use App\Models\Treatment;
@@ -28,10 +29,10 @@ class HomeController extends Controller
 
     public function home(Request $request)
     {
-        $treatments = Treatment::query()
+        $treatmentCategories = TreatmentCategory::query()
             ->where('active', true)
-            ->orderBy('name')
-            ->limit(6)
+            ->orderBy('id', 'asc')
+            ->limit(3)
             ->get();
 
         $therapists = User::query()
@@ -52,11 +53,17 @@ class HomeController extends Controller
             ->orderBy('display_order')
             ->get();
 
+        $review = Review::where('active', true)
+            ->orderBy('created_at', 'desc')
+            ->limit(6)
+            ->get();
+
         return view('frontend.modules.home.index', [
-            'treatments' => $treatments,
+            'treatmentCategories' => $treatmentCategories,
             'therapists' => $therapists,
             'banner' => $banner,
-            'faqs' => $faqs
+            'faqs' => $faqs,
+            'reviews' => $review
         ]);
     }
 
@@ -78,7 +85,7 @@ class HomeController extends Controller
             ->get();
 
         $categories = TreatmentCategory::query()
-            ->orderBy('name')
+            ->orderBy('id', 'asc')
             ->get();
 
         return view('frontend.modules.treatments.index', [
@@ -167,5 +174,16 @@ class HomeController extends Controller
         return redirect()
             ->route('join_us')
             ->with('success', 'Thank you! <br />We have received your application form. <br />If you are successful, we will be in touch very soon!');
+    }
+
+    public function faq()
+    {
+        $faqs = FAQ::where('active', true)
+            ->orderBy('display_order')
+            ->get();
+
+        return view('frontend.modules.faq.index', [
+            'faqs' => $faqs
+        ]);
     }
 }

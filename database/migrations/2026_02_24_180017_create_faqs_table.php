@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('question');
             $table->text('answer');
             $table->boolean('active')->default(true);
-            $table->integer('order_by')->default(0);
+            $table->integer('display_order')->default(0);
             $table->timestamps();
         });
     }

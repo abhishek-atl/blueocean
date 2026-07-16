@@ -15,6 +15,11 @@ return new class extends Migration
             $table->id();
             $table->string('name', 100);
             $table->string('slug', 100);
+            $table->text('description')->nullable();
+            $table->string('image', 255)->nullable();
+            $table->string('image_alt')->nullable();
+            $table->string('image_title')->nullable();
+            $table->boolean('active')->default(true);
             $table->timestamps();
         });
     }

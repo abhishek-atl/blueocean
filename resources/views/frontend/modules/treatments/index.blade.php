@@ -18,22 +18,20 @@
 
     <div class="container">
 
-        <section class="treatments-categories">
-            <div class="row py-4">
-                <div class="col">
-                    <ul class="nav nav-pills">
-                        <li class="nav-item">
-                            <a class="nav-link @if($currentTag === 'all') active @endif" aria-current="page" href="{{ route('treatments') }}">All</a>
-                        </li>
-                        @foreach($categories as $category)
-                        <li class="nav-item">
-                            <a class="nav-link @if($currentTag === $category['slug']) active @endif" aria-current="page" href="{{ route('treatments', ['category' => $category['slug']]) }}">{{ $category['name'] }}</a>
-                        </li>
-                        @endforeach
-                    </ul>
-                </div>
+        <div class="row py-4">
+            <div class="col">
+                <ul class="nav nav-pills">
+                    <li class="nav-item">
+                        <a class="nav-link @if($currentTag === 'all') active @endif" aria-current="page" href="{{ route('treatments') }}">All</a>
+                    </li>
+                    @foreach($categories as $category)
+                    <li class="nav-item">
+                        <a class="nav-link @if($currentTag === $category['slug']) active @endif" aria-current="page" href="{{ route('treatments', ['category' => $category['slug']]) }}">{{ $category['name'] }}</a>
+                    </li>
+                    @endforeach
+                </ul>
             </div>
-        </section>
+        </div>
 
         <div class="row g-4">
             @foreach($treatments as $treatment)
@@ -57,20 +55,11 @@
                         <p class="custom-card-title">{{ $treatment->title }}</p>
                         @endif
 
-                        @if($treatment->summary)
                         <div class="custom-card-summary">
-                            {!! Str::limit(strip_tags($treatment->summary), 100) !!}
+                            {!! Str::limit(strip_tags($treatment->description), 100) !!}
                         </div>
-                        @endif
 
                         <div class="custom-card-actions">
-                            <div class="custom-card-price">
-                                @if($treatment->price)
-                                From <strong>£{{ number_format($treatment->price, 2) }}</strong>
-                                @else
-                                From <strong>£{{ number_format(59, 2) }}</strong>
-                                @endif
-                            </div>
                             <div class="custom-card-details-link">
                                 <a href="{{ route('treatment_detail', $treatment->slug) }}" class="btn btn-primary">View Treatment</a>
                             </div>

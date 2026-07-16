@@ -61,14 +61,6 @@
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label required" for="summary">Summary</label>
-                        <textarea name="summary" id="summary" class="form-control" rows="3" placeholder="Post Summary">{{ old('summary', $post->summary ?? '') }}</textarea>
-                        @error('summary')
-                        <div class="text-danger">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-                    <div class="mb-3">
                         <label class="form-label required" for="content">Content</label>
                         <textarea name="content" id="content" class="form-control editor" rows="8" placeholder="Post Content">{{ old('content', $post->content ?? '') }}</textarea>
                         @error('content')
@@ -120,17 +112,6 @@
                         </div>
                     </div>
 
-                    <div class="mb-3 col-3">
-                        <label class="form-label col-4 required">Comments Enabled</label>
-                        <div class="form-check form-check-inline radio-style mb-20">
-                            <input type="radio" name="comments_enabled" id="comments_y" value="1" @if(!isset($post) || $post->comments_enabled) checked @endif>
-                            <label class="form-check-label" for="comments_y">Yes</label>
-                        </div>
-                        <div class="form-check form-check-inline radio-style mb-20">
-                            <input type="radio" name="comments_enabled" id="comments_n" value="0" @if(isset($post) && !$post->comments_enabled) checked @endif>
-                            <label class="form-check-label" for="comments_n">No</label>
-                        </div>
-                    </div>
 
                 </div>
             </div>

@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->string('slug')->unique();
             $table->string('title');
-            $table->text('summary');
             $table->text('content');
             $table->string('author');
             $table->boolean('active')->default(true);
@@ -25,9 +24,9 @@ return new class extends Migration
             $table->string('image_alt')->nullable();
             $table->string('image_title')->nullable();
 
-            $table->string('meta_title')->nullable();
-            $table->text('meta_description')->nullable();
-            $table->text('extra_meta_tags')->nullable();
+            $table->string('page_meta_title')->nullable();
+            $table->text('page_meta_description')->nullable();
+            $table->text('page_extra_meta_tags')->nullable();
 
             $table->timestamps();
         });

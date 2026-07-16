@@ -32,9 +32,12 @@
     <link rel="stylesheet" href="{{ asset('assets/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/owl.carousel.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/owl.theme.default.min.css') }}">
+    
     <link rel="stylesheet" href="{{ asset('assets/css/fontawesome.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/solid.min.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/css/brands.min.css') }}" />
+    <link rel="stylesheet" href="{{ asset('assets/css/regular.min.css') }}" />
+    
     <link rel="stylesheet" href="{{ asset('assets/css/tempus-dominus.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/toastr.min.css') }}">
 

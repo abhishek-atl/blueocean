@@ -14,7 +14,9 @@ use App\Mail\SendGiftCertificateAdmin;
 use App\Mail\SendGiftCertificateRecipient;
 use App\Mail\SendGiftCertificateSender;
 use App\Mail\SendHolidayUpdateToAdmin;
+use App\Mail\SendReviewMail;
 use App\Mail\TherapistApplication;
+use App\Models\Review;
 use Illuminate\Support\Facades\Mail;
 
 class MailService
@@ -103,5 +105,11 @@ class MailService
     public function SendHolidayUpdateToTherapist($holiday, $action)
     {
         Mail::to($holiday->therapist->email)->send(new SendHolidayUpdateToTherapist($holiday, $action));
+    }
+
+    public function sendReviewMail(Review $review)
+    {
+        $email = config('mail.to.admin_address');
+        Mail::to($email)->send(new SendReviewMail($review));
     }
 }

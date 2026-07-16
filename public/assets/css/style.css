@@ -114,6 +114,12 @@ table.booking_detail tr.selected>* {
     margin-bottom: 60px;
 }
 
+.page-section-bg {
+    background-color: var(--bo-lightblue);
+    padding-top: 60px;
+    padding-bottom: 60px;
+}
+
 .section-eyebrow {
     display: inline-flex;
     align-items: center;
@@ -154,8 +160,116 @@ table.booking_detail tr.selected>* {
     color: var(--bo-blue) !important;
 }
 
-/* buttons */
+/* FAQ accordion */
+#accordionFaq {
+    --bs-accordion-border-width: 0;
+    --bs-accordion-border-radius: 12px;
+    display: grid;
+    gap: 14px;
+}
 
+#accordionFaq .accordion-item {
+    background: #fff;
+    border: 1px solid rgba(84, 107, 128, 0.16);
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(84, 107, 128, 0.08);
+    overflow: hidden;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+#accordionFaq .accordion-item:has(.accordion-button:not(.collapsed)) {
+    border-color: rgba(84, 107, 128, 0.42);
+    box-shadow: 0 14px 32px rgba(84, 107, 128, 0.14);
+}
+
+#accordionFaq .accordion-button {
+    gap: 18px;
+    min-height: 72px;
+    padding: 20px 24px;
+    background: #fff;
+    color: var(--text-color);
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.45;
+    box-shadow: none;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+#accordionFaq .accordion-button:not(.collapsed) {
+    background: rgba(199, 217, 229, 0.32);
+    color: var(--bo-blue);
+    box-shadow: none;
+}
+
+#accordionFaq .accordion-button:hover {
+    background: rgba(199, 217, 229, 0.2);
+    color: var(--bo-blue);
+}
+
+#accordionFaq .accordion-button:focus-visible {
+    border-color: transparent;
+    box-shadow: inset 0 0 0 3px rgba(84, 107, 128, 0.28);
+    outline: 0;
+}
+
+#accordionFaq .accordion-button::after {
+    flex: 0 0 34px;
+    width: 34px;
+    height: 34px;
+    margin-left: auto;
+    background-color: var(--bo-blue);
+    background-image:
+        linear-gradient(#fff, #fff),
+        linear-gradient(#fff, #fff);
+    background-position: center, center;
+    background-repeat: no-repeat;
+    background-size: 12px 2px, 2px 12px;
+    border-radius: 50%;
+    transform: none;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+#accordionFaq .accordion-button:not(.collapsed)::after {
+    background-color: var(--bo-gray);
+    background-image: linear-gradient(#fff, #fff);
+    background-size: 12px 2px;
+    transform: rotate(180deg);
+}
+
+#accordionFaq .accordion-body {
+    padding: 8px 24px 24px;
+    background: rgba(199, 217, 229, 0.32);
+    color: var(--text-muted-color);
+    line-height: 1.75;
+}
+
+#accordionFaq .accordion-body> :last-child {
+    margin-bottom: 0;
+}
+
+@media (max-width: 575.98px) {
+    #accordionFaq {
+        gap: 10px;
+    }
+
+    #accordionFaq .accordion-button {
+        gap: 12px;
+        min-height: 64px;
+        padding: 16px;
+    }
+
+    #accordionFaq .accordion-button::after {
+        flex-basis: 30px;
+        width: 30px;
+        height: 30px;
+    }
+
+    #accordionFaq .accordion-body {
+        padding: 4px 16px 20px;
+    }
+}
+
+/* buttons */
 .btn-check:checked+.btn,
 .btn.active,
 .btn.show,
@@ -202,7 +316,6 @@ table.booking_detail tr.selected>* {
 
 
 /* Forms */
-
 .form-control {
     border: 1px solid rgba(104, 138, 140, 0.24);
     border-radius: 8px;
@@ -263,7 +376,7 @@ table.booking_detail tr.selected>* {
     aspect-ratio: 1;
     border-radius: 50%;
     margin: 24px auto 0;
-    width: min(180px, calc(100% - 48px));
+    width: 300px;
 }
 
 .custom-card-image {
@@ -318,6 +431,8 @@ table.booking_detail tr.selected>* {
 .custom-card-actions .btn {
     padding: 10px 18px;
 }
+
+
 
 /**********************************************/
 /* Featurette */
@@ -424,6 +539,66 @@ table.booking_detail tr.selected>* {
     }
 }
 
+.owl-corousel-container {
+    position: relative;
+    padding: 20px;
+}
+
+.owl-corousel-container .owl-corousel-therapists {}
+
+.owl-corousel-container .owl-corousel-therapists .item {}
+
+.owl-corousel-container .owl-theme .custom-nav {
+    position: absolute;
+    margin: 0;
+    padding: 0;
+    height: auto;
+    top: 50%;
+    left: 0;
+    right: 0;
+}
+
+@media (max-width: 767.98px) {
+    .owl-corousel-container .owl-theme .custom-nav {
+        display: none;
+    }
+}
+
+.owl-corousel-container .owl-theme .custom-nav .owl-prev,
+.owl-corousel-container .owl-theme .custom-nav .owl-next {
+    position: absolute;
+    margin: 0px;
+    padding: 0;
+    color: inherit;
+    background: none;
+    order: none;
+    height: 40px;
+    border: 0;
+    z-index: 100;
+}
+
+.owl-corousel-container .owl-theme .custom-nav .owl-prev i,
+.owl-corousel-container .owl-theme .custom-nav .owl-next i {
+    font-size: 1rem;
+    background-color: var(--bo-blue);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.owl-corousel-container .owl-theme .custom-nav .owl-prev {
+    left: -10px;
+    color: var(--bo-yellow);
+}
+
+.owl-corousel-container .owl-theme .custom-nav .owl-next {
+    right: -10px;
+    color: var(--bo-yellow);
+}
+
 /**********************************************/
 /* Navigation */
 /**********************************************/
@@ -469,15 +644,6 @@ nav,
     border: solid 1px var(--bo-blue);
 }
 
-.navbar .dropdown-toggle::after {
-    display: none;
-}
-
-.navbar .arrow-down {
-    font-size: 10px;
-}
-
-
 /**********************************************/
 /* footer */
 /**********************************************/
@@ -506,7 +672,7 @@ footer a:hover {
 }
 
 footer ul {
-    list-style: disc;
+    list-style: none;
     padding: 0;
 }
 
@@ -552,9 +718,9 @@ footer ul li {
     align-items: center;
     width: 100%;
     min-height: 680px;
-    padding: 120px 0;
+    padding: 0;
     overflow: hidden;
-    background: url('../img/hero-bg.jpg') center / cover no-repeat;
+    background: url('../img/hero-bg.png?v=1') center / cover no-repeat;
 }
 
 .jumbotron::before {
