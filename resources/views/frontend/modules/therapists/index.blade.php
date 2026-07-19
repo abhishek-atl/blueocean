@@ -30,16 +30,16 @@
                     @endif
 
                     <div class="custom-card-body">
-                        <h2>{{ $therapist->first_name }} {{ $therapist->last_name }}</h2>
+                        <h2 class="text-center">{{ $therapist->first_name }} {{ $therapist->last_name }}</h2>
 
                         @if($therapist->therapist_profile->about)
-                        <div class="custom-card-summary">
+                        <div class="custom-card-summary text-center">
                             {{ Str::limit(strip_tags($therapist->therapist_profile->about), 100) }}
                         </div>
                         @endif
 
                         <div class="custom-card-actions">
-                            <div class="custom-card-details-link ms-auto">
+                            <div class="custom-card-details-link">
                                 <a href="{{ route('therapist_detail', $therapist->therapist_profile->slug) }}" class="btn btn-primary">View Therapist</a>
                             </div>
                         </div>

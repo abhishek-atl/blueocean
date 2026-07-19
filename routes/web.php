@@ -69,11 +69,13 @@ Route::post('/join-us', [HomeController::class, 'joinUsPost'])->name('join_us_po
 Route::get('/reviews', [ReviewController::class, 'index'])->name('reviews');
 Route::get('/leave/review', [ReviewController::class, 'addReview'])->name('add_review');
 Route::post('/leave/review', [ReviewController::class, 'addReviewPost'])->name('post_review');
+
 Route::get('/faq', [HomeController::class, 'faq'])->name('faq');
 
 Route::get('/blog', [BlogController::class, 'index'])->name('blog');
 Route::get('/blog/{slug}', [BlogController::class, 'blog_detail'])->name('blog_detail');
 
+Route::get('/legal/legal.html', [HomeController::class, 'terms_conditions'])->name('terms_conditions');
 
 // gift card
 Route::get('buy-gift-card', [GiftVoucherController::class, 'gifts'])->name('gifts');

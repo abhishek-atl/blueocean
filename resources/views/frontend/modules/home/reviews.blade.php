@@ -1,3 +1,4 @@
+<div class="page-section-padding">
     <div class="row justify-content-center text-center">
         <div class="col-12">
             <span class="section-eyebrow">Review</span>
@@ -24,91 +25,92 @@
             </a>
         </div>
     </div>
+</div>
 
-    @push('pageCss')
-    <style>
-        .owl-corousel-testimonial-container {
-            padding: 12px 0 24px;
-        }
+@push('pageCss')
+<style>
+    .owl-corousel-testimonial-container {
+        padding: 12px 0 24px;
+    }
 
+    .owl-corousel-testimonial .review-card {
+        height: 100%;
+        background: #fff;
+        border: 1px solid rgba(84, 107, 128, 0.12);
+        border-radius: 12px;
+        box-shadow: 0 10px 28px rgba(84, 107, 128, 0.1);
+        width: 400px;
+    }
+
+    @media screen and (max-width: 768px) {
         .owl-corousel-testimonial .review-card {
-            height: 100%;
-            background: #fff;
-            border: 1px solid rgba(84, 107, 128, 0.12);
-            border-radius: 12px;
-            box-shadow: 0 10px 28px rgba(84, 107, 128, 0.1);
-            width: 400px;
+            width: 100%;
         }
+    }
 
-        @media screen and (max-width: 768px) {
-            .owl-corousel-testimonial .review-card {
-                width: 100%;
-            }
-        }
+    .owl-corousel-testimonial .review-card p {
+        margin-bottom: 20px;
+        line-height: 1.7;
+    }
 
-        .owl-corousel-testimonial .review-card p {
-            margin-bottom: 20px;
-            line-height: 1.7;
-        }
+    .owl-corousel-testimonial .review-author {
+        color: var(--bo-blue);
+        font-size: 0.9rem;
+        font-weight: 700;
+    }
 
-        .owl-corousel-testimonial .review-author {
-            color: var(--bo-blue);
-            font-size: 0.9rem;
-            font-weight: 700;
-        }
+    .owl-corousel-testimonial .owl-stage {
+        display: flex;
+    }
 
-        .owl-corousel-testimonial .owl-stage {
-            display: flex;
-        }
+    .owl-corousel-testimonial .owl-item {
+        display: flex;
+    }
 
-        .owl-corousel-testimonial .owl-item {
-            display: flex;
-        }
+    .owl-corousel-testimonial .owl-nav button.owl-prev,
+    .owl-corousel-testimonial .owl-nav button.owl-next {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: var(--bo-blue);
+        color: #fff;
+    }
+</style>
+@endpush
 
-        .owl-corousel-testimonial .owl-nav button.owl-prev,
-        .owl-corousel-testimonial .owl-nav button.owl-next {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: var(--bo-blue);
-            color: #fff;
-        }
-    </style>
-    @endpush
-
-    @push('pageScripts')
-    <script>
-        $('.owl-corousel-testimonial').owlCarousel({
-            nav: true,
-            loop: true,
-            items: 3,
-            center: true,
-            autoplay: true,
-            autoplayTimeout: 5000,
-            responsive: {
-                0: {
-                    items: 1,
-                    dots: true,
-                    mouseDrag: true,
-                },
-                768: {
-                    items: 2,
-                    dots: true,
-                    mouseDrag: true,
-                },
-                992: {
-                    items: 3,
-                    dots: false,
-                    mouseDrag: false,
-                }
+@push('pageScripts')
+<script>
+    $('.owl-corousel-testimonial').owlCarousel({
+        nav: true,
+        loop: true,
+        items: 3,
+        center: true,
+        autoplay: true,
+        autoplayTimeout: 5000,
+        responsive: {
+            0: {
+                items: 1,
+                dots: true,
+                mouseDrag: true,
             },
-            margin: 10,
-            stagePadding: 0,
-            navText: [
-                '<i class="fa fa-arrow-left" aria-hidden="true"></i>',
-                '<i class="fa fa-arrow-right" aria-hidden="true"></i>'
-            ],
-            autowidth: false,
-        });
-    </script>
-    @endpush
+            768: {
+                items: 2,
+                dots: true,
+                mouseDrag: true,
+            },
+            992: {
+                items: 3,
+                dots: false,
+                mouseDrag: false,
+            }
+        },
+        margin: 10,
+        stagePadding: 0,
+        navText: [
+            '<i class="fa fa-arrow-left" aria-hidden="true"></i>',
+            '<i class="fa fa-arrow-right" aria-hidden="true"></i>'
+        ],
+        autowidth: false,
+    });
+</script>
+@endpush

@@ -2,7 +2,9 @@
 
 namespace App\Services;
 
+use App\Models\Setting;
 use Carbon\Carbon;
+use GuzzleHttp\Client;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
 
@@ -53,50 +55,52 @@ class SmsService
         return $text;
     }
 
-    public function sendSms(array $numbers, $message, $from)
+    public function sendSms(string $message, $numbers = null, $from = null)
     {
-        try {
-            $testmode = false;
-            if (App::environment(['local', 'staging'])) {
-                $testmode = true;
-                Log::info(print_r($message, true));
-                return;
-            }
-            $username = config('custom.text_local_api_username');
-            $password = config('custom.text_local_api_password');
-            $textlocal = new Textlocal($username, $password);
-            //dd($numbers);
+        if ($numbers == null) {
+            $adminMobile = Setting::where(['param_key' => 'admin_mobile'])->first()->param_value;
+            $numbers = [$adminMobile];
+        }
 
-            $modifiedNumbers = [];
-            // textGlobar need 44 country code format
-            foreach ($numbers as $key => $number) {
-                $number = substr($number, -10);
-                $modifiedNumbers[$key] = '44' . $number;
-            }
-            //
-            $response = $textlocal->sendSms($modifiedNumbers, $message, $from);
-            if (App::environment('local')) {
-                Log::info(print_r($response, true));
-            }
-            $response->status = 'success';
+        if ($from === null) {
+            $from = $this->smsSender();
+        }
+        try {
+            $client = new Client([
+                'verify' => false,
+                'headers' => [
+                    'X-AUTH-KEY' => config('custom.sms_api_key'),
+                    'Accept' => 'application/json',
+                    'Content-Type' => 'application/json',
+                ],
+            ]);
+            $response = $client->post(config('custom.sms_api_url'), [
+                'json' => [
+                    'message_body' => $this->trimSmsText($message),
+                    'from' => $from,
+                    'to' => [
+                        [
+                            'phone' => $numbers,
+                        ],
+                    ],
+                ],
+            ]);
             return $response;
         } catch (\Exception $e) {
             Log::error($e->getMessage());
-            $return = new stdClass;
-            $return->status = false;
-            return $return;
+            return false;
         }
     }
 
     public function smsSender()
     {
-        return config('custom.textlocal_sender_to_therapists');
+        return config('custom.sms_sender');
     }
 
     protected function trimSmsText($text)
     {
-        if (strlen($text) > 157) {
-            $smsText = substr($text, 0, 157) . '...';
+        if (strlen($text) > 70) {
+            $smsText = substr($text, 0, 70) . '...';
         } else {
             $smsText = $text;
         }

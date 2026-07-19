@@ -7,9 +7,6 @@
     --bo-lightblue: #c7d9e5;
     --bo-yellow: #e3dbcf;
     --body-bg: #eee;
-
-    --grad-start: #e3dbcf;
-    --grad-end: #546b80;
     --shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.06);
 
 }
@@ -114,10 +111,21 @@ table.booking_detail tr.selected>* {
     margin-bottom: 60px;
 }
 
-.page-section-bg {
-    background-color: var(--bo-lightblue);
+.pt60 {
+    padding-top: 60px;
+}
+
+.pb60 {
+    padding-bottom: 60px;
+}
+
+.page-section-padding {
     padding-top: 60px;
     padding-bottom: 60px;
+}
+
+.gold-bg {
+    background: linear-gradient(135deg, var(--bo-yellow), var(--bo-lightblue));
 }
 
 .section-eyebrow {
@@ -424,7 +432,7 @@ table.booking_detail tr.selected>* {
 
 .custom-card-actions {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
 }
 
@@ -696,7 +704,7 @@ footer ul li {
 }
 
 .footer-social a:hover {
-    background: linear-gradient(135deg, var(--grad-start), var(--grad-end));
+    background: linear-gradient(135deg, var(--bo-yellow), var(--bo-lightblue));
     transform: translateY(-4px);
 }
 

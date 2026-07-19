@@ -7,11 +7,9 @@ return [
     'stripe_public_key' => env('STRIPE_PUBLIC_KEY'),
     'stripe_secret_key' => env('STRIPE_SECRET_KEY'),
 
-    'text_local_api_username' => env('TEXTLOCAL_API_USERNAME'),
-    'text_local_api_password' => env('TEXTLOCAL_API_PASSWORD'),
-    'textlocal_sender_to_therapists' => env('TEXTLOCAL_SENDER_TO_THERAPISTS'),
-    'text_local_test_number' => env('TEXTLOCAL_TEST_NUMBER', '07786206055'),
-
+    'sms_api_url' => env('SMS_API_URL'),
+    'sms_api_key' => env('SMS_API_KEY'),
+    'sms_sender' => env('SMS_SENDER'),
 
     'db' => [
         'per_page' => 25

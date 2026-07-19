@@ -6,25 +6,31 @@ use App\Http\Requests\StoreTherapistApplication;
 use App\Models\Banner;
 use App\Models\FAQ;
 use App\Models\Review;
+use App\Models\Setting;
+use App\Models\TherapistApplication;
 use Illuminate\Http\Request;
 
 use App\Models\Treatment;
 use App\Models\TreatmentCategory;
 use App\Models\User;
 use App\Services\MailService;
+use App\Services\SmsService;
 use App\Services\UploadService;
 
 class HomeController extends Controller
 {
     protected MailService $mailService;
     protected UploadService $uploadService;
+    protected SmsService $smsService;
 
     public function __construct(
         MailService $mailService,
         UploadService $uploadService,
+        SmsService $smsService,
     ) {
         $this->mailService = $mailService;
         $this->uploadService = $uploadService;
+        $this->smsService = $smsService;
     }
 
     public function home(Request $request)
@@ -151,25 +157,23 @@ class HomeController extends Controller
 
     public function joinUsPost(StoreTherapistApplication $request)
     {
-        $params = $request->safe()->except(['cv', 'photo']);
-        $uploadPath = config('custom.upload.job_application_path');
 
-        if ($request->hasFile('cv')) {
-            $file = $request->file('cv');
-            $path = $this->uploadService->upload($file, $uploadPath);
-            $params['cv'] = public_path('uploads/' . $uploadPath . '/' . $path);
-        }
+        $application = new TherapistApplication();
+        $application->first_name = $request->input('first_name');
+        $application->last_name = $request->input('last_name');
+        $application->email = $request->input('email');
+        $application->mobile = $request->input('mobile');
+        $application->ip_address = $request->ip();
+        $application->user_agent = $request->userAgent();
+        $application->save();
 
-        if ($request->hasFile('photo')) {
-            $file = $request->file('photo');
-            $path = $this->uploadService->upload($file, $uploadPath);
-            $params['photo'] = public_path('uploads/' . $uploadPath . '/' . $path);
-        }
-
+        $params = $request->only(['first_name', 'last_name', 'email', 'mobile']);
         $params['ip'] = $request->ip();
         $params['user_agent'] = $request->userAgent();
 
         $this->mailService->sendTherapistApplicationMail($params);
+
+        $this->smsService->sendSms('New Therapist application has been recieved');
 
         return redirect()
             ->route('join_us')

@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::create('settings', function (Blueprint $table) {
             $table->id();
-            $table->string('param_group', 50);
             $table->string('param_key', 55);
             $table->string('param_value', 55);
             $table->timestamps();

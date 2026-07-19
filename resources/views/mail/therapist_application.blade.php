@@ -15,36 +15,20 @@
     <table width="100%" cellpadding="5" cellspacing="1" border="0">
         <tbody>
             <tr>
-                <td align="left">NAME:</td>
-                <td align="left">{{ $application['name'] }}</td>
+                <td align="left">First name:</td>
+                <td align="left">{{ $application['first_name'] }}</td>
             </tr>
             <tr>
-                <td align="left">EMAIL:</td>
+                <td align="left">Last name:</td>
+                <td align="left">{{ $application['last_name'] }}</td>
+            </tr>
+            <tr>
+                <td align="left">Email:</td>
                 <td align="left">{{ $application['email'] }}</td>
             </tr>
             <tr>
-                <td align="left">MOBILE:</td>
+                <td align="left">Mobile:</td>
                 <td align="left">{{ $application['mobile'] }}</td>
-            </tr>
-            <tr>
-                <td align="left">ADDRESS:</td>
-                <td align="left">{{ $application['address'] }}</td>
-            </tr>
-            <tr>
-                <td align="left">HAPPY TO TRAVEL:</td>
-                <td align="left">{{ ucfirst($application['travel']) }}</td>
-            </tr>
-            <tr>
-                <td align="left">WORK PREFERENCE:</td>
-                <td align="left">{{ ucfirst($application['fulltime']) }}</td>
-            </tr>
-            <tr>
-                <td align="left">FAVOURITE MASSAGE STYLES:</td>
-                <td align="left">{{ $application['favourite_massage_style'] }}</td>
-            </tr>
-            <tr>
-                <td align="left">EXPERIENCE:</td>
-                <td align="left">{{ $application['massage_love_reason'] }}</td>
             </tr>
             <tr>
                 <td align="left">IP:</td>

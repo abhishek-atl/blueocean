@@ -1,4 +1,4 @@
-<div class="page-section">
+<div class="page-section-padding">
     <div class="row justify-content-center text-center">
         <div class="col-12">
             <span class="section-eyebrow">Our Professionals</span>

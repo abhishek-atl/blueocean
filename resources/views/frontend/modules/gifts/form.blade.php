@@ -28,11 +28,6 @@ for last-minute birthday gifts or any occasion. From just GBP20.
 
             <div class="col-lg-5">
                 <aside class="content-panel">
-                    <img
-                        src="{{ asset('assets/img/buy-massage-gift-card.jpg') }}"
-                        alt="Londoner holding a massage gift voucher"
-                        title="Massage gift card: instant delivery to phone"
-                        class="img-fluid">
 
                     <div class="feature-icon mt-3"><i class="fa-solid fa-gift"></i></div>
                     <h2>A calm gift, delivered by email</h2>
