@@ -1,5 +1,13 @@
 @extends('frontend.layouts.default')
 
+@section('title')
+Booking Postcode
+@endsection
+
+@section('description')
+Booking Postcode
+@endsection
+
 @section('content')
 
 <section class="page-hero">

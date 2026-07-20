@@ -22,177 +22,156 @@ Checkout page for massage
 </section>
 
 <div class="page-section">
-
     <div class="container">
+        <div class="row">
 
-        <form id="frmCheckout" method="post" action="{{ route('bookingCheckoutPost') }}">
-            @csrf
-
-            <div class="row">
-
-                <div class="d-lg-none d-md-block col-md-12">
-                    <p class="font-weight-bold">BOOKING INFORMATION</p>
-                    <p>Checking Out: A {{ $duration->duration }}-min {{ $treatment->name }} massage with
-                        {{ $therapist->first_name }} at {{ $dateTime->format('H:i') }} on {{ $dateTime->format('D d M') }}
-                    </p>
-                </div>
-
-                <div class="col-md-8">
-                    <p class="fw-bold">Personal Information</p>
-
-                    <div class="row">
-                        <div class="col">
-                            <label for="name" class="col-form-label">Name</label>
-                            <input type="text" id="name" name="name" class="form-control autosave" placeholder="Type your name here" value="{{ $name }}">
-                        </div>
-                        <div class="col">
-                            <label for="mobile" class="col-form-label">Mobile</label>
-                            <input type="tel" id="mobile" name="mobile" class="form-control autosave" placeholder="07400123456" value="{{ $mobile }}">
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-6">
-                            <label for="town" class="col-form-label">Email</label>
-                            <input type="text" id="email" name="email" class="form-control autosave" value="{{ $email }}" @if (Auth::user()) readonly="readonly" @endif>
-                        </div>
-                    </div>
+            <div class="col-lg-8">
+                <div class="content-panel">
 
 
-                    <p class="fw-bold mt-3">Address</p>
-                    <div class="row">
-                        <div class="col">
-                            <label for="postcode" class="col-form-label">Postcode</label>
-                            <input type="text" id="postcode" name="postcode" class="form-control autosave" value="{{ $postcode }}" readonly>
-                        </div>
-                        <div class="col">
-                            <label for="flat_no" class="col-form-label">Flat Number / Building Name / Hotel
-                                Name</label>
-                            <input type="text" id="flat_no" name="flat_no" class="form-control autosave" placeholder="Optional (eg. Flat 12 River Court)" value="{{ $flat_no }}">
-                        </div>
-                    </div>
+                    <form id="frmCheckout" method="post" action="{{ route('bookingCheckoutPost') }}">
+                        @csrf
 
-                    <div class="row">
-                        <div class="col">
-                            <label for="street_number" class="col-form-label">Street Number</label>
-                            <input type="text" id="street_number" name="street_number" class="form-control autosave" placeholder="eg. 10" value="{{ $street_number }}">
-                        </div>
-                        <div class="col">
-                            <label for="street_name" class="col-form-label">Street Name</label>
-                            <input type="text" id="street_name" name="street_name" class="form-control autosave" placeholder="eg. Kings Road" value="{{ $street_name }}">
-                        </div>
-                    </div>
+                        <h2>Personal Information</h2>
 
-                    <div class="row">
-                        <div class="col-6">
-                            <label for="town" class="col-form-label">Town</label>
-                            <input type="text" id="town" name="town" class="form-control autosave" placeholder="eg. London" value="{{ $town }}">
-                        </div>
-                    </div>
-
-
-                    <div class="form-row">
-                        <div class="form-group col-md-12">
-                            <label for="Comment" class="col-form-label">Comment</label>
-                            <textarea name="comment" id="comment" cols="30" rows="3" class="form-control" placeholder="Please state any medical conditions or other comments here"></textarea>
-                        </div>
-                        <div class="form-group col-md-6">
-                            <label for="discount_code" class="col-form-label">Discount code</label>
-                            <div class="input-group">
-                                <input type="text" name="discount_code" id="discount_code" class="form-control" placeholder="Enter your code">
-                                <div class="input-group-append">
-                                    <button class="btn btn-outline-primary discountCode_apply" type="button">Apply</button>
-                                </div>
+                        <div class="row g-4 mb-4">
+                            <div class="col-md-6">
+                                <label class="form-label" for="name">Name</label>
+                                <input type="text" class="form-control" id="name" name="name" value="{{ $name }}" placeholder="Type your name here">
+                                @error('name')
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
+                                @enderror
                             </div>
-                            <small class="discount_code_message"></small>
-                        </div>
-                    </div>
-
-
-                    <div class="d-lg-none d-md-block">
-
-                        <div class="form-group row py-0 my-0">
-                            <label class="col-5 col-form-label">Cost</label>
-                            <div class="col-3">
-                                <input type="text" id="session_cost" name="session_cost" class="form-control-plaintext text-right" value="" readonly>
+                            <div class="col-md-6">
+                                <label class="form-label" for="mobile">Mobile</label>
+                                <input type="text" class="form-control" id="mobile" name="mobile" value="{{ $mobile }}" placeholder="eg. 07400123456">
+                                @error('mobile')
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            @if (Auth::user())
+                            <div class="col-md-6">
+                                <label class="form-label" for="email">Email</label>
+                                <input type="text" class="form-control" id="email" name="email" value="{{ $email }}" @if (Auth::user()) readonly="readonly" @endif placeholder="eg. 07400123456">
+                                @error('mobile')
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            @endauth
+                            <div class="col-md-6">
+                                <label class="form-label" for="postcode">Postcode</label>
+                                <input type="text" class="form-control" id="postcode" name="postcode" value="{{ $postcode }}" readonl>
+                                @error('postcode')
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label" for="flat_no">Flat Number/Hotel</label>
+                                <input type="text" id="flat_no" name="flat_no" class="form-control" placeholder="Optional (eg. Flat 12 River Court)" value="{{ $flat_no }}">
+                                @error('flat_no')
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label" for="street_number">Street Number</label>
+                                <input type="text" id="street_number" name="street_number" class="form-control" placeholder="eg. 10" value="{{ $street_number }}">
+                                @error('street_number')
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label" for="street_name">Street Name</label>
+                                <input type="text" id="street_name" name="street_name" class="form-control" placeholder="eg. Kings Road" value="{{ $street_name }}">
+                                @error('flat_no')
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="col-md-12">
+                                <label class="form-label" for="town">Town</label>
+                                <input type="text" id="town" name="town" class="form-control" placeholder="eg. London" value="{{ $town }}">
+                                @error('town')
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="col-md-12">
+                                <label class="form-label" for="comment">Comment</label>
+                                <textarea name="comment" id="comment" cols="30" rows="3" class="form-control" placeholder="Please state any medical conditions or other comments here"></textarea>
                             </div>
                         </div>
-                        <div class="form-group row py-0 my-0">
-                            <label class="col-5 col-form-label">Travel Cost</label>
-                            <div class="col-3">
-                                <input type="text" id="travel_supp" name="travel_supp" class="form-control-plaintext text-right" value="" readonly>
-                            </div>
-                        </div>
-                        <div class="form-group row py-0 my-0">
-                            <label class="col-5 col-form-label">Discount Code</label>
-                            <div class="col-3">
-                                <input type="text" id="discount_amount" name="discount_amount" class="form-control-plaintext text-right" value="" readonly>
-                            </div>
-                        </div>
-                        <div class="form-group row py-0 my-0">
-                            <label class="col-5 col-form-label">Gift Card</label>
-                            <div class="col-3">
-                                <input type="text" id="gift_voucher_amount" name="gift_voucher_amount" class="form-control-plaintext text-right" value="" readonly>
-                            </div>
-                        </div>
-                        <div class="form-group row py-0 my-0">
-                            <label class="col-5 col-form-label"><b>Total Cost</b></label>
-                            <div class="col-3">
-                                <input type="text" id="total_cost" name="total_cost" class="form-control-plaintext font-weight-bold text-right" value="" readonly>
-                            </div>
-                        </div>
-                    </div>
 
-                    <div class="form-row">
-                        <div class="form-group col-md-6">
-                            <label for="payment_method_cash" class="col-form-label">Payment Method</label>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="payment_method" id="payment_method_cash" value="cash" @if (($paymentMethod && $paymentMethod=='cash' ) || !$paymentMethod) checked="checked" @endif>
-                                <label class="form-check-label" for="payment_method_cash">Cash</label>
-                            </div>
-
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="payment_method" id="payment_method_cc" value="credit_card" @if ($paymentMethod && $paymentMethod=='credit_card' ) checked="checked" @endif>
-                                <label class="form-check-label" for="payment_method_cc">Credit Card</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="payment_method" id="gift_voucher" value="gift_voucher" @if ($paymentMethod && $paymentMethod=='gift_voucher' ) checked="checked" @endif>
-                                <label class="form-check-label" for="gift_voucher">Gift Card</label>
-                            </div>
-                            <div class="form-group gift_voucher_block hide-elem mt-3">
+                        <div class="row g-4 mb-4">
+                            <div class="form-group col-md-6">
+                                <label class="form-label" for="discount_code">Discount code</label>
                                 <div class="input-group">
-                                    <input type="text" name="gift_code" id="gift_code" class="form-control" placeholder="Enter your gift code">
+                                    <input type="text" class="form-control" id="discount_code" name="discount_code" placeholder="Enter your code">
                                     <div class="input-group-append">
-                                        <button class="btn btn-outline-primary giftCode_apply" type="button">Check</button>
+                                        <button class="btn btn-outline-primary discountCode_apply" type="button">Apply</button>
                                     </div>
+                                    @error('postcode')
+                                    <div class="invalid-feedback d-block">{{ $message }}</div>
+                                    @enderror
+                                    <small class="discount_code_message"></small>
                                 </div>
-                                <small class="gift_code_message"></small>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="form-row mt-3">
-                        <div class="col">
-                            <p class="textCash bg-lightblue p-3">Your therapist will collect <span id="cost_massage_val"></span> in cash from you directly.</p>
-                            <p class="textCreditCard bg-lightblue p-3" style="display:none;">
-                                <i class="fa fa-lock"></i>
-                                We process all credit cards directly through <a href="https://stripe.com/gb" target="_blank" class="text-white text-dark">STRIPE</a>, a globally trusted secure
-                                payment processor.
-                            </p>
-                            <p class="textGiftVoucher bg-lightblue p-3" style="display:none;">
-                                Please enter your gift card code and press "Check"
-                            </p>
+                        <h2>Payment Method</h2>
+                        <div class="row g-4 mb-4">
+                            <div class="col-md-6">
+                                <label for="payment_method_cash" class="col-form-label">Payment Method</label>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="payment_method" id="payment_method_cash" value="cash" @if (($paymentMethod && $paymentMethod=='cash' ) || !$paymentMethod) checked="checked" @endif>
+                                    <label class="form-check-label" for="payment_method_cash">Cash</label>
+                                </div>
+
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="payment_method" id="payment_method_cc" value="credit_card" @if ($paymentMethod && $paymentMethod=='credit_card' ) checked="checked" @endif>
+                                    <label class="form-check-label" for="payment_method_cc">Credit Card</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="payment_method" id="gift_voucher" value="gift_voucher" @if ($paymentMethod && $paymentMethod=='gift_voucher' ) checked="checked" @endif>
+                                    <label class="form-check-label" for="gift_voucher">Gift Card</label>
+                                </div>
+                                <div class="form-group gift_voucher_block hide-elem mt-3">
+                                    <div class="input-group">
+                                        <input type="text" name="gift_code" id="gift_code" class="form-control" placeholder="Enter your gift code">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-outline-primary giftCode_apply" type="button">Check</button>
+                                        </div>
+                                    </div>
+                                    <small class="gift_code_message"></small>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-row m-2 ml-lg-0 text-center">
-                        <small>By confirming your booking, you agree to our <a href="{{ route('terms_conditions') }}" target="_blank">Terms & Conditions</a>.</small>
-                    </div>
-                    <div class="form-row mt-2 d-flex justify-content-lg-start justify-content-center">
-                        <button type="submit" class="btn btn-primary btnSubmit">CONFIRM</button>
-                    </div>
-                </div>
 
-                <div class="col-md-4 d-none d-lg-block">
-                    <p class="font-weight-bold">BOOKING INFORMATION</p>
+                        <div class="form-row mt-3">
+                            <div class="col">
+                                <p class="textCash bg-lightblue p-3">Your therapist will collect <span id="cost_massage_val"></span> in cash from you directly.</p>
+                                <p class="textCreditCard bg-lightblue p-3" style="display:none;">
+                                    <i class="fa fa-lock"></i>
+                                    We process all credit cards directly through <a href="https://stripe.com/gb" target="_blank" class="text-dark">STRIPE</a>, a globally trusted secure
+                                    payment processor.
+                                </p>
+                                <p class="textGiftVoucher bg-lightblue p-3" style="display:none;">
+                                    Please enter your gift card code and press "Check"
+                                </p>
+                            </div>
+                        </div>
+                        <div class="form-row m-2 ml-lg-0 text-center">
+                            <small>By confirming your booking, you agree to our <a href="{{ route('terms_conditions') }}" target="_blank">Terms & Conditions</a>.</small>
+                        </div>
+                        <div class="form-row mt-2 d-flex justify-content-lg-start justify-content-center">
+                            <button type="submit" class="btn btn-primary btnSubmit">CONFIRM</button>
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+
+            <div class="col-md-4 d-none d-lg-block">
+                <div class="content-panel">
+                    <h2>BOOKING INFORMATION</h2>
                     <div class="form-group row">
                         <label class="col-sm-6 col-form-label" for="massage_type">Massage Type:</label>
                         <div class="col-sm-6">
@@ -257,11 +236,11 @@ Checkout page for massage
                     Click <a href="{{ route('bookingInfo') }}">here</a> if you want to make changes in booking
                     information.
                 </div>
-
             </div>
-        </form>
-    </div>
 
+
+        </div>
+    </div>
 </div>
 
 
@@ -271,7 +250,7 @@ Checkout page for massage
             <div class="modal-header">
                 <h5 class="modal-title">Information</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    <span aria-hidden="true">&times;</span>
+                <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body"></div>
@@ -286,6 +265,12 @@ Checkout page for massage
 
 
 @push('pageCss')
+<style>
+    .iti {
+        display: block !important;
+    }
+</style>
+
 <link href="{{ asset('assets/css/intlTelInput.css') }}" rel="stylesheet">
 @endpush
 

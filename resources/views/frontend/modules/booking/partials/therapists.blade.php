@@ -1,6 +1,6 @@
 <div class="row g-4">
     @foreach($therapists as $therapist)
-    <div class="col-12 col-md-3">
+    <div class="col-12 col-md-4">
 
         <article class="custom-card h-100 therapist-card" id="therapist_{{ $therapist->id }}" data-name="{{ $therapist->first_name }}">
 

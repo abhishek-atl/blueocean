@@ -12,6 +12,7 @@ use App\Models\TariffPlan;
 use App\Models\Treatment;
 use App\Models\User;
 use App\Models\UserProfile;
+use App\Services\BookingMailService;
 use App\Services\BookingService;
 use App\Services\DatabaseService;
 use App\Services\FormatService;
@@ -33,6 +34,7 @@ class BookingController extends Controller
     protected DatabaseService $databaseService;
     protected FormatService $formatService;
     protected MailService $mailService;
+    protected BookingMailService $bookingMailService;
     protected SmsService $smsService;
     protected GiftCertificateService $giftCertificateService;
     protected PaymentService $paymentService;
@@ -42,6 +44,7 @@ class BookingController extends Controller
         DatabaseService $databaseService,
         FormatService $formatService,
         MailService $mailService,
+        BookingMailService $bookingMailService,
         SmsService $smsService,
         GiftCertificateService $giftCertificateService,
         PaymentService $paymentService,
@@ -50,6 +53,7 @@ class BookingController extends Controller
         $this->databaseService = $databaseService;
         $this->formatService = $formatService;
         $this->mailService = $mailService;
+        $this->bookingMailService = $bookingMailService;
         $this->smsService = $smsService;
         $this->giftCertificateService = $giftCertificateService;
         $this->paymentService = $paymentService;
@@ -63,7 +67,7 @@ class BookingController extends Controller
 
     public function bookingPostcodeSubmit(Request $request)
     {
-        $request->session()->put('booking', $request->except('_token'));
+        $request->session()->put('booking', $request->except(['_token', 'proengsoft_jsvalidation']));
         $request->session()->put('booking.begin', microtime(true));
         return redirect()->to(route('bookingInfo'));
     }
@@ -78,7 +82,7 @@ class BookingController extends Controller
         if (!$postcode) {
             $result = false;
             $message = 'Sorry, we do not cover this area yet.';
-            $this->mailService->sendPostcodeNotCoveredMail($request->postcode);
+            $this->bookingMailService->sendPostcodeNotCoveredMail($request->postcode);
         } else {
             $therapistsCount = $this->bookingService->getTherapistsByPostcode($postcode->postcode, $count = true);
             if ($therapistsCount == 0) {
@@ -127,6 +131,57 @@ class BookingController extends Controller
         ]);
     }
 
+    public function getDays(Request $request)
+    {
+        $days = $this->bookingService->getBookableDays();
+        $view = View::make('frontend.modules.booking.partials.days', [
+            'days' => $days
+        ])->render();
+        return response()->json([
+            'view' => $view
+        ]);
+    }
+
+    public function getTime(Request $request)
+    {
+        $timeSlots = $this->bookingService->getAvailableTimeSlots();
+        return View::make('frontend.modules.booking.partials.time', [
+            'timeSlots' => $timeSlots,
+        ]);
+    }
+
+    public function getFreeTherapists(Request $request)
+    {
+        $date = $request->input('date', null);
+        $time = $request->input('time', null);
+        $treatment = $request->input('treatment', null);
+
+        $therapists = $this->bookingService->getFreeTherapists($date, $time, $treatment);
+        $therapistView = View::make('frontend.modules.booking.partials.therapists', [
+            'therapists' => $therapists,
+        ])->render();
+
+        return response()->json([
+            'therapists' => $therapistView,
+        ]);
+    }
+
+    public function therapistInfo(Request $request)
+    {
+        $therapist = $this->databaseService->getByParams(User::class, [
+            'where' => ['id' => $request->therapist_id],
+            'first' => true
+        ]);
+        $therapist->load(['treatments', 'user_profile', 'therapist_profile']);
+        $view = View::make('frontend.modules.booking.partials.therapist_info', [
+            'therapist' => $therapist
+        ])->render();
+        return response()->json([
+            'view' => $view
+        ]);
+    }
+
+
     public function bookingInfoSubmit(Request $request)
     {
         if (!$request->session()->has('booking')) {
@@ -153,7 +208,7 @@ class BookingController extends Controller
             return redirect(route('auth.login'));
     }
 
-
+    // Checkout Process
     public function bookingCheckout(Request $request)
     {
         if (!$request->session()->has('booking')) {
@@ -577,55 +632,5 @@ class BookingController extends Controller
             $response = ['result' => 0, 'data' => []];
         }
         return response()->json($response);
-    }
-
-    public function getDays(Request $request)
-    {
-        $days = $this->bookingService->getBookableDays();
-        $view = View::make('frontend.modules.booking.partials.days', [
-            'days' => $days
-        ])->render();
-        return response()->json([
-            'view' => $view
-        ]);
-    }
-
-    public function getTime(Request $request)
-    {
-        $timeSlots = $this->bookingService->getAvailableTimeSlots();
-        return View::make('frontend.modules.booking.partials.time', [
-            'timeSlots' => $timeSlots,
-        ]);
-    }
-
-    public function getFreeTherapists(Request $request)
-    {
-        $date = $request->input('date', null);
-        $time = $request->input('time', null);
-        $treatment = $request->input('treatment', null);
-
-        $therapists = $this->bookingService->getFreeTherapists($date, $time, $treatment);
-        $therapistView = View::make('frontend.modules.booking.partials.therapists', [
-            'therapists' => $therapists,
-        ])->render();
-
-        return response()->json([
-            'therapists' => $therapistView,
-        ]);
-    }
-
-    public function therapistInfo(Request $request)
-    {
-        $therapist = $this->databaseService->getByParams(User::class, [
-            'where' => ['id' => $request->therapist_id],
-            'first' => true
-        ]);
-        $therapist->load(['treatments', 'user_profile', 'therapist_profile']);
-        $view = View::make('frontend.modules.booking.partials.therapist_info', [
-            'therapist' => $therapist
-        ])->render();
-        return response()->json([
-            'view' => $view
-        ]);
     }
 }

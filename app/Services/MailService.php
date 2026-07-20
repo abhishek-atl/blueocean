@@ -5,7 +5,9 @@ namespace App\Services;
 use App\Mail\Auth\ForgotPassword;
 use App\Mail\Auth\PasswordChangedNotification;
 use App\Mail\Auth\SendUserEmailVerificationMail;
+
 use App\Mail\PostcodeNotCovered;
+
 use App\Mail\SendBookingMailToAdmin;
 use App\Mail\SendBookingMailToClient;
 use App\Mail\SendBookingMailToTherapist;
@@ -47,13 +49,6 @@ class MailService
     {
         $mail = new PasswordChangedNotification($user);
         Mail::to($user)->send($mail);
-    }
-
-    public function sendPostcodeNotCoveredMail($postcode)
-    {
-        //$email = $this->settingService->getByParams(['where' => ['param_key' => 'admin_email']])->first()->value;
-        $email = 'webmaster@blueocean.uk';
-        Mail::to($email)->send(new PostcodeNotCovered($postcode));
     }
 
     public function sendBookingMailToClient($booking, $email)

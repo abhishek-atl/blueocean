@@ -90,8 +90,7 @@ class BookingService extends BaseService
     public function getAvailableTimeSlots()
     {
         $now = Carbon::now()->addHour();
-        $endTime = Carbon::now()->setTime(22, 30, 0);
-        $timeSlots = [];
+        $endTime = Carbon::now()->setTime(23, 30, 0);
 
         // If current time is after 22:30, start from 07:00 tomorrow
         if ($now > $endTime) {
@@ -110,9 +109,10 @@ class BookingService extends BaseService
         }
 
         // Set end time to 22:00 on the start date
-        $endTimeSlot = (clone $startTime)->setTime(22, 30, 0);
+        $endTimeSlot = (clone $startTime)->setTime(23, 30, 0);
 
         // Generate 30-minute intervals
+        $timeSlots = [];
         while ($startTime <= $endTimeSlot) {
             $timeSlots[] = $startTime->format('H:i');
             $startTime->addMinutes(30);

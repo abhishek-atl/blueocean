@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Mail\PostcodeNotCovered;
 use App\Mail\SendBookingEmailToAdmin;
 use App\Mail\SendBookingEmailToClient;
 use App\Mail\SendBookingEmailToTherapist;
@@ -14,13 +15,18 @@ use App\Mail\SendExtendEmailToClient;
 use App\Mail\SendReconfirmMailAdmin;
 use App\Mail\SendReconfirmMailClient;
 use App\Mail\SendReconfirmMailTherapist;
+use App\Models\Setting;
 use Illuminate\Support\Facades\Mail;
 
 class BookingMailService
 {
 
-    public function __construct()
+    public function __construct() {}
+
+    public function sendPostcodeNotCoveredMail($postcode)
     {
+        $adminMobile = Setting::where(['param_key' => 'admin_mobile'])->first()->param_value;
+        Mail::to($adminMobile)->send(new PostcodeNotCovered($postcode));
     }
 
     /***********************************************************/
@@ -69,7 +75,7 @@ class BookingMailService
         Mail::to(config('mail.to.admin_address'))->send(new SendCancellationRequestMailToAdmin($booking));
     }
 
-    public function sendCancellationMailToClient($booking, $giftCode=null)
+    public function sendCancellationMailToClient($booking, $giftCode = null)
     {
         Mail::to($booking->email)->send(new SendCancellationMailClient($booking, $giftCode));
     }
