@@ -305,6 +305,22 @@ table.booking_detail tr.selected>* {
     border-color: var(--bo-blue);
 }
 
+.btn-outline-primary {
+    background-color: transparent;
+    border: 1px solid var(--bo-blue);
+    border-radius: 24px;
+    color: var(--bo-blue);
+    font-weight: 600;
+}
+
+.btn-outline-primary:hover,
+.btn-outline-primary:active {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2) !important;
+    color: white;
+    background-color: var(--bo-blue);
+    border-color: var(--bo-blue);
+}
+
 .btn-secondary {
     background-color: var(--bo-yellow);
     border: none;

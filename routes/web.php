@@ -15,7 +15,7 @@ include __DIR__ . '/auth.php';
 include __DIR__ . '/booking.php';
 
 Route::group([
-    'middleware' => [AdminMiddleware::class]
+    //'middleware' => [AdminMiddleware::class]
 ], function () {
 
     // client

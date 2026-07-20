@@ -1,5 +1,7 @@
 <div class="row g-4">
-    @foreach($therapists as $therapist)
+
+
+    @forelse($therapists as $therapist)
     <div class="col-12 col-md-4">
 
         <article class="custom-card h-100 therapist-card" id="therapist_{{ $therapist->id }}" data-name="{{ $therapist->first_name }}">
@@ -14,17 +16,13 @@
             @endif
 
             <div class="custom-card-body">
-                <h2>{{ $therapist->first_name }}</h2>
-
-                <div class="custom-card-summary">
-                    {!! Str::limit(strip_tags($therapist->therapist_profile->about), 50) !!}
-                </div>
+                <h2 >{{ $therapist->first_name }}</h2>
 
                 <div class="custom-card-actions">
                     <div class="therapist-more-info">
                         <a href="javascript:void(0)"
                             onclick="showTherapistsInfo(event, '{{ $therapist->id }}', '{{ $therapist->first_name }}')"
-                            class="">More About {{ $therapist->first_name }} </a>
+                            class="">More Details</a>
                     </div>
                     <div class="therapist-more-info">
                         <a href="javascript:void(0)"
@@ -35,5 +33,9 @@
             </div>
         </article>
     </div>
-    @endforeach
+    @empty
+    <div class="col-12 col-md-4">
+        Sorry! No therapists available at selected timeslot. Please select another one.
+    </div>
+    @endforelse
 </div>

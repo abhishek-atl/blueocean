@@ -29,92 +29,90 @@ Booking Information
 <div class="page-section">
 
     <div class="container">
+        <form name="frmMassageInfo" method="post" action="{{ route('bookingInfoSubmit') }}">
+            @csrf
+            <input type="hidden" id="date" name="date" value="@if(session('booking.date')){{ session('booking.date') }}@endif">
+            <input type="hidden" id="time" name="time" value="@if(session('booking.time')){{ session('booking.time') }}@endif">
+            <input type="hidden" id="therapist_id" name="therapist_id" value="@if(session('booking.therapist_id')){{ session('booking.therapist_id') }}@endif">
 
-        <div class="row">
+            <div class="row">
 
+                <div class="col-md-4">
 
-            <div class="col-md-4">
+                    <div class="content-panel">
+                        <div class="row g-4 mb-4">
 
-                <div class="content-panel">
-                    <div class="row g-4 mb-4">
-
-                        <div class="col-md-12">
-                            <div class="row">
-                                <div class="col-sm-3">
-                                    <label for="duration" class="col-form-label font-weight-bold">Postcode</label>
-                                </div>
-                                <div class="col-sm-6">
-                                    <input type="text" class="d-inline form-control-plaintext" value="{{ session('booking.postcode') }}" readonly>
-                                </div>
-                                <div class="col-sm-3 text-end">
-                                    <a class="btn btn-outline-primary" href="{{ route('bookingPostcode') }}">Change</a>
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <label for="duration" class="col-form-label font-weight-bold">Postcode</label>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <input type="text" class="d-inline form-control-plaintext" value="{{ session('booking.postcode') }}" readonly>
+                                    </div>
+                                    <div class="col-sm-3 text-end">
+                                        <a class="btn btn-outline-primary" href="{{ route('bookingPostcode') }}">Change</a>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-md-12">
-                            <div class="row">
-                                <div class="col-sm-3">
-                                    <label for="duration" class="form-label font-weight-bold">Duration</label>
-                                </div>
-                                <div class="col-sm-9">
-                                    <select class="form-control" id="duration" name="duration">
-                                        @foreach ($durations as $duration)
-                                        @php $class= ''; @endphp
-                                        @if (session('booking.duration') == $duration->id)
-                                        @php $class = 'selected'; @endphp
-                                        @endif
-                                        <option value="{{ $duration->id }}" data-amount="£{{ number_format($duration->amount, 2) }}" {{ $class }}>
-                                            {{ $duration->duration }} minutes
-                                        </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-12">
-                            <div class="row">
-                                <div class="col-sm-3">
-                                    <label for="duration_amount" class="form-label font-weight-bold">Amount</label>
-                                </div>
-                                <div class="col-sm-9">
-                                    <input type="text" id="duration_amount" class="form-control" value="" readonly>
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <label for="duration" class="form-label font-weight-bold">Duration</label>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <select class="form-control" id="duration" name="duration">
+                                            @foreach ($durations as $duration)
+                                            @php $class= ''; @endphp
+                                            @if (session('booking.duration') == $duration->id)
+                                            @php $class = 'selected'; @endphp
+                                            @endif
+                                            <option value="{{ $duration->id }}" data-amount="£{{ number_format($duration->amount, 2) }}" {{ $class }}>
+                                                {{ $duration->duration }} minutes
+                                            </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <div class="col-md-12">
-                            <div class="row">
-                                <div class="col-sm-3">
-                                    <label for="treatment" class="form-label font-weight-bold">Style</label>
-                                </div>
-                                <div class="col-sm-9">
-                                    <select class="form-control" id="treatment" name="treatment">
-                                        @foreach ($treatments as $treatment)
-                                        @php $class= ''; @endphp
-                                        @if (session('booking.treatment') == $treatment->id)
-                                        @php $class = 'selected'; @endphp
-                                        @endif
-                                        <option value="{{ $treatment->id }}" {{ $class }}>{{ $treatment->name }}</option>
-                                        @endforeach
-                                    </select>
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <label for="duration_amount" class="form-label font-weight-bold">Amount</label>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <input type="text" id="duration_amount" class="form-control" value="" readonly>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <label for="treatment" class="form-label font-weight-bold">Style</label>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        <select class="form-control" id="treatment" name="treatment">
+                                            @foreach ($treatments as $treatment)
+                                            @php $class= ''; @endphp
+                                            @if (session('booking.treatment') == $treatment->id)
+                                            @php $class = 'selected'; @endphp
+                                            @endif
+                                            <option value="{{ $treatment->id }}" {{ $class }}>{{ $treatment->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="col-md-8">
+                <div class="col-md-8">
 
-                <div class="content-panel">
-
-                    <form name="frmMassageInfo" method="post" action="{{ route('bookingInfoSubmit') }}">
-                        @csrf
-                        <input type="hidden" id="date" name="date" value="@if(session('booking.date')){{ session('booking.date') }}@endif">
-                        <input type="hidden" id="time" name="time" value="@if(session('booking.time')){{ session('booking.time') }}@endif">
-                        <input type="hidden" id="therapist_id" name="therapist_id" value="@if(session('booking.therapist_id')){{ session('booking.therapist_id') }}@endif">
+                    <div class="content-panel">
 
                         <div class="row mt-3 date-block">
                             <div class="col-md-12">
@@ -151,15 +149,13 @@ Booking Information
                             </div>
                         </div>
 
-                    </form>
+                    </div>
 
                 </div>
 
+
             </div>
-
-
-        </div>
-
+        </form>
     </div>
 
     <div class="modal fade" tabindex="-1" id="modal_common">
@@ -190,6 +186,7 @@ Booking Information
         let routeTime = "{{ route('getTime') }}";
         let routeFreeTherapists = "{{ route('getFreeTherapists') }}";
         let routeTherapistInfo = "{{ route('therapistInfo') }}";
+        let postcode = "{{ session('booking.postcode') }}";
 
         function loadDays() {
             return new Promise(function(resolve, reject) {
@@ -222,7 +219,7 @@ Booking Information
                 $('.loading').show();
                 $.post(routeTime, {
                     date: date,
-                    id: therapist_id,
+                    therapist_id: therapist_id,
                     duration: duration
                 }, function(response) {
                     $('#time_update').empty();
@@ -251,9 +248,11 @@ Booking Information
             return new Promise(function(resolve, reject) {
                 $('.loading').show();
                 $.post(routeFreeTherapists, {
+                    postcode: postcode,
+                    treatment: $('#treatment').val(),
                     date: $('#date').val(),
                     time: $('#time').val(),
-                    treatment: $('#treatment').val(),
+                    duration: $('#duration').val(),
                 }, function(response) {
                     $('#therapists-update').empty();
                     $('#therapists-update').append(response.therapists);
@@ -264,6 +263,8 @@ Booking Information
                     }
                 }).always(function() {
                     initOwlOnTherapists()
+
+
                     $('.loading').hide();
                     resolve();
                 });
@@ -383,9 +384,11 @@ Booking Information
             $('#date').val(date);
             $('#time').val("");
             loadTime().then(function() {
-                loadTherapists().then(function() {
-                    scrollToNextSelection('date-block');
-                })
+                if (!$('#therapist_id').val()) {
+                    loadTherapists().then(function() {
+                        scrollToNextSelection('date-block');
+                    })
+                }
             })
         });
 
@@ -433,7 +436,6 @@ Booking Information
                     '<i class="fa fa-arrow-left" aria-hidden="true"></i>',
                     '<i class="fa fa-arrow-right" aria-hidden="true"></i>'
                 ],
-                slideBy: 3,
                 autoWidth: true,
             });
         }

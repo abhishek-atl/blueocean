@@ -144,7 +144,13 @@ class BookingController extends Controller
 
     public function getTime(Request $request)
     {
-        $timeSlots = $this->bookingService->getAvailableTimeSlots();
+        $therapistId = $request->input('therapist_id');
+        $duration = TariffPlan::find($request->input('duration'))?->duration ?? 60;
+        $timeSlots = $this->bookingService->getAvailableTimeSlots(
+            $therapistId,
+            $request->input('date'),
+            $duration
+        );
         return View::make('frontend.modules.booking.partials.time', [
             'timeSlots' => $timeSlots,
         ]);
@@ -152,11 +158,15 @@ class BookingController extends Controller
 
     public function getFreeTherapists(Request $request)
     {
-        $date = $request->input('date', null);
-        $time = $request->input('time', null);
+        $postcode = $request->input('postcode', null);
         $treatment = $request->input('treatment', null);
+        $date = $request->filled('date') ? Carbon::parse($request->input('date')) : null;
+        $time = $request->input('time', null);
 
-        $therapists = $this->bookingService->getFreeTherapists($date, $time, $treatment);
+        $durationId = $request->input('duration');
+        $duration = TariffPlan::where('id', $durationId)->first();
+
+        $therapists = $this->bookingService->getFreeTherapists($postcode, $treatment, $date, $time, $duration->duration);
         $therapistView = View::make('frontend.modules.booking.partials.therapists', [
             'therapists' => $therapists,
         ])->render();

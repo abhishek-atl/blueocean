@@ -155,7 +155,7 @@
 
 .calendar_date:hover,
 .calendar_date.active {
-    background-color: #5cb85c;
+    background-color: var(--bo-blue);
     color: #fff;
 }
 
@@ -185,7 +185,7 @@
 
 .calendar_time:hover,
 .calendar_time.active {
-    background-color: #5cb85c;
+    background-color: var(--bo-blue);
     color: #fff;
 }
 
@@ -202,7 +202,7 @@
 }
 
 .therapist-active {
-    border: solid 3px green;
+    border: solid 3px var(--bo-blue);
 }
 
 .calendar_date_month {
@@ -220,9 +220,9 @@
 
 .owl-corousel-container-date .owl-theme .custom-nav {
     position: absolute;
-    margin: 0 15px;
+    margin: 0;
     padding: 0;
-    height: 130px;
+    height: auto;
     top: 0;
     left: 0;
     right: 0;
@@ -242,16 +242,24 @@
 
 .owl-corousel-container-date .owl-theme .custom-nav .owl-prev i,
 .owl-corousel-container-date .owl-theme .custom-nav .owl-next i {
-    font-size: 1.5rem;
-    color: #ff5509;
+    font-size: 1rem;
+    background-color: var(--bo-blue);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .owl-corousel-container-date .owl-theme .custom-nav .owl-prev {
     left: -10px;
+    color: var(--bo-yellow);
 }
 
 .owl-corousel-container-date .owl-theme .custom-nav .owl-next {
     right: -10px;
+    color: var(--bo-yellow);
 }
 
 .owl-corousel-container-time {
@@ -261,9 +269,9 @@
 
 .owl-corousel-container-time .owl-theme .custom-nav {
     position: absolute;
-    margin: 0 15px;
+    margin: 0;
     padding: 0;
-    height: 80px;
+    height: auto;
     top: 0;
     left: 0;
     right: 0;
@@ -283,14 +291,22 @@
 
 .owl-corousel-container-time .owl-theme .custom-nav .owl-prev i,
 .owl-corousel-container-time .owl-theme .custom-nav .owl-next i {
-    font-size: 1.5rem;
-    color: #ff5509;
+    font-size: 1rem;
+    background-color: var(--bo-blue);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .owl-corousel-container-time .owl-theme .custom-nav .owl-prev {
     left: -10px;
+    color: var(--bo-yellow);
 }
 
 .owl-corousel-container-time .owl-theme .custom-nav .owl-next {
     right: -10px;
+    color: var(--bo-yellow);
 }
