@@ -23,15 +23,13 @@ Checkout page for massage
 
 <div class="page-section">
     <div class="container">
-        <div class="row">
+        <form id="frmCheckout" method="post" action="{{ route('bookingCheckoutPost') }}">
+            @csrf
 
-            <div class="col-lg-8">
-                <div class="content-panel">
+            <div class="row">
 
-
-                    <form id="frmCheckout" method="post" action="{{ route('bookingCheckoutPost') }}">
-                        @csrf
-
+                <div class="col-lg-8">
+                    <div class="content-panel">
                         <h2>Personal Information</h2>
 
                         <div class="row g-4 mb-4">
@@ -164,82 +162,82 @@ Checkout page for massage
                             <button type="submit" class="btn btn-primary btnSubmit">CONFIRM</button>
                         </div>
 
-                    </form>
-
+                    </div>
                 </div>
+
+                <div class="col-md-4 d-none d-lg-block">
+                    <div class="content-panel">
+                        <h2>BOOKING INFORMATION</h2>
+                        <div class="form-group row">
+                            <label class="col-sm-6 col-form-label" for="massage_type">Massage Type:</label>
+                            <div class="col-sm-6">
+                                <input type="text" id="massage_type" name="massage_type" class="form-control-plaintext" value="{{ $treatment->name }}" readonly>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-6 col-form-label" for="therapist_name">Therapist Name:</label>
+                            <div class="col-sm-6">
+                                <input type="text" id="therapist_name" name="therapist_name" class="form-control-plaintext" value="{{ $therapist->first_name }}" readonly>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-6 col-form-label" for="date">Date</label>
+                            <div class="col-sm-6">
+                                <input type="text" id="date" name="date" class="form-control-plaintext" value="{{ $dateTime->format('d F Y') }}" readonly>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-6 col-form-label" for="time">Time:</label>
+                            <div class="col-sm-6">
+                                <input type="text" id="time" name="time" class="form-control-plaintext" value="{{ $dateTime->format('H:i') }}" readonly>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-6 col-form-label" for="session_duration">Session Duration:</label>
+                            <div class="col-sm-6">
+                                <input type="text" id="session_duration" name="session_duration" class="form-control-plaintext" value="{{ $duration->duration }} minute" readonly>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-6 col-form-label" for="session_cost">Session Cost:</label>
+                            <div class="col-sm-6">
+                                <input type="text" id="session_cost" name="session_cost" class="form-control-plaintext" value="" readonly>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-6 col-form-label" for="travel_sup">Travel Supplement:</label>
+                            <div class="col-sm-6">
+                                <input type="text" id="travel_supp" name="travel_supp" class="form-control-plaintext" value="" readonly>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-6 col-form-label" for="discount_amount">Discount Amount:</label>
+                            <div class="col-sm-6">
+                                <input type="text" id="discount_amount" name="discount_amount" class="form-control-plaintext" value="" readonly>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-6 col-form-label" for="gift_discount_amount">Gift Card:</label>
+                            <div class="col-sm-6">
+                                <input type="text" id="gift_voucher_amount" name="gift_voucher_amount" class="form-control-plaintext" value="" readonly>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-6 col-form-label" for="total_cost">Total Cost:</label>
+                            <div class="col-sm-6">
+                                <input type="text" id="total_cost" name="total_cost" class="form-control-plaintext" value="" readonly>
+                            </div>
+                        </div>
+                        <input type="hidden" name="spk" id="spk" value="{{ $spk }}" />
+                        Click <a href="{{ route('bookingInfo') }}">here</a> if you want to make changes in booking
+                        information.
+                    </div>
+                </div>
+
+
             </div>
 
-            <div class="col-md-4 d-none d-lg-block">
-                <div class="content-panel">
-                    <h2>BOOKING INFORMATION</h2>
-                    <div class="form-group row">
-                        <label class="col-sm-6 col-form-label" for="massage_type">Massage Type:</label>
-                        <div class="col-sm-6">
-                            <input type="text" id="massage_type" name="massage_type" class="form-control-plaintext" value="{{ $treatment->name }}" readonly>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label class="col-sm-6 col-form-label" for="therapist_name">Therapist Name:</label>
-                        <div class="col-sm-6">
-                            <input type="text" id="therapist_name" name="therapist_name" class="form-control-plaintext" value="{{ $therapist->first_name }}" readonly>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label class="col-sm-6 col-form-label" for="date">Date</label>
-                        <div class="col-sm-6">
-                            <input type="text" id="date" name="date" class="form-control-plaintext" value="{{ $dateTime->format('d F Y') }}" readonly>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label class="col-sm-6 col-form-label" for="time">Time:</label>
-                        <div class="col-sm-6">
-                            <input type="text" id="time" name="time" class="form-control-plaintext" value="{{ $dateTime->format('H:i') }}" readonly>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label class="col-sm-6 col-form-label" for="session_duration">Session Duration:</label>
-                        <div class="col-sm-6">
-                            <input type="text" id="session_duration" name="session_duration" class="form-control-plaintext" value="{{ $duration->duration }} minute" readonly>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label class="col-sm-6 col-form-label" for="session_cost">Session Cost:</label>
-                        <div class="col-sm-6">
-                            <input type="text" id="session_cost" name="session_cost" class="form-control-plaintext" value="" readonly>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label class="col-sm-6 col-form-label" for="travel_sup">Travel Supplement:</label>
-                        <div class="col-sm-6">
-                            <input type="text" id="travel_supp" name="travel_supp" class="form-control-plaintext" value="" readonly>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label class="col-sm-6 col-form-label" for="discount_amount">Discount Amount:</label>
-                        <div class="col-sm-6">
-                            <input type="text" id="discount_amount" name="discount_amount" class="form-control-plaintext" value="" readonly>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label class="col-sm-6 col-form-label" for="gift_discount_amount">Gift Card:</label>
-                        <div class="col-sm-6">
-                            <input type="text" id="gift_voucher_amount" name="gift_voucher_amount" class="form-control-plaintext" value="" readonly>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label class="col-sm-6 col-form-label" for="total_cost">Total Cost:</label>
-                        <div class="col-sm-6">
-                            <input type="text" id="total_cost" name="total_cost" class="form-control-plaintext" value="" readonly>
-                        </div>
-                    </div>
-                    <input type="hidden" name="spk" id="spk" value="{{ $spk }}" />
-                    Click <a href="{{ route('bookingInfo') }}">here</a> if you want to make changes in booking
-                    information.
-                </div>
-            </div>
-
-
-        </div>
+        </form>
     </div>
 </div>
 

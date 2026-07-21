@@ -1,5 +1,13 @@
 @extends('frontend.layouts.default')
 
+@section('title')
+Massage Booking Success | {{ config('app.name') }}
+@endsection
+
+@section('description')
+Massage Booking Success
+@endsection
+
 @section('content')
 
 <section class="page-hero">
@@ -63,8 +71,6 @@
                 @else
                 <div class"p-3">
                     <p class="h2">Join the Club: Get Rewarded</p>
-                    <p>Access your Customer Dashboard now! Sign up below to unlock exclusive loyalty offers, rate therapists,
-                        track your full booking history, and breeze through checkout faster than ever!</p>
                     @include('frontend.modules.auth.register-form', [
                     'name' => $booking->name,
                     'email' => $booking->email,

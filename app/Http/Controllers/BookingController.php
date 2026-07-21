@@ -273,6 +273,32 @@ class BookingController extends Controller
         ]);
     }
 
+    public function charges(Request $request)
+    {
+        try {
+            $duration = $this->databaseService->find(TariffPlan::class, $request->session()->get('booking.duration'));
+            $postcode = $this->databaseService->find(Postcode::class, $request->session()->get('booking.postcode_id'));
+
+            $session_cost = $duration->amount;
+            $travel_supplement = (int) $postcode->travel_supp;
+            $discount_amount = session('booking.discount_amount', 0);
+            $gift_voucher_amount = session('booking.gift_voucher_amount', 0);
+
+            $total_cost = ($session_cost + $travel_supplement) - ($discount_amount + $gift_voucher_amount);
+
+            $request->session()->put('booking.session_cost', $session_cost);
+            $request->session()->put('booking.travel_supp', $travel_supplement);
+            $request->session()->put('booking.discount_amount', $discount_amount);
+            $request->session()->put('booking.gift_voucher_amount', $gift_voucher_amount);
+            $request->session()->put('booking.total_cost', $total_cost);
+
+            $response = ['result' => 1, 'data' => session('booking')];
+        } catch (\Exception $e) {
+            $response = ['result' => 0, 'data' => []];
+        }
+        return response()->json($response);
+    }
+
     public function bookingCheckoutPost(Request $request)
     {
         if (!$request->session()->has('booking')) {
@@ -431,6 +457,48 @@ class BookingController extends Controller
         ]);
     }
 
+    public function createStripeSession(Request $request)
+    {
+        \Stripe\Stripe::setApiKey(config('custom.stripe_secret_key'));
+        $booking = $this->databaseService->getByParams(Booking::class, ['id' => session('bookingId')]);
+        $style = $this->databaseService->getByParams(Treatment::class, ['id' => $booking->treatment_id]);
+
+        $productName = $style->title;
+        $amount = ($booking->payable_amount + $booking->travel_supp) - ($booking->gift_discount_amount);
+        $customerEmail = $booking->email;
+        $successUrl = route('bookingReturnFromStripe') . '?session_id={CHECKOUT_SESSION_ID}';
+        $cancelUrl = route('bookingPostcode');
+
+        $metadata = ['booking_id' => $booking->id];
+        $stripeSession = $this->paymentService->createStripeSession($productName, $amount, $customerEmail, $successUrl, $cancelUrl, $metadata);
+        return response()->json($stripeSession);
+    }
+
+    public function returnFromStripe(Request $request)
+    {
+        if ($request->session()->has('bookingId')) {
+            \Stripe\Stripe::setApiKey(config('custom.stripe_secret_key'));
+
+            $stripeSession = \Stripe\Checkout\Session::retrieve($request->session_id);
+            //$customer = \Stripe\Customer::retrieve($session->customer);
+
+            if ($stripeSession->payment_status == 'paid') {
+                $booking = $this->databaseService->getByParams(Booking::class, ['id' => session('bookingId')]);
+                $booking->status = 'new';
+                $booking->save();
+
+                $payment = $this->databaseService->getByParams(Payment::class, ['where' => ['booking_id' => session('bookingId')]])->first();
+                $payment['status'] = 'completed';
+                $payment['charge_id'] = $stripeSession->payment_intent;
+                $payment->save();
+                return redirect(route('bookingSuccess'));
+            }
+        }
+        return redirect(route('booking_postal_code'));
+    }
+
+
+
     public function bookingSuccess(Request $request)
     {
         $request->session()->forget('booking');
@@ -479,45 +547,7 @@ class BookingController extends Controller
     }
 
 
-    public function createStripeSession(Request $request)
-    {
-        \Stripe\Stripe::setApiKey(config('custom.stripe_secret_key'));
-        $booking = $this->databaseService->getByParams(Booking::class, ['id' => session('bookingId')]);
-        $style = $this->databaseService->getByParams(Treatment::class, ['id' => $booking->treatment_id]);
 
-        $productName = $style->title;
-        $amount = ($booking->cost + $booking->travel_supp) - ($booking->gift_discount_amount);
-        $customerEmail = $booking->email;
-        $successUrl = route('bookingReturnFromStripe') . '?session_id={CHECKOUT_SESSION_ID}';
-        $cancelUrl = route('bookingPostcode');
-
-        $metadata = ['booking_id' => $booking->id];
-        $stripeSession = $this->paymentService->createStripeSession($productName, $amount, $customerEmail, $successUrl, $cancelUrl, $metadata);
-        return response()->json($stripeSession);
-    }
-
-    public function returnFromStripe(Request $request)
-    {
-        if ($request->session()->has('bookingId')) {
-            \Stripe\Stripe::setApiKey(config('custom.stripe_secret_key'));
-
-            $stripeSession = \Stripe\Checkout\Session::retrieve($request->session_id);
-            //$customer = \Stripe\Customer::retrieve($session->customer);
-
-            if ($stripeSession->payment_status == 'paid') {
-                $booking = $this->databaseService->getByParams(Booking::class, ['id' => session('bookingId')]);
-                $booking->status = 'new';
-                $booking->save();
-
-                $payment = $this->databaseService->getByParams(Payment::class, ['where' => ['booking_id' => session('bookingId')]])->first();
-                $payment['status'] = 'completed';
-                $payment['charge_id'] = $stripeSession->payment_intent;
-                $payment->save();
-                return redirect(route('bookingSuccess'));
-            }
-        }
-        return redirect(route('booking_postal_code'));
-    }
 
     public function updatePaymentMethod(Request $request)
     {
@@ -615,32 +645,5 @@ class BookingController extends Controller
             }
         }
         return response()->json(['success' => false, 'message' => 'Wrong request!']);
-    }
-
-    public function charges(Request $request)
-    {
-        try {
-
-            $duration = $this->databaseService->find(TariffPlan::class, $request->session()->get('booking.duration'));
-            $postcode = $this->databaseService->find(Postcode::class, $request->session()->get('booking.postcode_id'));
-
-            $session_cost = $duration->amount;
-            $travel_supplement = (int) $postcode->travel_supp;
-            $discount_amount = session('booking.discount_amount', 0);
-            $gift_voucher_amount = session('booking.gift_voucher_amount', 0);
-
-            $total_cost = ($session_cost + $travel_supplement) - ($discount_amount + $gift_voucher_amount);
-
-            $request->session()->put('booking.session_cost', $session_cost);
-            $request->session()->put('booking.travel_supp', $travel_supplement);
-            $request->session()->put('booking.discount_amount', $discount_amount);
-            $request->session()->put('booking.gift_voucher_amount', $gift_voucher_amount);
-            $request->session()->put('booking.total_cost', $total_cost);
-
-            $response = ['result' => 1, 'data' => session('booking')];
-        } catch (\Exception $e) {
-            $response = ['result' => 0, 'data' => []];
-        }
-        return response()->json($response);
     }
 }
