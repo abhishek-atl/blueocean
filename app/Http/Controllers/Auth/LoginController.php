@@ -80,8 +80,11 @@ class LoginController extends Controller
         if (session('booking')) {
             return redirect(route('bookingCheckout'));
         }
-        if ($user->hasRole(['Therapist']) || $user->hasRole(['Customer']) ) {
-            return redirect(route('bookings'));
+        if ($user->hasRole(['Therapist'])) {
+            return redirect(route('profile'));
+        }
+        if ($user->hasRole(['Customer'])) {
+            return redirect(route('account'));
         }
 
         return redirect()->intended(route('home'));

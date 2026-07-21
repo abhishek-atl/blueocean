@@ -7,7 +7,7 @@ use App\Http\Controllers\GiftVoucherController;
 use App\Http\Controllers\GooglePlacesController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PaypalPaymentController;
-use App\Http\Middleware\AdminMiddleware;
+use App\Http\Middleware\AuthMiddleware;
 use Illuminate\Support\Facades\Route;
 
 
@@ -15,7 +15,7 @@ include __DIR__ . '/auth.php';
 include __DIR__ . '/booking.php';
 
 Route::group([
-    //'middleware' => [AdminMiddleware::class]
+    'middleware' => [AuthMiddleware::class]
 ], function () {
 
     // client

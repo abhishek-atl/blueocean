@@ -37,18 +37,25 @@
             <li class="nav-item nav-item-has-children">
                 <a href="#" class="@if(
                 !Request::routeIs('admin.therapists*') &&
+                !Request::routeIs('admin.therapist_applications*') &&
                 !Request::routeIs('admin.treatment*')) 
                 collapsed @endif" data-bs-toggle="collapse" data-bs-target="#menu_therapists" aria-controls="ddmenu_2" aria-expanded="false" aria-label="Toggle navigation">
                     <i class="fa fa-user-nurse me-2"></i> <span class="text">Therapists</span>
                 </a>
                 <ul id="menu_therapists" class="collapse @if(
                     Request::routeIs('admin.therapists*') ||
+                    Request::routeIs('admin.therapist_applications*') ||
                     Request::routeIs('admin.treatment*'))
                     show @endif dropdown-nav">
 
                     <li>
                         <a href="{{ route('admin.therapists.index') }}" @if(Request::routeIs('admin.therapists*')) class="active" @endif>
                             Therapists
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('admin.therapist_applications.index') }}" @if(Request::routeIs('admin.therapist_applications*')) class="active" @endif>
+                            Applications
                         </a>
                     </li>
                     <li>

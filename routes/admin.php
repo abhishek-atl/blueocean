@@ -22,6 +22,7 @@ use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\FAQController;
 use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\TariffPlanController;
+use App\Http\Controllers\Admin\TherapistApplicationController;
 use App\Http\Controllers\Admin\GiftCertificateController;
 use App\Http\Controllers\Admin\BlacklistController;
 use App\Http\Controllers\Admin\TreatmentCategoryController;
@@ -57,6 +58,9 @@ Route::middleware([AdminMiddleware::class])->group(function () {
     Route::post('/therapist/store', [TherapistController::class, 'store'])->name('therapists.store');
     Route::get('/therapist/destroy/{id}', [TherapistController::class, 'destroy'])->name('therapists.destroy');
 
+    Route::get('/therapist-applications', [TherapistApplicationController::class, 'index'])->name('therapist_applications.index');
+    Route::post('/therapist-applications/{id}/approve', [TherapistApplicationController::class, 'approve'])->name('therapist_applications.approve');
+
     Route::get('/therapists/profile/{id?}', [TherapistController::class, 'therapistProfile'])->name('therapists.profile');
     Route::post('/therapists/profile', [TherapistController::class, 'therapistProfileStore'])->name('therapists.profileStore');
 
@@ -87,7 +91,7 @@ Route::middleware([AdminMiddleware::class])->group(function () {
     Route::post('/treatment_categories/store', [TreatmentCategoryController::class, 'store'])->name('treatment_categories.store');
     Route::get('/treatment_categories/destroy/{id}', [TreatmentCategoryController::class, 'destroy'])->name('treatment_categories.destroy');
 
-    
+
     // Users
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
     Route::get('/users/create', [UserController::class, 'createEdit'])->name('users.create');
