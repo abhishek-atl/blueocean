@@ -25,7 +25,6 @@
                 <a class="btn btn-secondary" href="{{ route('profile') }}">Personal</a>
                 <a class="btn btn-primary" href="{{ route('postcodes') }}">Postcode</a>
                 <a class="btn btn-secondary" href="{{ route('schedules') }}">Schedule</a>
-                <a class="btn btn-secondary" href="{{ route('mandates') }}">Mandates</a>
             </div>
         </div>
 
@@ -38,14 +37,18 @@
                         @foreach($districts as $district)
                         <div class="form-group row border my-3 pb-3">
                             <div class="col-md-12 p-0">
-                                <div class="bg-secondary p-2">{{ $district->postcode_area }} {{ $district->district }}</div>
+                                <div class="bg-secondary p-2 text-white">{{ $district->postcode_area }} {{ $district->district_name }}</div>
                             </div>
                             @foreach($district->postcodes as $postcode)
                             <div class="col-md-2">
                                 <div class="form-check my-2">
-                                    @php $class = ''; @endphp
+                                    @php
+                                        $class = '';
+                                    @endphp
                                     @if($therapist && $therapist->postcodes && $therapist->postcodes->contains('postcode',$postcode->postcode))
-                                    @php $class = 'checked="checked"'; @endphp
+                                        @php
+                                            $class = 'checked="checked"';
+                                        @endphp
                                     @endif
                                     <input class="form-check-input" type="checkbox" {{ $class }} disabled>
                                     <label class="form-check-label" for="{{$postcode->id}}">{{ $postcode->postcode }}</label>

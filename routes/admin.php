@@ -16,7 +16,9 @@ use App\Http\Controllers\Admin\PaymentController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\PostController;
 use App\Http\Controllers\Admin\PostTagController;
+use App\Http\Controllers\Admin\PromocodeController;
 use App\Http\Controllers\Admin\ReviewController;
+use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\FAQController;
 use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\TariffPlanController;
@@ -115,6 +117,16 @@ Route::middleware([AdminMiddleware::class])->group(function () {
 
 
     // Settings
+    Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
+    Route::get('/settings/{setting}/edit', [SettingController::class, 'edit'])->name('settings.edit');
+    Route::put('/settings/{setting}', [SettingController::class, 'update'])->name('settings.update');
+
+    Route::get('/promocodes', [PromocodeController::class, 'index'])->name('promocodes.index');
+    Route::get('/promocodes/create', [PromocodeController::class, 'createEdit'])->name('promocodes.create');
+    Route::get('/promocodes/edit/{id}', [PromocodeController::class, 'createEdit'])->name('promocodes.edit');
+    Route::post('/promocodes/store', [PromocodeController::class, 'store'])->name('promocodes.store');
+    Route::get('/promocodes/destroy/{id}', [PromocodeController::class, 'destroy'])->name('promocodes.destroy');
+
     Route::get('/postcode-districts', [PostcodeDistrictController::class, 'index'])->name('postcode_districts.index');
 
     Route::get('/postcodes', [PostcodeController::class, 'index'])->name('postcodes.index');

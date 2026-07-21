@@ -238,60 +238,6 @@ class AccountController extends Controller
         http_response_code(200);
     }
 
-    public function mandates()
-    {
-        abort_if(!Auth::user()->hasRole('Therapist'), 403);
-        $user = Auth::user();
-        $mandate = $user->mandate;
-        $lastPayment = PaymentReceived::where('user_id', $user->id)->latest()->first();
-        return view('frontend.modules.account.therapist_mandates', [
-            'spk' => config('custom.stripe_public_key'),
-            'mandate' => $mandate,
-            'lastPayment' => $lastPayment
-        ]);
-    }
-
-    public function createMandateSetupStripeSession()
-    {
-        abort_if(!Auth::user()->hasRole('Therapist'), 403);
-
-        $user = Auth::user();
-
-        \Stripe\Stripe::setApiKey(config('custom.stripe_secret_key'));
-        $stripeCustomer = $this->paymentService->createStripeCustomer($user);
-        if ($stripeCustomer) {
-            $successUrl = route('mandate_setup_success') . '?session_id={CHECKOUT_SESSION_ID}';
-            $cancelUrl = route('mandates');
-            $session = \Stripe\Checkout\Session::create([
-                'payment_method_types' => ['bacs_debit'],
-                'mode' => 'setup',
-                'customer' => $stripeCustomer->id,
-                'success_url' => $successUrl,
-                'cancel_url' => $cancelUrl,
-            ]);
-            return response()->redirectTo($session->url);
-        }
-    }
-
-    public function mandateSetupSuccess(Request $request)
-    {
-        abort_if(!Auth::user()->hasRole('Therapist'), 403);
-        return redirect()->route('mandates')->with('success', 'Mandate submitted successfully');
-    }
-
-    function mandateCancel()
-    {
-        $therapist = Auth::user();
-        $mandate = TherapistsMandate::where('user_id', $user->id)->first();
-        $stripe = new \Stripe\StripeClient(config('custom.stripe_secret_key'));
-        $stripe->paymentMethods->detach($mandate->payment_method_id, []);
-        $mandate->stripe_status = 'inactive';
-        $mandate->is_enabled = 0;
-        $mandate->save();
-        return redirect()->route('mandates')->with('success', 'Mandate cancelled successfully');
-    }
-
-
     public function profile(Request $request)
     {
         abort_if(!Auth::user()->hasRole('Therapist'), 403);
@@ -311,11 +257,13 @@ class AccountController extends Controller
         $params = [];
         $params['order_by'] = request('order_by') ? request('order_by') : 'id';
         $params['order'] = request('order') ? request('order') : 'asc';
-        //$params['with'] = ['postcodes.zone'];
+        $params['with'] = ['postcodes'];
+
         $districts = $this->postcodeDistrictService->getByParams($params);
 
+
         return view('frontend.modules.account.therapist_postcodes', [
-            'therapist' => $user->therapist,
+            'therapist' => $user,
             'districts' => $districts
         ]);
     }

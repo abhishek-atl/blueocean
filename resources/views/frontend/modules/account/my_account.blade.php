@@ -144,6 +144,7 @@
                 </form>
             </div>
 
+            {{--
             <div class="content-panel">
                 <form method="post" action="{{ route('accountDataDownload') }}">
                     @csrf
@@ -158,6 +159,8 @@
 
                 </form>
             </div>
+            --}}
+
         </div>
     </div>
 

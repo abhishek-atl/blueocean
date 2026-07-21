@@ -30,11 +30,6 @@ Route::group([
     Route::post('/rate', [AccountController::class, 'rateBooking'])->name('rate_booking');
 
     // therapist
-    Route::get('/mandates', [AccountController::class, 'mandates'])->name('mandates');
-    Route::post('/mandate-setup', [AccountController::class, 'createMandateSetupStripeSession'])->name('mandate_setup');
-    Route::get('/mandate-setup-success', [AccountController::class, 'mandateSetupSuccess'])->name('mandate_setup_success');
-    Route::post('/mandate-cancel', [AccountController::class, 'mandateCancel'])->name('mandate_cancel');
-
     Route::get('/profile', [AccountController::class, 'profile'])->name('profile');
     Route::get('/postcodes', [AccountController::class, 'postcodes'])->name('postcodes');
     Route::get('/schedules', [AccountController::class, 'schedules'])->name('schedules');

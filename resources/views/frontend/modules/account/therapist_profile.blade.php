@@ -25,7 +25,6 @@
                 <a class="btn btn-primary" href="{{ route('profile') }}">Personal</a>
                 <a class="btn btn-secondary" href="{{ route('postcodes') }}">Postcode</a>
                 <a class="btn btn-secondary" href="{{ route('schedules') }}">Schedule</a>
-                <a class="btn btn-secondary" href="{{ route('mandates') }}">Mandates</a>
             </div>
         </div>
 

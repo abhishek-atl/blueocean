@@ -111,7 +111,9 @@
                 !Request::routeIs('admin.postcode_districts*') &&
                 !Request::routeIs('admin.postcodes*') &&
                 !Request::routeIs('admin.tariff_plans*') &&
-                !Request::routeIs('admin.gift_certificates*'))
+                !Request::routeIs('admin.gift_certificates*') &&
+                !Request::routeIs('admin.promocodes*') &&
+                !Request::routeIs('admin.settings*'))
                 collapsed @endif" data-bs-toggle="collapse" data-bs-target="#menu_postcodes" aria-controls="ddmenu_2" aria-expanded="false" aria-label="Toggle navigation">
                     <i class="fa fa-gear me-2"></i> <span class="text">Settings</span>
                 </a>
@@ -119,8 +121,15 @@
                 Request::routeIs('admin.postcode_districts*') ||
                 Request::routeIs('admin.postcodes*') ||
                 Request::routeIs('admin.tariff_plans*') ||
-                Request::routeIs('admin.gift_certificates*'))
+                Request::routeIs('admin.gift_certificates*') ||
+                Request::routeIs('admin.promocodes*') ||
+                Request::routeIs('admin.settings*'))
                 show @endif dropdown-nav">
+                    <li>
+                        <a href="{{ route('admin.settings.index') }}" @if(Request::routeIs('admin.settings*')) class="active" @endif>
+                            General Settings
+                        </a>
+                    </li>
                     <li>
                         <a href="{{ route('admin.postcode_districts.index') }}" @if(Request::routeIs('admin.postcode_districts*')) class="active" @endif>
                             Postcode Districts
@@ -134,6 +143,11 @@
                     <li>
                         <a href="{{ route('admin.tariff_plans.index') }}" @if(Request::routeIs('admin.tariff_plans*')) class="active" @endif>
                             Tariff Plans
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('admin.promocodes.index') }}" @if(Request::routeIs('admin.promocodes*')) class="active" @endif>
+                            Promocodes
                         </a>
                     </li>
                     <li>
