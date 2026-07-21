@@ -35,7 +35,7 @@
                             </div>
                         </div>
                         <div class="col-12">
-                            <a href="{{ route('admin.reviews.create')}}" class="btn btn-primary">Create Review</a>
+                            <a href="{{ route('admin.reviews.create')}}" class="btn btn-primary">Add Review</a>
                         </div>
                     </form>
 

@@ -54,6 +54,10 @@ class BlacklistController extends Controller
     {
         $params = $request->except('_token');
 
+        if($request->input('active')) {
+            $params['approved_at'] = now();
+        }
+        
         if (isset($params['id'])) {
             $blacklist = $this->databaseService->find(Blacklist::class, $params['id']);
             $blacklist->update($params);

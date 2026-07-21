@@ -35,7 +35,7 @@
                             </div>
                         </div>
                         <div class="col-12">
-                            <a href="{{ route('admin.postcodes.create')}}" class="btn btn-primary">Create Postcode</a>
+                            <a href="{{ route('admin.postcodes.create')}}" class="btn btn-primary">Add Postcode</a>
                         </div>
                     </form>
 

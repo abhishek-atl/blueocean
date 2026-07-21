@@ -9,7 +9,7 @@
         <div class="col-md-12">
             <div class="card-style d-flex flex-wrap align-items-center justify-content-between">
                 <div class="title">
-                    <h2>Therapist Schedules</h2>
+                    <h2>Schedules: {{ $user->first_name}}</h2>
 
                     <div class="breadcrumb-wrapper">
                         <nav aria-label="breadcrumb">

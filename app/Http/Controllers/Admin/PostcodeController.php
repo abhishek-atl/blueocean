@@ -49,7 +49,7 @@ class PostcodeController extends Controller
         }
         $districts = $this->databaseService->getByParams(PostcodeDistrict::class, ['all' => true]);
 
-        return view('admin.modules.postcode.postcode_add_edit', [
+        return view('admin.modules.postcode.create_edit', [
             'districts' => $districts,
             'postcode' => $postcode,
         ]);

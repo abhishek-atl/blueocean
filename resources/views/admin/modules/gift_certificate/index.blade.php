@@ -35,7 +35,7 @@
                             </div>
                         </div>
                         <div class="col-12">
-                            <a href="{{ route('admin.gift_certificates.create')}}" class="btn btn-primary">Create Certificate</a>
+                            <a href="{{ route('admin.gift_certificates.create')}}" class="btn btn-primary">Add Gift Certificate</a>
                         </div>
                     </form>
 

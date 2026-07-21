@@ -1,5 +1,7 @@
 @extends('admin.layouts.default')
 
+@inject('format', 'App\Services\FormatService')
+
 @section('title', 'Blacklists')
 
 @section('content')
@@ -91,7 +93,7 @@
                             <td>{{ Str::limit($blacklist->reason, 40) ?? '-' }}</td>
                             <td>
                                 @if($blacklist->approved_at)
-                                <span class="badge bg-success">{{ $blacklist->approved_at->format('M d, Y') }}</span>
+                                <span class="badge bg-success">{{ $format->date($blacklist->approved_at) }}</span>
                                 @else
                                 <span class="badge bg-warning">Pending</span>
                                 @endif

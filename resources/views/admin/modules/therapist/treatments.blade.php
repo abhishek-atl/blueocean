@@ -9,7 +9,7 @@
         <div class="col-md-12">
             <div class="card-style d-flex flex-wrap align-items-center justify-content-between">
                 <div class="title">
-                    <h2>Select Treatments</h2>
+                    <h2>Treatments: {{ $user->first_name}}</h2>
                     <div class="breadcrumb-wrapper">
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">

@@ -9,7 +9,7 @@
         <div class="col-md-12">
             <div class="card-style d-flex flex-wrap align-items-center justify-content-between">
                 <div class="title">
-                    <h2>Therapist Postcodes</h2>
+                    <h2>Postcodes: {{ $user->first_name}}</h2>
 
                     <div class="breadcrumb-wrapper">
                         <nav aria-label="breadcrumb">
@@ -72,24 +72,16 @@
                                 <label class="form-check-label" for="checkAll">Choose All</label>
                             </div>
                         </div>
-                        @foreach($zones as $zone)
-                        <div class="col-md-1 p-0">
-                            <div class="form-check mx-3">
-                                <input class="form-check-input checkAllZone" type="checkbox" value="{{ $zone->id}}" id="zone{{ $zone->id}}">
-                                <label class="form-check-label" for="zone{{ $zone->id}}">{{ $zone->name}}</label>
-                            </div>
-                        </div>
-                        @endforeach
                     </div>
 
                     @foreach($districts as $district)
                     <div class="form-group row border my-3 pb-3">
                         <div class="col-md-12 p-0">
-                            <div class="bg-secondary p-2 text-white">{{ $district->postcode_area }} {{ $district->district }}</div>
+                            <div class="bg-secondary p-2 text-white">{{ $district->postcode_area }} {{ $district->district_name }}</div>
                             <div class="form-check mx-3 my-3">
                                 <input class="form-check-input checkThisZone" type="checkbox" id="checkAll{{ $district->id}}">
                                 <label class="form-check-label" for="checkAll{{ $district->id}}">
-                                    Choose All {{ $district->postcode_area }} {{ $district->district }} Postcodes
+                                    Choose All {{ $district->postcode_area }} {{ $district->district_name }} Postcodes
                                 </label>
                             </div>
                         </div>
@@ -106,7 +98,7 @@
                                     @endphp
                                 @endif
                                 <input class="form-check-input" type="checkbox" name="postcodes[]" value="{{$postcode->id}}" id="{{$postcode->id}}" 
-                                 {{ $class }}>
+                                 data-zone="{{ $postcode->zone ? $postcode->zone : 0 }}" {{ $class }}>
                                 <label class="form-check-label" for="{{$postcode->id}}">
                                     {{ $postcode->postcode }}
                                 </label>
@@ -144,10 +136,6 @@
         });
         $('.checkAll').click(function (event) {
             $('input:checkbox[name="postcodes[]"]').prop('checked', this.checked);
-        });
-        $('.checkAllZone').click(function (event) {
-            let id = $(this).val();
-            $('input:checkbox[data-zone="' + id + '"]').prop('checked', this.checked);
         });
     });
 </script>

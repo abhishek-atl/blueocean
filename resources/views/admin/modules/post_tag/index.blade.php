@@ -35,7 +35,7 @@
                             </div>
                         </div>
                         <div class="col-12">
-                            <a href="{{ route('admin.post_tags.create')}}" class="btn btn-primary">Create Tag</a>
+                            <a href="{{ route('admin.post_tags.create')}}" class="btn btn-primary">Add Post Tag</a>
                         </div>
                     </form>
 

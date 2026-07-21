@@ -1,7 +1,7 @@
 <aside class="sidebar-nav-wrapper">
     <div class="navbar-logo">
         <a href="{{ route('admin.dashboard') }}">
-            <img src="{{ asset('assets/img/logo.svg') }}" alt="logo" class="img-fluid">
+            <img src="{{ asset('admin/img/logo.png') }}" alt="logo" class="img-fluid">
         </a>
     </div>
     <nav class="sidebar-nav">
@@ -14,25 +14,20 @@
 
             @can('Manage Booking')
             <li class="nav-item nav-item-has-children">
-                <a href="#" class="@if(!Request::routeIs('admin.bookings*') &&
-                !Request::routeIs('admin.payments*')) collapsed @endif" data-bs-toggle="collapse" data-bs-target="#menu_bookings" aria-controls="ddmenu_2" aria-expanded="false" aria-label="Toggle navigation">
+                <a href="#" class="@if(
+                !Request::routeIs('admin.bookings*') &&
+                !Request::routeIs('admin.payments*')) 
+                collapsed @endif" data-bs-toggle="collapse" data-bs-target="#menu_bookings" aria-controls="ddmenu_2" aria-expanded="false" aria-label="Toggle navigation">
                     <i class="fa fa-wallet me-2"></i> <span class="text">Bookings</span>
                 </a>
                 <ul id="menu_bookings" class="collapse @if(Request::routeIs('admin.bookings*') ||
                     Request::routeIs('admin.payments*')
                     ) show @endif dropdown-nav">
-
                     <li>
-                        <a href="{{ route('admin.bookings.index') }}" @if(
-                            Route::currentRouteName()=='admin.bookings.index' ||
-                            Route::currentRouteName()=='admin.bookings.create' ||
-                            Route::currentRouteName()=='admin.bookings.edit' ) class="active" @endif>Bookings</a>
+                        <a href="{{ route('admin.bookings.index') }}" @if(Request::routeIs('admin.bookings*')) class="active" @endif>Bookings</a>
                     </li>
                     <li>
-                        <a href="{{ route('admin.payments.index') }}" @if(
-                            Route::currentRouteName()=='admin.payments.index' ||
-                            Route::currentRouteName()=='admin.payments.create' ||
-                            Route::currentRouteName()=='admin.payments.edit' ) class="active" @endif>Payments</a>
+                        <a href="{{ route('admin.payments.index') }}" @if(Request::routeIs('admin.payments*')) class="active" @endif>Payments</a>
                     </li>
                 </ul>
             </li>
@@ -40,28 +35,31 @@
 
             @can('Manage Therapist')
             <li class="nav-item nav-item-has-children">
-                <a href="#" class="@if(!Request::routeIs('admin.therapists*') &&
-                !Request::routeIs('admin.treatment*')) collapsed @endif" data-bs-toggle="collapse" data-bs-target="#menu_therapists" aria-controls="ddmenu_2" aria-expanded="false" aria-label="Toggle navigation">
+                <a href="#" class="@if(
+                !Request::routeIs('admin.therapists*') &&
+                !Request::routeIs('admin.treatment*')) 
+                collapsed @endif" data-bs-toggle="collapse" data-bs-target="#menu_therapists" aria-controls="ddmenu_2" aria-expanded="false" aria-label="Toggle navigation">
                     <i class="fa fa-user-nurse me-2"></i> <span class="text">Therapists</span>
                 </a>
-                <ul id="menu_therapists" class="collapse @if(Request::routeIs('admin.therapists*') ||
-                    Request::routeIs('admin.treatment*')
-                    ) show @endif dropdown-nav">
+                <ul id="menu_therapists" class="collapse @if(
+                    Request::routeIs('admin.therapists*') ||
+                    Request::routeIs('admin.treatment*'))
+                    show @endif dropdown-nav">
 
                     <li>
-                        <a href="{{ route('admin.therapists.index') }}" @if(Route::currentRouteName()=='admin.therapists.*' ) class="active" @endif>
+                        <a href="{{ route('admin.therapists.index') }}" @if(Request::routeIs('admin.therapists*')) class="active" @endif>
                             Therapists
                         </a>
                     </li>
                     <li>
-                        <a href="{{ route('admin.treatments.index') }}" @if(Route::currentRouteName()=='admin.treatments.index' ||
-                            Route::currentRouteName()=='admin.treatments.create' ||
-                            Route::currentRouteName()=='admin.treatments.edit' ) class="active" @endif>Treatments</a>
+                        <a href="{{ route('admin.treatments.index') }}" @if(Request::routeIs('admin.treatments*')) class="active" @endif>
+                            Treatments
+                        </a>
                     </li>
                     <li>
-                        <a href="{{ route('admin.treatment_categories.index') }}" @if(Route::currentRouteName()=='admin.treatment_categories.index' ||
-                            Route::currentRouteName()=='admin.treatment_categories.create' ||
-                            Route::currentRouteName()=='admin.treatment_categories.edit' ) class="active" @endif>Treatment Categories</a>
+                        <a href="{{ route('admin.treatment_categories.index') }}" @if(Request::routeIs('admin.treatment_categories*')) class="active" @endif>
+                            Treatment Categories
+                        </a>
                     </li>
                 </ul>
             </li>
@@ -69,35 +67,39 @@
 
             @can('Manage User')
             <li class="nav-item nav-item-has-children">
-                <a href="#" class="@if(!Request::routeIs('admin.customers*') &&
+                <a href="#" class="@if(
+                !Request::routeIs('admin.customers*') &&
                 !Request::routeIs('admin.users*') &&
-                !Request::routeIs('admin.roles*')
+                !Request::routeIs('admin.roles*') && 
+                !Request::routeIs('admin.blacklists*')
                 ) collapsed @endif" data-bs-toggle="collapse" data-bs-target="#menu_users" aria-controls="ddmenu_2" aria-expanded="false" aria-label="Toggle navigation">
                     <i class="fa fa-users me-2"></i> <span class="text">Users</span>
                 </a>
-                <ul id="menu_users" class="collapse @if(Request::routeIs('admin.users*') ||
+                <ul id="menu_users" class="collapse @if(
+                Request::routeIs('admin.users*') ||
                 Request::routeIs('admin.customers*') ||
-                Request::routeIs('admin.roles*')
+                Request::routeIs('admin.roles*') ||
+                Request::routeIs('admin.blacklists*')
                 ) show @endif dropdown-nav">
                     <li>
-                        <a href="{{ route('admin.users.index') }}" @if(Route::currentRouteName()=='admin.users.index' ||
-                            Route::currentRouteName()=='admin.users.create' || Route::currentRouteName()=='admin.users.edit' ) class="active" @endif>Admins</a>
+                        <a href="{{ route('admin.users.index') }}" @if(Request::routeIs('admin.users*')) class="active" @endif>
+                            Admins
+                        </a>
                     </li>
                     <li>
-                        <a href="{{ route('admin.customers.index') }}" @if(Route::currentRouteName()=='admin.customers.index' ||
-                            Route::currentRouteName()=='admin.customers.create' ||
-                            Route::currentRouteName()=='admin.customers.edit' ) class="active" @endif>Customers</a>
+                        <a href="{{ route('admin.customers.index') }}" @if(Request::routeIs('admin.customers*')) class="active" @endif>
+                            Customers
+                        </a>
                     </li>
                     <li>
-                        <a href="{{ route('admin.roles.index') }}" @if(Route::currentRouteName()=='admin.roles.index' ||
-                            Route::currentRouteName()=='admin.roles.create' ||
-                            Route::currentRouteName()=='admin.roles.edit' ||
-                            Route::currentRouteName()=='admin.roles.permissions' ) class="active" @endif>Roles</a>
+                        <a href="{{ route('admin.roles.index') }}" @if(Request::routeIs('admin.roles*')) class="active" @endif>
+                            Roles
+                        </a>
                     </li>
                     <li>
-                        <a href="{{ route('admin.blacklists.index') }}" @if(Route::currentRouteName()=='admin.blacklists.index' ||
-                            Route::currentRouteName()=='admin.blacklists.create' ||
-                            Route::currentRouteName()=='admin.blacklists.edit' ) class="active" @endif>Blacklists</a>
+                        <a href="{{ route('admin.blacklists.index') }}" @if(Request::routeIs('admin.blacklists*')) class="active" @endif>
+                            Blacklists
+                        </a>
                     </li>
                 </ul>
             </li>
@@ -105,32 +107,39 @@
 
             @can('Manage Setting')
             <li class="nav-item nav-item-has-children">
-                <a href="#" class="@if(!Request::routeIs('admin.postcode*')) collapsed @endif" data-bs-toggle="collapse" data-bs-target="#menu_postcodes" aria-controls="ddmenu_2" aria-expanded="false" aria-label="Toggle navigation">
-                    <i class="fa fa-envelope me-2"></i> <span class="text">Postcodes</span>
+                <a href="#" class="@if(
+                !Request::routeIs('admin.postcode_districts*') &&
+                !Request::routeIs('admin.postcodes*') &&
+                !Request::routeIs('admin.tariff_plans*') &&
+                !Request::routeIs('admin.gift_certificates*'))
+                collapsed @endif" data-bs-toggle="collapse" data-bs-target="#menu_postcodes" aria-controls="ddmenu_2" aria-expanded="false" aria-label="Toggle navigation">
+                    <i class="fa fa-gear me-2"></i> <span class="text">Settings</span>
                 </a>
-                <ul id="menu_postcodes" class="collapse @if(Request::routeIs('admin.postcode*')) show @endif dropdown-nav">
+                <ul id="menu_postcodes" class="collapse @if(
+                Request::routeIs('admin.postcode_districts*') ||
+                Request::routeIs('admin.postcodes*') ||
+                Request::routeIs('admin.tariff_plans*') ||
+                Request::routeIs('admin.gift_certificates*'))
+                show @endif dropdown-nav">
                     <li>
-                        <a href="{{ route('admin.postcode_districts.index') }}" @if(Route::currentRouteName()=='admin.postcode_districts.index' ) class="active" @endif>Postcode Districts</a>
+                        <a href="{{ route('admin.postcode_districts.index') }}" @if(Request::routeIs('admin.postcode_districts*')) class="active" @endif>
+                            Postcode Districts
+                        </a>
                     </li>
                     <li>
-                        <a href="{{ route('admin.postcodes.index') }}" @if(Route::currentRouteName()=='admin.postcodes.index' ||
-                            Route::currentRouteName()=='admin.postcodes.create' ||
-                            Route::currentRouteName()=='admin.postcodes.edit' ) class="active" @endif>Postcodes</a>
+                        <a href="{{ route('admin.postcodes.index') }}" @if(Request::routeIs('admin.postcodes*')) class="active" @endif>
+                            Postcodes
+                        </a>
                     </li>
                     <li>
-                        <a href="{{ route('admin.postcode_zones.index') }}" @if(Route::currentRouteName()=='admin.postcode_zones.index' ||
-                            Route::currentRouteName()=='admin.postcode_zones.create' ||
-                            Route::currentRouteName()=='admin.postcode_zones.edit' ) class="active" @endif>Postcode Zones</a>
+                        <a href="{{ route('admin.tariff_plans.index') }}" @if(Request::routeIs('admin.tariff_plans*')) class="active" @endif>
+                            Tariff Plans
+                        </a>
                     </li>
                     <li>
-                        <a href="{{ route('admin.tariff_plans.index') }}" @if(Route::currentRouteName()=='admin.tariff_plans.index' ||
-                            Route::currentRouteName()=='admin.tariff_plans.create' ||
-                            Route::currentRouteName()=='admin.tariff_plans.edit' ) class="active" @endif>Tariff Plans</a>
-                    </li>
-                    <li>
-                        <a href="{{ route('admin.gift_certificates.index') }}" @if(Route::currentRouteName()=='admin.gift_certificates.index' ||
-                            Route::currentRouteName()=='admin.gift_certificates.create' ||
-                            Route::currentRouteName()=='admin.gift_certificates.edit' ) class="active" @endif>Gift Certificates</a>
+                        <a href="{{ route('admin.gift_certificates.index') }}" @if(Request::routeIs('admin.gift_certificates*')) class="active" @endif>
+                            Gift Certificates
+                        </a>
                     </li>
                 </ul>
             </li>
@@ -138,53 +147,46 @@
 
             @can('Manage Content')
             <li class="nav-item nav-item-has-children">
-                <a href="#" class="@if(!Request::routeIs('admin.post*') &&
+                <a href="#" class="@if(
                 !Request::routeIs('admin.reviews*') &&
                 !Request::routeIs('admin.faqs*') &&
-                !Request::routeIs('admin.banners*')) collapsed @endif" data-bs-toggle="collapse" data-bs-target="#menu_content" aria-controls="ddmenu_2" aria-expanded="false" aria-label="Toggle navigation">
-                    <i class="fa fa-envelope me-2"></i> <span class="text">Content</span>
+                !Request::routeIs('admin.banners*') &&
+                !Request::routeIs('admin.posts*') &&
+                !Request::routeIs('admin.post_tags*'))
+                collapsed @endif" data-bs-toggle="collapse" data-bs-target="#menu_content" aria-controls="ddmenu_2" aria-expanded="false" aria-label="Toggle navigation">
+                    <i class="fa fa-paste me-2"></i> <span class="text">Content</span>
                 </a>
-                <ul id="menu_content" class="collapse @if(Request::routeIs('admin.post*') ||
+                <ul id="menu_content" class="collapse @if(
                     Request::routeIs('admin.reviews*') ||
                     Request::routeIs('admin.faqs*') ||
-                    Request::routeIs('admin.banners*')) show @endif dropdown-nav">
+                    Request::routeIs('admin.banners*') ||
+                    Request::routeIs('admin.posts*') ||
+                    Request::routeIs('admin.post_tags*')
+                    ) show @endif dropdown-nav">
                     <li>
-                        <a href="{{ route('admin.reviews.index') }}" @if(Route::currentRouteName()=='admin.reviews.index' ||
-                            Route::currentRouteName()=='admin.reviews.create' ||
-                            Route::currentRouteName()=='admin.reviews.edit' ) class="active" @endif>Reviews</a>
+                        <a href="{{ route('admin.reviews.index') }}" @if(Request::routeIs('admin.reviews*')) class="active" @endif>
+                            Reviews
+                        </a>
                     </li>
                     <li>
-                        <a href="{{ route('admin.faqs.index') }}" @if(Route::currentRouteName()=='admin.faqs.index' ||
-                            Route::currentRouteName()=='admin.faqs.create' ||
-                            Route::currentRouteName()=='admin.faqs.edit' ) class="active" @endif>FAQs</a>
+                        <a href="{{ route('admin.faqs.index') }}" @if(Request::routeIs('admin.faqs*')) class="active" @endif>
+                            FAQs
+                        </a>
                     </li>
                     <li>
-                        <a href="{{ route('admin.banners.index') }}" @if(Route::currentRouteName()=='admin.banners.index' ||
-                            Route::currentRouteName()=='admin.banners.create' ||
-                            Route::currentRouteName()=='admin.banners.edit' ) class="active" @endif>Banners</a>
-                    </li>
-                </ul>
-            </li>
-            <li class="nav-item nav-item-has-children">
-                <a href="#" class="@if(!Request::routeIs('admin.post*') &&
-                !Request::routeIs('admin.reviews*') &&
-                !Request::routeIs('admin.faqs*') &&
-                !Request::routeIs('admin.banners*')) collapsed @endif" data-bs-toggle="collapse" data-bs-target="#menu_blog" aria-controls="ddmenu_2" aria-expanded="false" aria-label="Toggle navigation">
-                    <i class="fa fa-envelope me-2"></i> <span class="text">Blog</span>
-                </a>
-                <ul id="menu_blog" class="collapse @if(Request::routeIs('admin.post*') ||
-                    Request::routeIs('admin.reviews*') ||
-                    Request::routeIs('admin.faqs*') ||
-                    Request::routeIs('admin.banners*')) show @endif dropdown-nav">
-                    <li>
-                        <a href="{{ route('admin.posts.index') }}" @if(Route::currentRouteName()=='admin.posts.index' ||
-                            Route::currentRouteName()=='admin.posts.create' ||
-                            Route::currentRouteName()=='admin.posts.edit' ) class="active" @endif>Posts</a>
+                        <a href="{{ route('admin.banners.index') }}" @if(Request::routeIs('admin.banners*')) class="active" @endif>
+                            Banners
+                        </a>
                     </li>
                     <li>
-                        <a href="{{ route('admin.post_tags.index') }}" @if(Route::currentRouteName()=='admin.post_tags.index' ||
-                            Route::currentRouteName()=='admin.post_tags.create' ||
-                            Route::currentRouteName()=='admin.post_tags.edit' ) class="active" @endif>Post Tags</a>
+                        <a href="{{ route('admin.posts.index') }}" @if(Request::routeIs('admin.posts*')) class="active" @endif>
+                            Posts
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('admin.post_tags.index') }}" @if(Request::routeIs('admin.post_tags*')) class="active" @endif>
+                            Post Tags
+                        </a>
                     </li>
                 </ul>
             </li>
@@ -192,7 +194,7 @@
 
             <li class="nav-item">
                 <a href="{{ route('auth.logout',['user' => 'admin']) }}">
-                    <i class="fa fa-home me-2"></i> <span class="text">Logout {{ Auth::user()->first_name }}</span>
+                    <i class="fa fa-arrow-right-from-bracket me-2"></i> <span class="text">Logout</span>
                 </a>
             </li>
 

@@ -14,7 +14,7 @@
             <div class="card-style d-flex flex-wrap align-items-center justify-content-between">
                 <div class="title">
                     @if(isset($user))
-                    <h2>Edit Therapist</h2>
+                    <h2>Edit Therapist: {{ $user->first_name}}</h2>
                     @else
                     <h2>Add Therapist</h2>
                     @endif

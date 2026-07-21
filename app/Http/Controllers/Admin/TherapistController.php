@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreUserRequest;
 use Illuminate\Http\Request;
 
-use App\Models\PostcodeZone;
 use App\Models\PostcodeDistrict;
 use App\Models\TherapistHoliday;
 use App\Models\Treatment;
@@ -39,10 +38,10 @@ class TherapistController extends Controller
     public function index(Request $request)
     {
         $params = [];
-        $params['sort_by'] = $request->get('sort_by', 'id');
-        $params['sort_order'] = $request->get('sort_order', 'desc');
-        if (null != $request->get('search')) {
-            $params['search'] = $request->get('search');
+        $params['sort_by'] = $request->input('sort_by', 'id');
+        $params['sort_order'] = $request->input('sort_order', 'desc');
+        if (null != $request->input('search')) {
+            $params['search'] = $request->input('search');
         }
 
         $therapists = $this->userService->therapists($params);
@@ -156,16 +155,13 @@ class TherapistController extends Controller
     public function postcodes($id)
     {
         $user = $this->userService->find(request('id'));
-        $user->load('postcodes.zone');
+        $user->load('postcodes');
 
         $districts = $this->databaseService->getByParams(PostcodeDistrict::class, ['all' => true, 'with' => ['postcodes']]);
-
-        $zones = $this->databaseService->getByParams(PostcodeZone::class, ['all' => true]);
 
         return view('admin.modules.therapist.postcodes', [
             'districts' => $districts,
             'user' => $user,
-            'zones' => $zones
         ]);
     }
 

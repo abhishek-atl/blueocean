@@ -92,25 +92,15 @@
                         @enderror
                     </div>
 
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label class="form-label" for="requested_at">Requested At</label>
-                                <input type="datetime-local" name="requested_at" id="requested_at" class="form-control" value="{{ old('requested_at', isset($blacklist) && $blacklist->requested_at ? $blacklist->requested_at->format('Y-m-d\TH:i') : '') }}" />
-                                @error('requested_at')
-                                <div class="text-danger">{{ $message }}</div>
-                                @enderror
-                            </div>
+                    <div class="mb-3">
+                        <label class="form-label col-4 required">Approved</label>
+                        <div class="form-check form-check-inline radio-style mb-20">
+                            <input type="radio" name="active" id="active_yes" value="1" @if($blacklist->approved_at) checked @endif>
+                            <label class="form-check-label" for="active_yes">Yes</label>
                         </div>
-
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label class="form-label" for="approved_at">Approved At</label>
-                                <input type="datetime-local" name="approved_at" id="approved_at" class="form-control" value="{{ old('approved_at', isset($blacklist) && $blacklist->approved_at ? $blacklist->approved_at->format('Y-m-d\TH:i') : '') }}" />
-                                @error('approved_at')
-                                <div class="text-danger">{{ $message }}</div>
-                                @enderror
-                            </div>
+                        <div class="form-check form-check-inline radio-style mb-20">
+                            <input type="radio" name="active" id="active_no" value="0" @if(!$blacklist->approved_at) checked @endif>
+                            <label class="form-check-label" for="active_no">No</label>
                         </div>
                     </div>
 
@@ -119,10 +109,8 @@
 
             <div class="col-lg-12">
                 <div class="card-style mb-30">
-                    <div class="mb-3">
-                        <button type="submit" class="btn btn-primary">Save</button>
-                        <a href="{{ route('admin.blacklists.index') }}" class="btn btn-secondary">Cancel</a>
-                    </div>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                    <a href="{{ route('admin.blacklists.index') }}" class="btn btn-secondary">Cancel</a>
                 </div>
             </div>
         </div>

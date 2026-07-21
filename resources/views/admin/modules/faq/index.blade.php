@@ -35,7 +35,7 @@
                             </div>
                         </div>
                         <div class="col-12">
-                            <a href="{{ route('admin.faqs.create')}}" class="btn btn-primary">Create FAQ</a>
+                            <a href="{{ route('admin.faqs.create')}}" class="btn btn-primary">Add FAQ</a>
                         </div>
                     </form>
 

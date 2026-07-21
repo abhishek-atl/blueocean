@@ -81,14 +81,13 @@
 
             <div class="col-lg-12">
                 <div class="card-style mb-30">
-
-                    <div class="mb-3 col-3">
+                    <div class="col-3">
                         <label class="form-label required">Active</label>
-                        <div class="form-check form-check-inline radio-style mb-20">
+                        <div class="form-check form-check-inline radio-style">
                             <input type="radio" name="active" id="active_y" value="1" @if(isset($tariffPlan) && $tariffPlan->active) checked @endif>
                             <label class="form-check-label" for="active_y">Yes</label>
                         </div>
-                        <div class="form-check form-check-inline radio-style mb-20">
+                        <div class="form-check form-check-inline radio-style">
                             <input type="radio" name="active" id="active_n" value="0" @if(!isset($tariffPlan) || !$tariffPlan->active) checked @endif>
                             <label class="form-check-label" for="active_n">No</label>
                         </div>
@@ -99,10 +98,8 @@
 
             <div class="col-lg-12">
                 <div class="card-style mb-30">
-                    <div class="mb-3">
-                        <button type="submit" class="btn btn-primary">Save</button>
-                        <a href="{{ route('admin.tariff_plans.index') }}" class="btn btn-secondary">Cancel</a>
-                    </div>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                    <a href="{{ route('admin.tariff_plans.index') }}" class="btn btn-secondary">Cancel</a>
                 </div>
             </div>
         </div>

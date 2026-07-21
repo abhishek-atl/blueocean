@@ -35,7 +35,7 @@
                             </div>
                         </div>
                         <div class="col-12">
-                            <a href="{{ route('admin.banners.create')}}" class="btn btn-primary">Create Banner</a>
+                            <a href="{{ route('admin.banners.create')}}" class="btn btn-primary">Add Banner</a>
                         </div>
                     </form>
 

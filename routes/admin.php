@@ -29,8 +29,10 @@ use App\Http\Middleware\AdminMiddleware;
 Route::get('login', [LoginController::class, 'showAdminLoginForm'])->name('login');
 
 Route::middleware([AdminMiddleware::class])->group(function () {
+
     // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
+
 
     // Bookings
     Route::get('/bookings', [BookingController::class, 'index'])->name('bookings.index');
@@ -39,12 +41,12 @@ Route::middleware([AdminMiddleware::class])->group(function () {
     Route::post('/bookings/store', [BookingController::class, 'store'])->name('bookings.store');
     Route::get('/bookings/destroy/{id}', [BookingController::class, 'destroy'])->name('bookings.destroy');
 
-    // payments
     Route::get('/payments', [PaymentController::class, 'index'])->name('payments.index');
     Route::get('/payments/create', [PaymentController::class, 'createEdit'])->name('payments.create');
     Route::get('/payments/edit/{id}', [PaymentController::class, 'createEdit'])->name('payments.edit');
     Route::post('/payments/store', [PaymentController::class, 'store'])->name('payments.store');
     Route::get('/payments/destroy/{id}', [PaymentController::class, 'destroy'])->name('payments.destroy');
+
 
     // Therapists
     Route::get('/therapists', [TherapistController::class, 'index'])->name('therapists.index');
@@ -70,7 +72,7 @@ Route::middleware([AdminMiddleware::class])->group(function () {
 
     Route::get('/holidays/{id}', [TherapistController::class, 'holidays'])->name('therapists.holidays');
 
-    // Treatments
+
     Route::get('/treatments', [TreatmentController::class, 'index'])->name('treatments.index');
     Route::get('/treatments/create', [TreatmentController::class, 'createEdit'])->name('treatments.create');
     Route::get('/treatments/edit/{id}', [TreatmentController::class, 'createEdit'])->name('treatments.edit');
@@ -83,6 +85,7 @@ Route::middleware([AdminMiddleware::class])->group(function () {
     Route::post('/treatment_categories/store', [TreatmentCategoryController::class, 'store'])->name('treatment_categories.store');
     Route::get('/treatment_categories/destroy/{id}', [TreatmentCategoryController::class, 'destroy'])->name('treatment_categories.destroy');
 
+    
     // Users
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
     Route::get('/users/create', [UserController::class, 'createEdit'])->name('users.create');
@@ -90,15 +93,12 @@ Route::middleware([AdminMiddleware::class])->group(function () {
     Route::post('/users/store', [UserController::class, 'store'])->name('users.store');
     Route::get('/users/destroy/{id}', [UserController::class, 'destroy'])->name('users.destroy');
 
-    // Customers
     Route::get('/customers', [CustomerController::class, 'index'])->name('customers.index');
     Route::get('/customers/create', [CustomerController::class, 'createEdit'])->name('customers.create');
     Route::get('/customers/edit/{id}', [CustomerController::class, 'createEdit'])->name('customers.edit');
     Route::post('/customers/store', [CustomerController::class, 'store'])->name('customers.store');
     Route::get('/customers/destroy/{id}', [CustomerController::class, 'destroy'])->name('customers.destroy');
 
-
-    // Role and Permissions
     Route::get('/roles', [RoleController::class, 'index'])->name('roles.index');
     Route::get('/role/create', [RoleController::class, 'create'])->name('roles.create');
     Route::get('/role/edit/{id}', [RoleController::class, 'edit'])->name('roles.edit');
@@ -107,21 +107,36 @@ Route::middleware([AdminMiddleware::class])->group(function () {
     Route::get('/permissions/{roleId}', [RoleController::class, 'getRolePermissions'])->name('roles.permissions');
     Route::post('/permissions/store', [RoleController::class, 'storeRolePermissions'])->name('roles.permissions.store');
 
-    // post districts
+    Route::get('/blacklists', [BlacklistController::class, 'index'])->name('blacklists.index');
+    Route::get('/blacklists/create', [BlacklistController::class, 'createEdit'])->name('blacklists.create');
+    Route::get('/blacklists/edit/{id}', [BlacklistController::class, 'createEdit'])->name('blacklists.edit');
+    Route::post('/blacklists/store', [BlacklistController::class, 'store'])->name('blacklists.store');
+    Route::get('/blacklists/destroy/{id}', [BlacklistController::class, 'destroy'])->name('blacklists.destroy');
+
+
+    // Settings
     Route::get('/postcode-districts', [PostcodeDistrictController::class, 'index'])->name('postcode_districts.index');
 
-    // postcodes
     Route::get('/postcodes', [PostcodeController::class, 'index'])->name('postcodes.index');
     Route::get('/postcodes/create', [PostcodeController::class, 'createEdit'])->name('postcodes.create');
     Route::get('/postcodes/edit/{id}', [PostcodeController::class, 'createEdit'])->name('postcodes.edit');
     Route::post('/postcodes/store', [PostcodeController::class, 'store'])->name('postcodes.store');
     Route::get('/postcodes/destroy/{id}', [PostcodeController::class, 'destroy'])->name('postcodes.destroy');
 
-    // postcode zones
-    Route::get('/postcode-zones', [PostcodeZoneController::class, 'index'])->name('postcode_zones.index');
-    Route::get('/postcode-zones/create', [PostcodeZoneController::class, 'createEdit'])->name('postcode_zones.create');
-    Route::get('/postcode-zones/edit/{id?}', [PostcodeZoneController::class, 'createEdit'])->name('postcode_zones.edit');
-    Route::post('/postcode-zones/store', [PostcodeZoneController::class, 'store'])->name('postcode_zones.store');
+    Route::get('/tariff-plans', [TariffPlanController::class, 'index'])->name('tariff_plans.index');
+    Route::get('/tariff-plans/create', [TariffPlanController::class, 'createEdit'])->name('tariff_plans.create');
+    Route::get('/tariff-plans/edit/{id}', [TariffPlanController::class, 'createEdit'])->name('tariff_plans.edit');
+    Route::post('/tariff-plans/store', [TariffPlanController::class, 'store'])->name('tariff_plans.store');
+    Route::get('/tariff-plans/destroy/{id}', [TariffPlanController::class, 'destroy'])->name('tariff_plans.destroy');
+
+    Route::get('/gift-certificates', [GiftCertificateController::class, 'index'])->name('gift_certificates.index');
+    Route::get('/gift-certificates/create', [GiftCertificateController::class, 'createEdit'])->name('gift_certificates.create');
+    Route::get('/gift-certificates/edit/{id}', [GiftCertificateController::class, 'createEdit'])->name('gift_certificates.edit');
+    Route::post('/gift-certificates/store', [GiftCertificateController::class, 'store'])->name('gift_certificates.store');
+    Route::get('/gift-certificates/destroy/{id}', [GiftCertificateController::class, 'destroy'])->name('gift_certificates.destroy');
+
+
+
 
     // Posts
     Route::get('/posts', [PostController::class, 'index'])->name('posts.index');
@@ -151,12 +166,7 @@ Route::middleware([AdminMiddleware::class])->group(function () {
     Route::post('/faqs/store', [FAQController::class, 'store'])->name('faqs.store');
     Route::get('/faqs/destroy/{id}', [FAQController::class, 'destroy'])->name('faqs.destroy');
 
-    // Tariff Plans
-    Route::get('/tariff-plans', [TariffPlanController::class, 'index'])->name('tariff_plans.index');
-    Route::get('/tariff-plans/create', [TariffPlanController::class, 'createEdit'])->name('tariff_plans.create');
-    Route::get('/tariff-plans/edit/{id}', [TariffPlanController::class, 'createEdit'])->name('tariff_plans.edit');
-    Route::post('/tariff-plans/store', [TariffPlanController::class, 'store'])->name('tariff_plans.store');
-    Route::get('/tariff-plans/destroy/{id}', [TariffPlanController::class, 'destroy'])->name('tariff_plans.destroy');
+
 
     // banners
     Route::get('/banners', [BannerController::class, 'index'])->name('banners.index');
@@ -164,18 +174,4 @@ Route::middleware([AdminMiddleware::class])->group(function () {
     Route::get('/banners/edit/{id}', [BannerController::class, 'createEdit'])->name('banners.edit');
     Route::post('/banners/store', [BannerController::class, 'store'])->name('banners.store');
     Route::get('/banners/destroy/{id}', [BannerController::class, 'destroy'])->name('banners.destroy');
-
-    // Gift Certificates
-    Route::get('/gift-certificates', [GiftCertificateController::class, 'index'])->name('gift_certificates.index');
-    Route::get('/gift-certificates/create', [GiftCertificateController::class, 'createEdit'])->name('gift_certificates.create');
-    Route::get('/gift-certificates/edit/{id}', [GiftCertificateController::class, 'createEdit'])->name('gift_certificates.edit');
-    Route::post('/gift-certificates/store', [GiftCertificateController::class, 'store'])->name('gift_certificates.store');
-    Route::get('/gift-certificates/destroy/{id}', [GiftCertificateController::class, 'destroy'])->name('gift_certificates.destroy');
-
-    // Blacklists
-    Route::get('/blacklists', [BlacklistController::class, 'index'])->name('blacklists.index');
-    Route::get('/blacklists/create', [BlacklistController::class, 'createEdit'])->name('blacklists.create');
-    Route::get('/blacklists/edit/{id}', [BlacklistController::class, 'createEdit'])->name('blacklists.edit');
-    Route::post('/blacklists/store', [BlacklistController::class, 'store'])->name('blacklists.store');
-    Route::get('/blacklists/destroy/{id}', [BlacklistController::class, 'destroy'])->name('blacklists.destroy');
 });

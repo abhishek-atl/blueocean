@@ -35,7 +35,7 @@
                             </div>
                         </div>
                         <div class="col-12">
-                            <a href="{{ route('admin.tariff_plans.create')}}" class="btn btn-primary">Create Plan</a>
+                            <a href="{{ route('admin.tariff_plans.create')}}" class="btn btn-primary">Add Tariff Plan</a>
                         </div>
                     </form>
 
@@ -63,7 +63,7 @@
                                 </a>
                             </th>
                             <th scope="col" style="width: 12%;">
-                                Duration (Days)
+                                Duration (Minutes)
                             </th>
                             <th scope="col" style="width: 12%;">
                                 Amount
