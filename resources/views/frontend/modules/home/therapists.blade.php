@@ -54,6 +54,14 @@
         margin: 20px 0;
     }
 
+    @media (max-width: 767.98px) {
+        .owl-corousel-therapists h2 {
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+    }
+
     .owl-corousel-therapists .link-primary {
         color: var(--bo-blue) !important;
         font-size: 1em;
@@ -89,6 +97,7 @@
                 0: {
                     items: 3,
                     mouseDrag: true,
+                    stagePadding: 20,
                 },
                 992: {
                     items: 5,
