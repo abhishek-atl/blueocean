@@ -1,4 +1,4 @@
-<div class="page-section-padding">
+<div class="pt60">
     <div class="row justify-content-center text-center">
         <div class="col-12">
             <span class="section-eyebrow">Our Professionals</span>
@@ -8,85 +8,97 @@
     </div>
 </div>
 
-<div class="row g-4">
-    <div class="owl-corousel-container">
+<div class="row g-4 pb60">
+    <div class="owl-corousel-therapists-container">
         <div class="owl-corousel-therapists owl-carousel owl-theme">
             @foreach($therapists as $therapist)
             <div class="item">
-                <article class="rounded-card h-100">
+                <article class="h-100">
                     @if($therapist->user_profile?->getRawOriginal('image'))
                     <a href="{{ route('therapist_detail', $therapist->therapist_profile->slug) }}" class="custom-card-image">
                         <img
                             src="{{ $therapist->user_profile->image }}"
                             alt="{{ $therapist->first_name }} {{ $therapist->last_name }}"
-                            class="img-fluid">
+                            class="rounded-circle">
                     </a>
                     @endif
 
-                    <div class="custom-card-body text-center">
-                        <h2>{{ $therapist->first_name }} {{ $therapist->last_name }}</h2>
+                    <div class="text-center">
+                        <h2>{{ $therapist->first_name }}</h2>
 
-                        @if($therapist->therapist_profile->about)
-                        <div class="custom-card-summary">
-                            {{ Str::limit(strip_tags($therapist->therapist_profile->about), 40) }}
-                        </div>
-                        @endif
-
-                        <div class="custom-card-actions justify-content-center">
-                            <div class="custom-card-details-link">
-                                <a href="{{ route('therapist_detail', $therapist->therapist_profile->slug) }}" class="btn btn-primary">View Therapist</a>
-                            </div>
+                        <div class="justify-content-center">
+                            <a href="{{ route('therapist_detail', $therapist->therapist_profile->slug) }}" class="link-primary">View Profile</a>
                         </div>
                     </div>
                 </article>
             </div>
             @endforeach
         </div>
-        <div class="owl-theme">
-            <div class="owl-controls">
-                <div class="custom-nav owl-nav"></div>
-            </div>
-        </div>
+
     </div>
 </div>
+
+@push('pageCss')
+<style>
+    .owl-corousel-therapists-container {
+        padding: 20px 0;
+    }
+
+    .owl-corousel-therapists-container .item:hover img {
+        transform: scale(1.04);
+    }
+
+    .owl-corousel-therapists h2 {
+        color: var(--bo-blue);
+        font-size: 1.5em;
+        margin: 20px 0;
+    }
+
+    .owl-corousel-therapists .link-primary {
+        color: var(--bo-blue) !important;
+        font-size: 1em;
+    }
+
+    .owl-corousel-therapists .link-primary:hover {
+        font-weight: bold;
+    }
+
+    .owl-corousel-therapists .owl-nav button.owl-prev,
+    .owl-corousel-therapists .owl-nav button.owl-next {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: var(--bo-blue);
+        color: #fff;
+    }
+</style>
+@endpush
 
 @push('pageScripts')
 <script>
     $(document).ready(function() {
         $('.owl-corousel-therapists').owlCarousel({
-            navContainer: '.owl-corousel-container .custom-nav',
             nav: true,
+            dots: false,
             loop: true,
-            items: 3,
+            margin: 10,
+            center: true,
+            autowidth: true,
+            stagePadding: 40,
             responsive: {
                 0: {
-                    items: 1,
-                    stagePadding: 0,
-                    dots: true,
-                    mouseDrag: true,
-                },
-                768: {
-                    items: 2,
-                    stagePadding: 0,
-                    dots: true,
+                    items: 3,
                     mouseDrag: true,
                 },
                 992: {
-                    items: 3,
-                    stagePadding: 5,
-                    dots: false,
+                    items: 5,
                     mouseDrag: false,
                 }
             },
-            center: true,
-            margin: 20,
-            stagePadding: 40,
             navText: [
                 '<i class="fa fa-arrow-left" aria-hidden="true"></i>',
                 '<i class="fa fa-arrow-right" aria-hidden="true"></i>'
-            ],
-            autowidth: true,
-
+            ]
         });
     });
 </script>

@@ -19,7 +19,7 @@
         <div class="row g-4">
             @forelse($therapists as $therapist)
             <div class="col-12 col-md-6 col-lg-4">
-                <article class="custom-card rounded-card h-100">
+                <article class="custom-card h-100">
                     @if($therapist->user_profile?->getRawOriginal('image'))
                     <a href="{{ route('therapist_detail', $therapist->therapist_profile->slug) }}" class="custom-card-image">
                         <img

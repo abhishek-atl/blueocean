@@ -1,4 +1,4 @@
-<div class="page-section">
+<div class="page-section-padding">
     <div class="row home-cta">
         <div class="col-md-7">
             <div class="home-cta-media">

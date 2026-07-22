@@ -19,6 +19,13 @@
             </div>
         </div>
 
+        <div class="col-6 offset-3">
+            <p class="text-center">We take pride in providing exceptional massage services to our clients. Here are some of the reviews and testimonials from our satisfied customers.</p>
+            <p class="text-center"><strong>Outstanding</strong> <br /><img src="{{ asset('assets/img/star.png') }}" alt="5-star-reviews-icon" title="alt=" width="124" /></p>
+            <p class="text-center">Average rating {{ $averageRating }}/5.00 from {{ $totalReviews }} reviews</p>
+            <p class="text-center">Best Rating 5/5</p>
+        </div>
+
         <div class="d-flex justify-content-center text-center mb-4">
             <a href="{{ route('reviews') }}" class="btn btn-primary" title="Read More Reviews">
                 Read More Reviews

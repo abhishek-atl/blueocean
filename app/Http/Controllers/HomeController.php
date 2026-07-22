@@ -47,7 +47,7 @@ class HomeController extends Controller
             ->whereHas('therapist_profile', function ($query) {
                 $query->where('on_therapist_page', true);
             })
-            ->with(['user_profile', 'therapist_profile'])
+            ->with(['user_profile', 'therapist_profile', 'treatments'])
             ->orderBy('first_name')
             ->orderBy('last_name')
             ->get();
@@ -64,12 +64,18 @@ class HomeController extends Controller
             ->limit(6)
             ->get();
 
+        $evaluationTotal = Review::where('active', 1)->whereNotNull('evaluation')->sum('evaluation');
+        $totalReviews = Review::where('active', 1)->whereNotNull('evaluation')->count();
+        $averageRating = $totalReviews > 0 ? round($evaluationTotal / $totalReviews, 1) : 0;
+
         return view('frontend.modules.home.index', [
             'treatmentCategories' => $treatmentCategories,
             'therapists' => $therapists,
             'banner' => $banner,
             'faqs' => $faqs,
-            'reviews' => $review
+            'reviews' => $review,
+            'totalReviews' => $totalReviews,
+            'averageRating' => $averageRating
         ]);
     }
 

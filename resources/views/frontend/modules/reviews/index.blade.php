@@ -45,7 +45,7 @@ Read reviews from our satisfied customers.
                         @if($review->evaluation)
                         <span class="float-right review-rating">Rated:
                             @for($i=1; $i<= $review->evaluation; $i++)
-                                <img src="{{ asset('assets/img/reviews/stars/star-on.png') }}" alt="Star Rating" />
+                                <img src="{{ asset('assets/img/star-single.png') }}" alt="Star Rating" />
                                 @endfor
                         </span>
                         @endif

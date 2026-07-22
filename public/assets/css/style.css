@@ -396,21 +396,14 @@ table.booking_detail tr.selected>* {
     transition: box-shadow 0.3s ease, transform 0.3s ease;
 }
 
-.rounded-card .custom-card-image {
-    aspect-ratio: 1;
-    border-radius: 50%;
-    margin: 24px auto 0;
-    width: 300px;
-}
-
-.custom-card-image {
+.custom-card .custom-card-image {
     aspect-ratio: 16 / 10;
     background: #f5f5f5;
     display: block;
     overflow: hidden;
 }
 
-.custom-card-image img {
+.custom-card .custom-card-image img {
     height: 100%;
     object-fit: cover;
     transition: transform 0.3s ease;
@@ -421,38 +414,38 @@ table.booking_detail tr.selected>* {
     transform: scale(1.04);
 }
 
-.custom-card-body {
+.custom-card .custom-card-body {
     display: flex;
     flex: 1;
     flex-direction: column;
     padding: 24px;
 }
 
-.custom-card-body h2 {
+.custom-card .custom-card-body h2 {
     color: var(--bo-blue);
-    font-size: 1.35rem;
-    font-weight: 700;
+    font-weight: bold;
+    font-size: 1rem;
     margin-bottom: 10px;
 }
 
-.custom-card-title {
+.custom-card .custom-card-title {
     font-weight: 600;
     font-size: 14px;
     margin-bottom: 12px;
 }
 
-.custom-card-summary {
+.custom-card .custom-card-summary {
     color: var(--text-muted);
     margin-bottom: 22px;
 }
 
-.custom-card-actions {
+.custom-card .custom-card-actions {
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-.custom-card-actions .btn {
+.custom-card .custom-card-actions .btn {
     padding: 10px 18px;
 }
 
@@ -563,65 +556,6 @@ table.booking_detail tr.selected>* {
     }
 }
 
-.owl-corousel-container {
-    position: relative;
-    padding: 20px;
-}
-
-.owl-corousel-container .owl-corousel-therapists {}
-
-.owl-corousel-container .owl-corousel-therapists .item {}
-
-.owl-corousel-container .owl-theme .custom-nav {
-    position: absolute;
-    margin: 0;
-    padding: 0;
-    height: auto;
-    top: 50%;
-    left: 0;
-    right: 0;
-}
-
-@media (max-width: 767.98px) {
-    .owl-corousel-container .owl-theme .custom-nav {
-        display: none;
-    }
-}
-
-.owl-corousel-container .owl-theme .custom-nav .owl-prev,
-.owl-corousel-container .owl-theme .custom-nav .owl-next {
-    position: absolute;
-    margin: 0px;
-    padding: 0;
-    color: inherit;
-    background: none;
-    order: none;
-    height: 40px;
-    border: 0;
-    z-index: 100;
-}
-
-.owl-corousel-container .owl-theme .custom-nav .owl-prev i,
-.owl-corousel-container .owl-theme .custom-nav .owl-next i {
-    font-size: 1rem;
-    background-color: var(--bo-blue);
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.owl-corousel-container .owl-theme .custom-nav .owl-prev {
-    left: -10px;
-    color: var(--bo-yellow);
-}
-
-.owl-corousel-container .owl-theme .custom-nav .owl-next {
-    right: -10px;
-    color: var(--bo-yellow);
-}
 
 /**********************************************/
 /* Navigation */

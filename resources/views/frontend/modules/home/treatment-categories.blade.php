@@ -1,4 +1,4 @@
-<div class="page-section">
+<div class="page-section-padding">
     <div class="row justify-content-center text-center">
         <div class="col-12">
             <span class="section-eyebrow">Out at-home Treatments</span>
@@ -8,13 +8,13 @@
     </div>
 </div>
 
-<div class="row g-4 mt60">
+<div class="row g-4 pb60">
     @foreach($treatmentCategories as $treatmentCategory)
     <div class="col-12 col-md-6 col-lg-4">
         <article class="custom-card h-100">
 
             @if($treatmentCategory->getRawOriginal('image'))
-            <a href="{{ route('treatment_detail', $treatmentCategory->slug) }}" class="custom-card-image">
+            <a href="{{ route('treatments', ['category' => $treatmentCategory->slug]) }}" class="custom-card-image">
                 <img
                     src="{{ $treatmentCategory->image }}"
                     class="img-fluid">

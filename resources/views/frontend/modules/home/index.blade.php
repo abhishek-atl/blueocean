@@ -44,13 +44,13 @@ treatments with genuine care, from just £59
     </div>
 </div>
 
-<div class="container pb60">
-    @include('frontend.modules.home.treatment-categories')
+<div class="container">
+    @include('frontend.modules.home.reviews')
 </div>
 
 <div class="container-fluid gold-bg">
     <div class="container">
-        @include('frontend.modules.home.reviews')
+        @include('frontend.modules.home.treatment-categories')
     </div>
 </div>
 
