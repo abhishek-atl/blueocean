@@ -221,7 +221,7 @@
             }
 
         });
-        @if ($user)
+        @if($user && $user->user_profile && $user->user_profile->birthday)
             $('#birthday').val(moment('{{ $user->user_profile->birthday}}').format(moment_date_format));
         @endif
     });

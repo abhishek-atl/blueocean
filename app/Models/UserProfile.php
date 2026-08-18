@@ -12,6 +12,10 @@ class UserProfile extends Model
 
     protected $guarded = ['id'];
 
+    protected $casts = [
+        'avg_rating' => 'decimal:1',
+    ];
+
     protected function image(): Attribute
     {
         return Attribute::make(

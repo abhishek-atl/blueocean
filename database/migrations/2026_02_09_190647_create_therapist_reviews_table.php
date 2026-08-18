@@ -11,17 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('reviews', function (Blueprint $table) {
+        Schema::create('therapist_reviews', function (Blueprint $table) {
             $table->id();
-            $table->string('first_name');
-            $table->string('last_name')->nullable();
-            $table->string('email')->nullable();
-            $table->string('profession')->nullable();
-            $table->string('company')->nullable();
-            $table->string('photo')->nullable();
-            $table->string('location');
+            $table->integer('therapist_id');
+            $table->integer('client_id');
+            $table->integer('booking_id')->unsigned();
+            $table->string('eval_punctuality');
+            $table->string('eval_professionalism');
+            $table->string('eval_communication');
+            $table->string('eval_technique');
             $table->longText('comment');
-            $table->tinyInteger('evaluation')->nullable();
+            $table->tinyInteger('avg_evaluation');
             $table->string('ip_address');
             $table->tinyInteger('active')->default(0);
             $table->timestamps();
@@ -33,6 +33,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('reviews');
+        Schema::dropIfExists('therapist_reviews');
     }
 };

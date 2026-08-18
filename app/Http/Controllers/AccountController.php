@@ -67,11 +67,54 @@ class AccountController extends Controller
     // common to client and therapists
     public function rateBooking(Request $request)
     {
-        if (Auth::user()->hasRole('Customer')) // rate to therapist
-            $result = $this->userService->rateTherapist($request->booking_id, $request->evaluation);
-        elseif (Auth::user()->hasRole('Therapist')) // rate to customer
-            $result = $this->userService->rateCustomer($request->booking_id, $request->evaluation);
-        return $result;
+        if (Auth::user()->hasRole('Customer')) { // rate therapist
+            $ratings = $request->validate([
+                'booking_id' => ['required', 'integer'],
+                'eval_punctuality' => ['required', 'integer', 'between:1,5'],
+                'eval_professionalism' => ['required', 'integer', 'between:1,5'],
+                'eval_communication' => ['required', 'integer', 'between:1,5'],
+                'eval_technique' => ['required', 'integer', 'between:1,5'],
+                'comment' => ['nullable', 'string', 'max:5000'],
+            ]);
+
+            $bookingId = (int) $ratings['booking_id'];
+            unset($ratings['booking_id']);
+            $ratings['comment'] = $ratings['comment'] ?? '';
+
+            $review = $this->userService->rateTherapist(
+                Auth::user(),
+                $bookingId,
+                $ratings,
+                $request->ip()
+            );
+
+            return response()->json(['success' => true, 'review' => $review]);
+        } elseif (Auth::user()->hasRole('Therapist')) { // rate customer
+            $ratings = $request->validate([
+                'booking_id' => ['required', 'integer'],
+                'eval_respectful_behaviour' => ['required', 'integer', 'between:1,5'],
+                'eval_communication' => ['required', 'integer', 'between:1,5'],
+                'eval_booking_information_accuracy' => ['required', 'integer', 'between:1,5'],
+                'eval_treatment_space_suitability' => ['required', 'integer', 'between:1,5'],
+                'felt_safe' => ['required', 'boolean'],
+                'accept_future_booking' => ['required', 'boolean'],
+                'comment' => ['nullable', 'string', 'max:5000'],
+            ]);
+
+            $bookingId = (int) $ratings['booking_id'];
+            unset($ratings['booking_id']);
+
+            $review = $this->userService->rateClient(
+                Auth::user(),
+                $bookingId,
+                $ratings,
+                $request->ip()
+            );
+
+            return response()->json(['success' => true, 'review' => $review]);
+        }
+
+        abort(403);
     }
 
     public function bookings(Request $request)
@@ -242,7 +285,7 @@ class AccountController extends Controller
     {
         abort_if(!Auth::user()->hasRole('Therapist'), 403);
         $user = Auth::user();
-        $user->load('treatments:name');
+        $user->load(['treatments:name', 'therapist_profile']);
         return view('frontend.modules.account.therapist_profile', [
             'therapist' => $user,
             'treatments' => $user->treatments

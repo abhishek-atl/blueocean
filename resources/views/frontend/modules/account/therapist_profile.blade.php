@@ -78,17 +78,18 @@
                     <div class="col-md-6">
                         <label class="fw-bold">Your Rating</label>
                         <div class="col-lg-9">
-                            @if($therapist->avg_rating)
-                            {{ $therapist->avg_rating }}
-                            @if($therapist->avg_rating <= 1)
+                            @php($averageRating = $therapist->therapist_profile?->avg_rating)
+                            @if($averageRating)
+                            {{ $averageRating }}
+                            @if($averageRating <= 1)
                             Oopsies Daisies! Need to do better.
-                            @elseif($therapist->avg_rating <= 2)
+                            @elseif($averageRating <= 2)
                             Time to step up the game!
-                            @elseif($therapist->avg_rating <= 3)
+                            @elseif($averageRating <= 3)
                             Not bad but let's aim higher!
-                            @elseif($therapist->avg_rating <= 4)
+                            @elseif($averageRating <= 4)
                             Nice work, getting close to excellence!
-                            @elseif($therapist->avg_rating <= 5)
+                            @elseif($averageRating <= 5)
                             Fantastic job!, You'are the cream of the crop!
                             @endif
                             @else

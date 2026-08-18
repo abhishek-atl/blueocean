@@ -9,6 +9,7 @@ use App\Models\PaymentReceived;
 use App\Models\Postcode;
 use App\Models\Promocode;
 use App\Models\TariffPlan;
+use App\Models\TherapyKit;
 use App\Models\Treatment;
 use App\Models\User;
 use App\Models\UserProfile;
@@ -115,6 +116,11 @@ class BookingController extends Controller
         ];
         $treatments = $this->databaseService->getByParams(Treatment::class, $params);
         $durations = $this->databaseService->getByParams(TariffPlan::class, $params);
+        $therapyKits = TherapyKit::query()
+            ->where('active', true)
+            ->orderBy('type')
+            ->orderBy('name')
+            ->get();
 
         // block booking if ip is black listed
         $ip = $request->getClientIp();
@@ -127,6 +133,7 @@ class BookingController extends Controller
         return view('frontend.modules.booking.booking_info', [
             'treatments' => $treatments,
             'durations' => $durations,
+            'therapyKits' => $therapyKits,
             'blockedIp' => $blockedIp,
         ]);
     }
@@ -166,7 +173,14 @@ class BookingController extends Controller
         $durationId = $request->input('duration');
         $duration = TariffPlan::where('id', $durationId)->first();
 
-        $therapists = $this->bookingService->getFreeTherapists($postcode, $treatment, $date, $time, $duration->duration);
+        $therapists = $this->bookingService->getFreeTherapists(
+            $postcode,
+            $treatment,
+            $date,
+            $time,
+            $duration->duration,
+            $request->input('therapy_kit_ids', [])
+        );
         $therapistView = View::make('frontend.modules.booking.partials.therapists', [
             'therapists' => $therapists,
         ])->render();
@@ -203,14 +217,39 @@ class BookingController extends Controller
             'treatment' => 'required',
             'date' => 'required',
             'time' => 'required',
-            'therapist_id' => 'required'
+            'therapist_id' => 'required|integer|exists:users,id',
+            'therapy_kit_ids' => 'nullable|array',
+            'therapy_kit_ids.*' => 'integer|distinct|exists:therapy_kit,id,active,1',
         ]);
+
+        $therapyKitIds = collect($request->input('therapy_kit_ids', []))
+            ->map(fn($id) => (int) $id)
+            ->unique()
+            ->values();
+
+        $eligibleTherapist = User::query()
+            ->whereKey($request->therapist_id)
+            ->where('user_type', User::TYPE_THERAPIST)
+            ->where('active', true)
+            ->when($therapyKitIds->isNotEmpty(), function ($query) use ($therapyKitIds) {
+                $query->whereHas('therapyKits', function ($query) use ($therapyKitIds) {
+                    $query->whereIn('therapy_kit.id', $therapyKitIds);
+                }, '=', $therapyKitIds->count());
+            })
+            ->exists();
+
+        if (!$eligibleTherapist) {
+            return redirect()->back()
+                ->withErrors(['therapist_id' => 'The selected therapist does not carry all selected therapy kit items.'])
+                ->withInput();
+        }
 
         $request->session()->put('booking.duration', $request->duration);
         $request->session()->put('booking.treatment', $request->treatment);
         $request->session()->put('booking.date', $request->date);
         $request->session()->put('booking.time', $request->time);
         $request->session()->put('booking.therapist_id', $request->therapist_id);
+        $request->session()->put('booking.therapy_kit_ids', $therapyKitIds->all());
 
         if (Auth::user())
             return redirect(route('bookingCheckout'));
@@ -236,6 +275,31 @@ class BookingController extends Controller
         $duration = $this->databaseService->find(TariffPlan::class, $request->session()->get('booking.duration'));
         $treatment = $this->databaseService->find(Treatment::class, $request->session()->get('booking.treatment'));
         $therapist = $this->databaseService->find(User::class, $request->session()->get('booking.therapist_id'));
+        $therapyKitIds = collect($request->session()->get('booking.therapy_kit_ids', []));
+        $therapyKits = collect();
+        if ($therapyKitIds->isNotEmpty()) {
+            $therapyKits = TherapyKit::query()
+                ->whereIn('id', $therapyKitIds)
+                ->where('active', true)
+                ->whereHas('therapists', function ($query) use ($request) {
+                    $query->whereKey($request->session()->get('booking.therapist_id'));
+                })
+                ->orderBy('type')
+                ->orderBy('name')
+                ->get();
+
+            if ($therapyKits->count() !== $therapyKitIds->count()) {
+                $request->session()->forget([
+                    'booking.therapy_kit_ids',
+                    'booking.therapy_kit_amount',
+                    'booking.therapy_kit_names',
+                    'booking.therapist_id',
+                ]);
+
+                return redirect()->route('bookingInfo')
+                    ->withErrors(['therapy_kit_ids' => 'One or more selected kit items are no longer available. Please choose again.']);
+            }
+        }
         $paymentMethod = $request->session()->get('booking.payment_method');
 
         $data = [];
@@ -259,6 +323,7 @@ class BookingController extends Controller
             'duration' => $duration,
             'treatment' => $treatment,
             'therapist' => $therapist,
+            'therapyKits' => $therapyKits,
             'dateTime' => $dateTime,
             'paymentMethod' => $paymentMethod,
 
@@ -279,14 +344,33 @@ class BookingController extends Controller
             $duration = $this->databaseService->find(TariffPlan::class, $request->session()->get('booking.duration'));
             $postcode = $this->databaseService->find(Postcode::class, $request->session()->get('booking.postcode_id'));
 
+            $therapyKitIds = collect($request->session()->get('booking.therapy_kit_ids', []));
+            $therapyKits = collect();
+            if ($therapyKitIds->isNotEmpty()) {
+                $therapyKits = TherapyKit::query()
+                    ->whereIn('id', $therapyKitIds)
+                    ->where('active', true)
+                    ->whereHas('therapists', function ($query) use ($request) {
+                        $query->whereKey($request->session()->get('booking.therapist_id'));
+                    })
+                    ->get();
+
+                if ($therapyKits->count() !== $therapyKitIds->count()) {
+                    throw new \RuntimeException('One or more selected therapy kit items are unavailable.');
+                }
+            }
+
             $session_cost = $duration->amount;
+            $therapy_kit_amount = (float) $therapyKits->sum('price');
             $travel_supplement = (int) $postcode->travel_supp;
             $discount_amount = session('booking.discount_amount', 0);
             $gift_voucher_amount = session('booking.gift_voucher_amount', 0);
 
-            $total_cost = ($session_cost + $travel_supplement) - ($discount_amount + $gift_voucher_amount);
+            $total_cost = ($session_cost + $therapy_kit_amount + $travel_supplement) - ($discount_amount + $gift_voucher_amount);
 
             $request->session()->put('booking.session_cost', $session_cost);
+            $request->session()->put('booking.therapy_kit_amount', $therapy_kit_amount);
+            $request->session()->put('booking.therapy_kit_names', $therapyKits->pluck('name')->all());
             $request->session()->put('booking.travel_supp', $travel_supplement);
             $request->session()->put('booking.discount_amount', $discount_amount);
             $request->session()->put('booking.gift_voucher_amount', $gift_voucher_amount);
@@ -321,15 +405,22 @@ class BookingController extends Controller
         $mobile = str_replace(' ', '', $mobile);
 
         // refresh charges
-        $this->charges($request);
+        $chargeResponse = $this->charges($request)->getData(true);
+        if (($chargeResponse['result'] ?? 0) !== 1) {
+            return response()->json([
+                'result' => 0,
+                'message' => 'The selected kit item is no longer available. Please update your booking.',
+            ]);
+        }
 
         $trainingDate = Carbon::createFromFormat('Y-m-d H:i', session('booking.date') . ' ' . session('booking.time'));
         $trainingFinish = clone($trainingDate);
         $trainingFinish->modify('+' . intval($request->session_duration) . ' minutes');
         $sessionCost = $this->formatService->parseFloat(session('booking.session_cost'));
+        $therapyKitAmount = $this->formatService->parseFloat(session('booking.therapy_kit_amount', 0));
         $travelSupp = $this->formatService->parseFloat(session('booking.travel_supp'));
         $discountAmount = $this->formatService->parseFloat(session('booking.discount_amount'));
-        $totalCost = $this->formatService->parseFloat($sessionCost - $discountAmount);
+        $totalCost = $this->formatService->parseFloat($sessionCost + $therapyKitAmount - $discountAmount);
 
         // gift card
         $giftDiscountAmount = $this->formatService->parseFloat(session('booking.gift_voucher_amount'));
@@ -384,7 +475,8 @@ class BookingController extends Controller
         $params['duration'] = (int) $request->session_duration;
 
         $params['amount'] = $totalCost;
-        $params['payable_amount'] = $sessionCost;
+        $params['payable_amount'] = $sessionCost + $therapyKitAmount;
+        $params['therapy_kit_amount'] = $therapyKitAmount;
         $params['fee_platform'] = $feeTmr;
         $params['fee_therapist'] = $feeTherapist;
 
@@ -405,6 +497,15 @@ class BookingController extends Controller
         }
 
         $booking = $this->databaseService->save(Booking::class, $params);
+
+        $selectedTherapyKits = TherapyKit::query()
+            ->whereIn('id', session('booking.therapy_kit_ids', []))
+            ->get();
+        $booking->therapyKits()->sync(
+            $selectedTherapyKits->mapWithKeys(fn(TherapyKit $therapyKit) => [
+                $therapyKit->id => ['amount' => $therapyKit->price],
+            ])->all()
+        );
 
         $payableAmount = $totalCost + $travelSupp;
         $paymentMethod = 'cash';
@@ -439,14 +540,14 @@ class BookingController extends Controller
             $user->ip_address = $request->ip();
             $user->save();
 
-            // $userProfile = UserProfile::where('user_id', Auth::id())->first();
-            // $userProfile->postcode = $request->postcode;
-            // $userProfile->mobile = $request->mobile;
-            // $userProfile->flat_no = $request->flat_no;
-            // $userProfile->street_number = $request->street_number;
-            // $userProfile->street_name = $request->street_name;
-            // $userProfile->town = $request->town;
-            // $userProfile->save();
+            $userProfile = UserProfile::where('user_id', Auth::id())->first();
+            $userProfile->postcode = $request->postcode;
+            $userProfile->mobile = $request->mobile;
+            $userProfile->flat_no = $request->flat_no;
+            $userProfile->street_number = $request->street_number;
+            $userProfile->street_name = $request->street_name;
+            $userProfile->town = $request->town;
+            $userProfile->save();
         }
 
         session(['bookingId' => $booking->id]);
@@ -464,6 +565,9 @@ class BookingController extends Controller
         $style = $this->databaseService->getByParams(Treatment::class, ['id' => $booking->treatment_id]);
 
         $productName = $style->title;
+        if ($booking->therapyKits->isNotEmpty()) {
+            $productName .= ' + ' . $booking->therapyKits->pluck('name')->join(', ');
+        }
         $amount = ($booking->payable_amount + $booking->travel_supp) - ($booking->gift_discount_amount);
         $customerEmail = $booking->email;
         $successUrl = route('bookingReturnFromStripe') . '?session_id={CHECKOUT_SESSION_ID}';
@@ -512,13 +616,13 @@ class BookingController extends Controller
             ]);
 
             if (Auth::user()) {
-                //$this->mailService->sendBookingMailToClient($booking, Auth::user()->email);
+                $this->mailService->sendBookingMailToClient($booking, Auth::user()->email);
             } else if ($booking->email) {
-                //$this->mailService->sendBookingMailToClient($booking, $booking->email);
+                $this->mailService->sendBookingMailToClient($booking, $booking->email);
             }
 
-            //$this->mailService->sendBookingMailToTherapist($booking);
-            //$this->mailService->sendBookingMailToAdmin($booking);
+            $this->mailService->sendBookingMailToTherapist($booking);
+            $this->mailService->sendBookingMailToAdmin($booking);
 
             try {
                 //$status = $this->smsService->sendSmsToTherapist($booking, $new = true);
@@ -542,7 +646,16 @@ class BookingController extends Controller
     public function booking(Request $request, $id)
     {
         $booking = $this->bookingService->getById($id);
-        $booking->load(['therapist', 'treatment', 'payment']);
+        $booking->load(['therapist', 'treatment', 'therapyKits', 'payment']);
+
+        if (Auth::id() === $booking->user_id) {
+            $booking->load('therapistReview');
+        }
+
+        if (Auth::id() === $booking->therapist_id) {
+            $booking->load('clientReview');
+        }
+
         return $booking;
     }
 
@@ -627,10 +740,11 @@ class BookingController extends Controller
 
     public function checkGiftcode(Request $request)
     {
-        $travelSupp = session('booking.travel_sup', 0);
+        $travelSupp = session('booking.travel_supp', 0);
         $sessionCost = session('booking.session_cost');
+        $therapyKitAmount = session('booking.therapy_kit_amount', 0);
         $discountAmount = session('booking.discount_amount', 0);
-        $totalCost = $sessionCost + $travelSupp - $discountAmount;
+        $totalCost = $sessionCost + $therapyKitAmount + $travelSupp - $discountAmount;
 
         if ($request->isMethod('post') && !empty($request->input('giftcode'))) {
             $giftCode = $request->input('giftcode');

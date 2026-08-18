@@ -33,10 +33,12 @@
                           @auth
                           @if(Auth::user()->hasRole('Customer'))
                           <li><a class="dropdown-item" href="{{ route('account') }}">Account</a></li>
+                          <li><a class="dropdown-item" href="{{ route('bookings') }}">Bookings</a></li>
                           <li><hr class="dropdown-divider"></li>
                           <li class="px-3 py-2"><a href="{{ route('auth.logout') }}" class="btn btn-primary w-100">Logout</a></li>
                           @elseif(Auth::user()->hasRole('Therapist'))
                           <li><a class="dropdown-item" href="{{ route('profile') }}">Profile</a></li>
+                          <li><a class="dropdown-item" href="{{ route('bookings') }}">Bookings</a></li>
                           <li><a class="dropdown-item" href="{{ route('holidays') }}">Holidays</a></li>
                           <li><hr class="dropdown-divider"></li>
                           <li class="px-3 py-2"><a href="{{ route('auth.logout') }}" class="btn btn-primary w-100">Logout</a></li>

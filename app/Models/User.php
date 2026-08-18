@@ -59,6 +59,21 @@ class User extends Authenticatable
         return $this->hasMany(Booking::class);
     }
 
+    public function therapistReviews()
+    {
+        return $this->hasMany(TherapistReview::class, 'therapist_id');
+    }
+
+    public function clientReviewsReceived()
+    {
+        return $this->hasMany(ClientReview::class, 'client_id');
+    }
+
+    public function clientReviewsGiven()
+    {
+        return $this->hasMany(ClientReview::class, 'therapist_id');
+    }
+
     public function postcodes()
     {
         return $this->belongsToMany(Postcode::class, 'therapists_postcodes', 'user_id', 'postcode_id');

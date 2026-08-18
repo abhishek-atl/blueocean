@@ -180,7 +180,8 @@
                 !Request::routeIs('admin.faqs*') &&
                 !Request::routeIs('admin.banners*') &&
                 !Request::routeIs('admin.posts*') &&
-                !Request::routeIs('admin.post_tags*'))
+                !Request::routeIs('admin.post_tags*') &&
+                !Request::routeIs('admin.pages*'))
                 collapsed @endif" data-bs-toggle="collapse" data-bs-target="#menu_content" aria-controls="ddmenu_2" aria-expanded="false" aria-label="Toggle navigation">
                     <i class="fa fa-paste me-2"></i> <span class="text">Content</span>
                 </a>
@@ -189,7 +190,8 @@
                     Request::routeIs('admin.faqs*') ||
                     Request::routeIs('admin.banners*') ||
                     Request::routeIs('admin.posts*') ||
-                    Request::routeIs('admin.post_tags*')
+                    Request::routeIs('admin.post_tags*') ||
+                    Request::routeIs('admin.pages*')
                     ) show @endif dropdown-nav">
                     <li>
                         <a href="{{ route('admin.reviews.index') }}" @if(Request::routeIs('admin.reviews*')) class="active" @endif>
@@ -214,6 +216,11 @@
                     <li>
                         <a href="{{ route('admin.post_tags.index') }}" @if(Request::routeIs('admin.post_tags*')) class="active" @endif>
                             Post Tags
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('admin.pages.index') }}" @if(Request::routeIs('admin.pages*')) class="active" @endif>
+                            Pages
                         </a>
                     </li>
                 </ul>

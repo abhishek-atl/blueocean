@@ -126,8 +126,10 @@ class TherapistController extends Controller
     public function therapistProfileStore(Request $request)
     {
         $params = $request->except(['_token', 'image']);
-
         $user = $this->userService->find($params['id']);
+
+        $params['slug'] = str($user->first_name . ' ' . $user->last_name)->slug();
+
         $this->userService->saveTherapistProfile($user, $params);
 
         return redirect()

@@ -3,10 +3,13 @@
 namespace App\Services;
 
 use App\Models\Booking;
+use App\Models\ClientReview;
+use App\Models\TherapistReview;
 use App\Models\User;
 use App\Models\UserVerify;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class UserService
@@ -42,46 +45,81 @@ class UserService
         return true;
     }
 
-    public function rateTherapist($bookingId, $score)
+    public function rateTherapist(User $client, int $bookingId, array $ratings, ?string $ipAddress): TherapistReview
     {
-        $result = false;
-        try {
-            $booking = Booking::whereId($bookingId)->with('therapist')->first();
-            $booking->update([
-                'therapist_rating' => $score
+        return DB::transaction(function () use ($client, $bookingId, $ratings, $ipAddress) {
+            $booking = Booking::query()
+                ->whereKey($bookingId)
+                ->where('user_id', $client->id)
+                ->with('therapist.therapist_profile')
+                ->firstOrFail();
+
+            $average = round(collect($ratings)->only([
+                'eval_punctuality',
+                'eval_professionalism',
+                'eval_communication',
+                'eval_technique',
+            ])->average());
+
+            $review = TherapistReview::updateOrCreate(
+                ['booking_id' => $booking->id],
+                array_merge($ratings, [
+                    'therapist_id' => $booking->therapist_id,
+                    'client_id' => $client->id,
+                    'avg_evaluation' => $average,
+                    'ip_address' => $ipAddress ?: '',
+                ])
+            );
+
+            $therapistAverage = TherapistReview::query()
+                ->where('therapist_id', $booking->therapist_id)
+                ->avg('avg_evaluation');
+
+            $booking->therapist->therapist_profile()->update([
+                'avg_rating' => round($therapistAverage, 1),
             ]);
-            $avg = $booking->therapist->bookings()
-                ->whereNotNull('therapist_rating')
-                ->avg('therapist_rating');
-            $booking->therapist->update([
-                'avg_rating' => number_format($avg, 2)
-            ]);
-            $result = true;
-        } catch (Exception $e) {
-        }
-        return $result;
+
+            return $review;
+        });
     }
 
-    public function rateCustomer($bookingId, $score)
+    public function rateClient(User $therapist, int $bookingId, array $ratings, ?string $ipAddress): ClientReview
     {
-        $result = false;
-        try {
-            $booking = Booking::whereId($bookingId)->with('client')->first();
-            $booking->update([
-                'client_rating' => $score
+        return DB::transaction(function () use ($therapist, $bookingId, $ratings, $ipAddress) {
+            $booking = Booking::query()
+                ->whereKey($bookingId)
+                ->where('therapist_id', $therapist->id)
+                ->whereNotNull('user_id')
+                ->with('client.user_profile')
+                ->firstOrFail();
+
+            $average = round(collect($ratings)->only([
+                'eval_respectful_behaviour',
+                'eval_communication',
+                'eval_booking_information_accuracy',
+                'eval_treatment_space_suitability',
+            ])->average(), 1);
+
+            $review = ClientReview::updateOrCreate(
+                ['booking_id' => $booking->id],
+                array_merge($ratings, [
+                    'therapist_id' => $therapist->id,
+                    'client_id' => $booking->user_id,
+                    'avg_evaluation' => $average,
+                    'ip_address' => $ipAddress,
+                ])
+            );
+
+            $clientAverage = ClientReview::query()
+                ->where('client_id', $booking->user_id)
+                ->avg('avg_evaluation');
+
+            $booking->client->user_profile()->update([
+                'avg_rating' => round($clientAverage, 1),
             ]);
-            if ($booking->client) {
-                $avg = $booking->client->client_bookings()
-                    ->whereNotNull('client_rating')
-                    ->avg('client_rating');
-                $booking->client->update([
-                    'avg_rating' => number_format($avg, 2)
-                ]);
-            }
-            $result = true;
-        } catch (Exception $e) {
-        }
-        return $result;
+
+            return $review;
+        });
     }
 
     public function admins($params)

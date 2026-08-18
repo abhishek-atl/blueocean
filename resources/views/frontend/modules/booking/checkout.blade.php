@@ -204,6 +204,14 @@ Checkout page for massage
                                 <input type="text" id="session_cost" name="session_cost" class="form-control-plaintext" value="" readonly>
                             </div>
                         </div>
+                        @foreach($therapyKits as $therapyKit)
+                        <div class="form-group row">
+                            <label class="col-sm-6 col-form-label">{{ $therapyKit->name }}:</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control-plaintext" value="£{{ number_format((float) $therapyKit->price, 2) }}" readonly>
+                            </div>
+                        </div>
+                        @endforeach
                         <div class="form-group row">
                             <label class="col-sm-6 col-form-label" for="travel_sup">Travel Supplement:</label>
                             <div class="col-sm-6">

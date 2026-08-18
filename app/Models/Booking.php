@@ -19,6 +19,7 @@ class Booking extends Model
         'paid_by_therapist' => 'boolean',
         'therapist_conf_sms' => 'boolean',
         'is_extension_paid' => 'boolean',
+        'therapy_kit_amount' => 'decimal:2',
     ];
 
     public function therapist()
@@ -36,9 +37,26 @@ class Booking extends Model
         return $this->belongsTo(Treatment::class);
     }
 
+    public function therapyKits()
+    {
+        return $this->belongsToMany(TherapyKit::class, 'booking_therapy_kit')
+            ->withPivot('amount')
+            ->withTimestamps();
+    }
+
     public function payment()
     {
         return $this->hasOne(Payment::class);
+    }
+
+    public function therapistReview()
+    {
+        return $this->hasOne(TherapistReview::class);
+    }
+
+    public function clientReview()
+    {
+        return $this->hasOne(ClientReview::class);
     }
 
     protected function address(): Attribute

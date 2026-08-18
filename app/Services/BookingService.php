@@ -156,7 +156,7 @@ class BookingService extends BaseService
         return $timeSlots;
     }
 
-    public function getFreeTherapists($postcode, $treatment, $date, $time, $duration)
+    public function getFreeTherapists($postcode, $treatment, $date, $time, $duration, $therapyKitIds = [])
     {
         // Base query for therapists
         $query = User::where('user_type', User::TYPE_THERAPIST)
@@ -175,6 +175,18 @@ class BookingService extends BaseService
             $query->whereHas('treatments', function ($query) use ($treatment) {
                 $query->whereKey($treatment);
             });
+        }
+
+        $therapyKitIds = collect((array) $therapyKitIds)
+            ->filter()
+            ->map(fn ($id) => (int) $id)
+            ->unique()
+            ->values();
+
+        if ($therapyKitIds->isNotEmpty()) {
+            $query->whereHas('therapyKits', function ($query) use ($therapyKitIds) {
+                $query->whereIn('therapy_kit.id', $therapyKitIds);
+            }, '=', $therapyKitIds->count());
         }
 
         $therapists = $query->get();

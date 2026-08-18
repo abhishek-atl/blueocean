@@ -18,6 +18,7 @@ return [
         'url' => env('DOWNLOAD_URL', '/storage/'),
         'disk' => env('STORAGE_DISK', 'public_uploads'),
         'post_path' => 'posts',
+        'page_path' => 'pages',
         'treatment_path' => 'treatments',
         'treatment_category_path' => 'treatment-categories',
         'user_path' => 'users',

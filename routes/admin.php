@@ -17,6 +17,7 @@ use App\Http\Controllers\Admin\PaymentController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\PostController;
 use App\Http\Controllers\Admin\PostTagController;
+use App\Http\Controllers\Admin\PageController;
 use App\Http\Controllers\Admin\PromocodeController;
 use App\Http\Controllers\Admin\ReviewController;
 use App\Http\Controllers\Admin\SettingController;
@@ -177,6 +178,13 @@ Route::middleware([AdminMiddleware::class])->group(function () {
     Route::get('/post-tags/edit/{id}', [PostTagController::class, 'createEdit'])->name('post_tags.edit');
     Route::post('/post-tags/store', [PostTagController::class, 'store'])->name('post_tags.store');
     Route::get('/post-tags/destroy/{id}', [PostTagController::class, 'destroy'])->name('post_tags.destroy');
+
+    // Pages
+    Route::get('/pages', [PageController::class, 'index'])->name('pages.index');
+    Route::get('/pages/create', [PageController::class, 'createEdit'])->name('pages.create');
+    Route::get('/pages/edit/{id}', [PageController::class, 'createEdit'])->name('pages.edit');
+    Route::post('/pages/store', [PageController::class, 'store'])->name('pages.store');
+    Route::get('/pages/destroy/{id}', [PageController::class, 'destroy'])->name('pages.destroy');
 
     // Reviews
     Route::get('/reviews', [ReviewController::class, 'index'])->name('reviews.index');

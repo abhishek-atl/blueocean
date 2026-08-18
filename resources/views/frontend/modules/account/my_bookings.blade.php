@@ -25,8 +25,8 @@
             <div class="col-md-12">
                 <p>Your saved address and contact details are:</p>
                 <p>{{ Auth::user()->first_name }} {{ Auth::user()->last_name }}<br />
-                    Postcode: {{ Auth::user()->user_profile->postcode }}<br />
-                    Mobile: {{ Auth::user()->user_profile->mobile }}<br />
+                    Postcode: {{ Auth::user()->user_profile?->postcode }}<br />
+                    Mobile: {{ Auth::user()->user_profile?->mobile }}<br />
                 </p>
             </div>
             <div class="col-md-12 mb-3">
@@ -59,21 +59,21 @@
                             @foreach($bookings as $booking)
 
                             @php
-                                $class = '';
-                                if($booking->appointment_start > now())
-                                    $class = 'table-success';
-                                elseif($booking->appointment_start < now() && $booking->appointment_finish > now())
-                                    $class = 'table-warning';
+                            $class = '';
+                            if($booking->appointment_start > now())
+                            $class = 'table-success';
+                            elseif($booking->appointment_start < now() && $booking->appointment_finish > now())
+                                $class = 'table-warning';
                                 elseif($booking->appointment_finish < now())
                                     $class='table-danger' ;
-                                @endphp
-                            <tr class="alink {{ $class }}" data-id="{{ $booking->id}}" data-url="{{ route('booking', ['id' => $booking->id]) }}">
-                                <td>{{ $format->date($booking->appointment_start) }}</td>
-                                <td>{{ $format->time($booking->appointment_start) }}</td>
-                                <td>{{ $booking->duration + $booking->extra_duration }} mins</td>
-                                <td>{{ $booking->therapist->first_name }}</td>
-                            </tr>
-                            @endforeach
+                                    @endphp
+                                    <tr class="alink {{ $class }}" data-id="{{ $booking->id}}" data-url="{{ route('booking', ['id' => $booking->id]) }}">
+                                    <td>{{ $format->date($booking->appointment_start) }}</td>
+                                    <td>{{ $format->time($booking->appointment_start) }}</td>
+                                    <td>{{ $booking->duration + $booking->extra_duration }} mins</td>
+                                    <td>{{ $booking->therapist->first_name }}</td>
+                                    </tr>
+                                    @endforeach
                         </thead>
                     </table>
                 </div>
@@ -98,10 +98,6 @@
                     <tr>
                         <td>Style</td>
                         <td id="style"></td>
-                    </tr>
-                    <tr>
-                        <td>Focus Area</td>
-                        <td id="focus_area"></td>
                     </tr>
                     <tr>
                         <td>Customer Comment</td>
@@ -133,12 +129,26 @@
                     </tr>
                     @if(Request::get('type') !== 'cancelled')
                     <tr>
-                        <td>Rated</td>
+                        <td>Rate therapist</td>
                         <td id="therapist_rating">
                             <div class="rate_therapist hide-elem">
-                                <div id="rating" class="rating"></div>
-                                <input type="text" class="form-control" name="evaluation" id="evaluation" style="opacity: 0; height:0px !important;" />
-                                <span class="rate_therapist_msg"></span>
+                                @foreach([
+                                    'eval_punctuality' => 'Punctuality',
+                                    'eval_professionalism' => 'Professionalism',
+                                    'eval_communication' => 'Communication',
+                                    'eval_technique' => 'Technique',
+                                ] as $field => $label)
+                                <div class="mb-2 therapist-rating-row">
+                                    <label for="{{ $field }}" class="d-block">{{ $label }}</label>
+                                    <div class="therapist-rating" data-target="#{{ $field }}"></div>
+                                    <input type="hidden" name="{{ $field }}" id="{{ $field }}" />
+                                </div>
+                                @endforeach
+                                <div class="mb-3">
+                                    <label for="therapist_review_comment" class="d-block">Comment (optional)</label>
+                                    <textarea class="form-control" id="therapist_review_comment" rows="3" maxlength="5000"></textarea>
+                                </div>
+                                <span class="rate_therapist_msg d-block mb-2"></span>
                                 <a href="#" class="btn btn-primary btn_rate_therapist">Rate Therapist</a>
                             </div>
                         </td>
@@ -193,18 +203,39 @@
 
     $('.btn_rate_therapist').click(function(e) {
         e.preventDefault();
-        if (!$('#evaluation').val()) {
-            alert("Please select rating from 1 (poor) to 5 (excellent)");
+        const ratingFields = [
+            'eval_punctuality',
+            'eval_professionalism',
+            'eval_communication',
+            'eval_technique'
+        ];
+
+        if (ratingFields.some(field => !$('#' + field).val())) {
+            alert("Please rate punctuality, professionalism, communication, and technique from 1 (poor) to 5 (excellent).");
             return false;
         }
-        $('.loading').hide();
+
+        $('.loading').show();
         let booking_id = $('tr.selected').attr('data-id');
-        let evaluation = $('#evaluation').val();
-        let url = "{{ route('rate_booking') }}" + '?booking_id=' + booking_id + '&evaluation=' + evaluation;
-        $.post(url, function(response) {
-            $('.loading').show();
+        let review = {
+            booking_id: booking_id,
+            eval_punctuality: $('#eval_punctuality').val(),
+            eval_professionalism: $('#eval_professionalism').val(),
+            eval_communication: $('#eval_communication').val(),
+            eval_technique: $('#eval_technique').val(),
+            comment: $('#therapist_review_comment').val()
+        };
+
+        $.post("{{ route('rate_booking') }}", review, function() {
             $('.btn_rate_therapist').hide();
-            $('.rate_therapist_msg').html('Your ratings has been saved. Thank You!');
+            $('.therapist-rating').raty('readOnly', true);
+            $('#therapist_review_comment').prop('readonly', true);
+            $('.rate_therapist_msg').text('Your ratings have been saved. Thank you!');
+        }).fail(function(xhr) {
+            const message = xhr.responseJSON && xhr.responseJSON.message
+                ? xhr.responseJSON.message
+                : 'Your rating could not be saved. Please try again.';
+            alert(message);
         }).always(function() {
             $('.loading').hide();
         });
@@ -218,7 +249,7 @@
         let url = $(this).attr('data-url');
         $.post(url, function(response) {
 
-            let totalPrice = parseFloat(response.cost) + parseFloat(response.travel_supp);
+            let totalPrice = parseFloat(response.payable_amount) + parseFloat(response.travel_supp);
             let paymentMethod = 'Cash';
             if (response.payment.payment_type != 'cash')
                 paymentMethod = 'Paid';
@@ -226,40 +257,44 @@
             $('#date').html(moment(response.appointment_start).format('dddd, DD MMMM YYYY') + ' at ' + moment(response.appointment_start).format('HH:mm'));
             $('#duration').html(response.duration + ' minutes');
             $('#style').html(response.treatment.name + ' Therapy');
-            $('#focus_area').html(response.focus_areas ? response.focus_areas : 'Nothing Mentioned');
-            $('#comment').html(response.comments ? response.comments : 'Nothing Mentioned');
-            $('#address').html(response.address);
+            $('#comment').html(response.comments ? response.comments : '-');
+            $('#address').html(response.postcode);
             $('#mobile').html(response.phone);
-            $('#price').html('£' + (response.cost));
+            $('#price').html('£' + (response.payable_amount));
             $('#travel_supp').html('£' + (response.travel_supp));
             $('#total_price').html('£' + totalPrice.toFixed(2) + ' ' + paymentMethod);
             $('#therapist').html(response.therapist.first_name);
 
             $('.rate_therapist').removeClass('hide-elem');
             $('.rate_therapist_msg').html('');
+            $('.therapist-rating').raty('destroy');
+            $('#therapist_review_comment').val('').prop('readonly', false);
 
-            if (!response.therapist_rating) {
-                $('.btn_rate_therapist').show();
-                $('.rating').raty({
-                    path: '{{ asset("assets/img/reviews/stars") }}',
-                    starOn: 'star-on.png',
-                    starOff: 'star-off.png',
-                    target: '#evaluation',
+            const therapistReview = response.therapist_review;
+            $('.therapist-rating').each(function() {
+                const target = $(this).data('target');
+                const field = target.substring(1);
+                $(target).val(therapistReview ? therapistReview[field] : '');
+                $(this).raty({
+                    target: target,
                     targetType: 'score',
                     targetKeep: true,
+                    starType: 'i',
+                    starOn: 'fa-solid fa-star',
+                    starOff: 'fa-regular fa-star',
+                    readOnly: !!therapistReview,
+                    score: therapistReview ? therapistReview[field] : undefined
                 });
+            });
+
+            if (!therapistReview) {
+                $('.btn_rate_therapist').show();
             } else {
                 $('.btn_rate_therapist').hide();
-                $('.rating').raty({
-                    path: '{{ asset("assets/img/reviews/stars") }}',
-                    starOn: 'star-on.png',
-                    starOff: 'star-off.png',
-                    target: '#evaluation',
-                    targetType: 'score',
-                    targetKeep: true,
-                    readOnly: true,
-                    score: response.therapist_rating
-                });
+                $('#therapist_review_comment')
+                    .val(therapistReview.comment || '')
+                    .prop('readonly', true);
+                $('.rate_therapist_msg').text('You have already reviewed this therapist.');
             }
 
         }).always(function() {

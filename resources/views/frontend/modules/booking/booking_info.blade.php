@@ -106,6 +106,41 @@ Booking Information
                                 </div>
                             </div>
 
+                            @if($therapyKits->isNotEmpty())
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <label class="form-label font-weight-bold">Kit Items</label>
+                                    </div>
+                                    <div class="col-sm-9">
+                                        @php
+                                            $selectedTherapyKitIds = collect(old('therapy_kit_ids', session('booking.therapy_kit_ids', [])))
+                                                ->map(fn ($id) => (string) $id);
+                                        @endphp
+                                        @foreach($therapyKits->groupBy('type') as $type => $kits)
+                                        <div class="mb-3">
+                                            <strong>{{ ucfirst($type) }}</strong>
+                                            @foreach($kits as $therapyKit)
+                                            <div class="form-check mt-2">
+                                                <input class="form-check-input therapy-kit-option" type="checkbox" name="therapy_kit_ids[]" value="{{ $therapyKit->id }}" id="therapy-kit-{{ $therapyKit->id }}" @checked($selectedTherapyKitIds->contains((string) $therapyKit->id))>
+                                                <label class="form-check-label" for="therapy-kit-{{ $therapyKit->id }}">
+                                                    {{ $therapyKit->name }} (+£{{ number_format((float) $therapyKit->price, 2) }})
+                                                </label>
+                                            </div>
+                                            @endforeach
+                                        </div>
+                                        @endforeach
+                                        @error('therapy_kit_ids')
+                                        <div class="text-danger">{{ $message }}</div>
+                                        @enderror
+                                        @error('therapy_kit_ids.*')
+                                        <div class="text-danger">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+                            </div>
+                            @endif
+
                         </div>
                     </div>
                 </div>
@@ -139,6 +174,9 @@ Booking Information
                             </div>
                             <div class="col-md-12">
                                 <div id="therapists-update"></div>
+                                @error('therapist_id')
+                                <div class="alert alert-danger mt-3">{{ $message }}</div>
+                                @enderror
                             </div>
                         </div>
 
@@ -253,6 +291,9 @@ Booking Information
                     date: $('#date').val(),
                     time: $('#time').val(),
                     duration: $('#duration').val(),
+                    therapy_kit_ids: $('.therapy-kit-option:checked').map(function() {
+                        return this.value;
+                    }).get(),
                 }, function(response) {
                     $('#therapists-update').empty();
                     $('#therapists-update').append(response.therapists);
@@ -373,6 +414,12 @@ Booking Information
             resetDiary();
             loadTherapists().then(function() {
                 scrollToNextSelection('duration-block');
+            });
+        });
+        $('.therapy-kit-option').change(function() {
+            resetDiary();
+            loadTherapists().then(function() {
+                scrollToNextSelection('therapists-block');
             });
         });
 

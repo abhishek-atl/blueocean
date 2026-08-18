@@ -12,4 +12,8 @@ class TherapistProfile extends Model
 
     protected $guarded = ['id'];
 
+    protected $casts = [
+        'avg_rating' => 'decimal:1',
+    ];
+
 }
