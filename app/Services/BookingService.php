@@ -158,10 +158,20 @@ class BookingService extends BaseService
 
     public function getFreeTherapists($postcode, $treatment, $date, $time, $duration, $therapyKitIds = [])
     {
+        $reviewWindowEnd = now();
+        $reviewWindowStart = $reviewWindowEnd->copy()->subWeek();
+
         // Base query for therapists
         $query = User::where('user_type', User::TYPE_THERAPIST)
             ->where('active', 1)
             ->with(['therapist_profile', 'user_profile'])
+            ->withAvg([
+                'therapistReviews as last_week_avg_evaluation' => function ($query) use ($reviewWindowStart, $reviewWindowEnd) {
+                    $query->whereHas('booking', function ($query) use ($reviewWindowStart, $reviewWindowEnd) {
+                        $query->whereBetween('appointment_finish', [$reviewWindowStart, $reviewWindowEnd]);
+                    });
+                },
+            ], 'avg_evaluation')
             ->whereHas('schedule');
 
         if ($postcode) {
@@ -265,7 +275,11 @@ class BookingService extends BaseService
             return true;
         });
 
-        return $availableTherapists->values();
+        return $availableTherapists
+            ->sortByDesc(fn ($therapist) => $therapist->last_week_avg_evaluation === null
+                ? -1
+                : (float) $therapist->last_week_avg_evaluation)
+            ->values();
     }
 
 
