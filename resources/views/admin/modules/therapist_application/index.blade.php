@@ -58,6 +58,7 @@
                             <th scope="col" style="width: 14%;">Last Name</th>
                             <th scope="col" style="width: 22%;">Email</th>
                             <th scope="col" style="width: 14%;">Mobile</th>
+                            <th scope="col">Therapy Kit</th>
                             <th scope="col" style="width: 13%;">Applied</th>
                             <th scope="col" style="width: 9%;">Status</th>
                             <th scope="col">Actions</th>
@@ -71,6 +72,14 @@
                             <td>{{ $application->last_name }}</td>
                             <td>{{ $application->email }}</td>
                             <td>{{ $application->mobile ?: 'N/A' }}</td>
+                            <td>
+                                @php
+                                    $selectedKits = collect($application->therapy_kit_ids ?? [])
+                                        ->map(fn ($id) => $therapyKits->get($id))
+                                        ->filter();
+                                @endphp
+                                {{ $selectedKits->isNotEmpty() ? $selectedKits->join(', ') : 'None selected' }}
+                            </td>
                             <td>{{ $application->created_at->format(config('custom.format.date_time')) }}</td>
                             <td>
                                 <span class="badge {{ $application->approved ? 'bg-success' : 'bg-warning' }}">
@@ -90,7 +99,7 @@
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="8" class="text-center">No therapist applications found</td>
+                            <td colspan="9" class="text-center">No therapist applications found</td>
                         </tr>
                         @endforelse
                     </tbody>

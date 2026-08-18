@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 
 use App\Models\PostcodeDistrict;
 use App\Models\TherapistHoliday;
+use App\Models\TherapyKit;
 use App\Models\Treatment;
 use App\Models\User;
 
@@ -98,6 +99,7 @@ class TherapistController extends Controller
         $user->user_profile()->delete();
         $user->therapist_profile()->delete();
         $user->treatments()->detach();
+        $user->therapyKits()->detach();
         $user->postcodes()->detach();
         $user->holidays()->delete();
         $user->schedule()->delete();
@@ -150,6 +152,38 @@ class TherapistController extends Controller
         $user = $this->userService->find(request('id'));
         $user->treatments()->sync($request->treatments);
         return redirect()->back()->with('status', 'Treatments updated successfully');
+    }
+
+    public function therapyKits($id)
+    {
+        $user = $this->userService->find($id);
+        abort_if(!$user, 404);
+        $user->load('therapyKits');
+
+        $therapyKits = TherapyKit::query()
+            ->orderBy('type')
+            ->orderBy('name')
+            ->get();
+
+        return view('admin.modules.therapist.therapy_kits', [
+            'therapyKits' => $therapyKits,
+            'user' => $user,
+        ]);
+    }
+
+    public function therapyKitsStore(Request $request, $id)
+    {
+        $user = $this->userService->find($id);
+        abort_if(!$user, 404);
+
+        $validated = $request->validate([
+            'therapy_kits' => ['nullable', 'array'],
+            'therapy_kits.*' => ['integer', 'distinct', 'exists:therapy_kit,id'],
+        ]);
+
+        $user->therapyKits()->sync($validated['therapy_kits'] ?? []);
+
+        return redirect()->back()->with('status', 'Therapy kit updated successfully.');
     }
 
     public function postcodes($id)

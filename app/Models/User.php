@@ -44,6 +44,16 @@ class User extends Authenticatable
         return $this->belongsToMany(Treatment::class, 'therapists_treatments', 'user_id', 'treatment_id');
     }
 
+    public function therapyKits()
+    {
+        return $this->belongsToMany(
+            TherapyKit::class,
+            'therapist_therapy_kit',
+            'therapist_id',
+            'therapy_kit_id'
+        )->withTimestamps();
+    }
+
     public function bookings()
     {
         return $this->hasMany(Booking::class);

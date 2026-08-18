@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\TherapistApplication;
+use App\Models\TherapyKit;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -39,8 +40,16 @@ class TherapistApplicationController extends Controller
             ->paginate(config('custom.db.per_page'))
             ->withQueryString();
 
+        $therapyKitIds = $applications->getCollection()
+            ->flatMap(fn (TherapistApplication $application) => $application->therapy_kit_ids ?? [])
+            ->unique();
+        $therapyKits = TherapyKit::query()
+            ->whereIn('id', $therapyKitIds)
+            ->pluck('name', 'id');
+
         return view('admin.modules.therapist_application.index', [
             'applications' => $applications,
+            'therapyKits' => $therapyKits,
             'sort_by' => $sortBy,
             'sort_order' => $sortOrder,
         ]);
@@ -78,6 +87,10 @@ class TherapistApplicationController extends Controller
                 'mobile' => $application->mobile,
             ]);
             $user->assignRole(User::TYPE_THERAPIST);
+            $therapyKitIds = TherapyKit::query()
+                ->whereIn('id', $application->therapy_kit_ids ?? [])
+                ->pluck('id');
+            $user->therapyKits()->sync($therapyKitIds);
 
             $application->update([
                 'approved' => true,

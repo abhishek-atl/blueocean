@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\PostcodeZoneController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\TherapistController;
 use App\Http\Controllers\Admin\TreatmentController;
+use App\Http\Controllers\Admin\TherapyKitController;
 use App\Http\Controllers\Admin\BookingController;
 use App\Http\Controllers\Admin\PaymentController;
 use App\Http\Controllers\Admin\UserController;
@@ -67,6 +68,9 @@ Route::middleware([AdminMiddleware::class])->group(function () {
     Route::get('/therapists/treatments/{id?}', [TherapistController::class, 'treatments'])->name('therapists.treatments');
     Route::post('/therapists/treatments/{id?}', [TherapistController::class, 'treatmentsStore'])->name('therapists.treatmentsStore');
 
+    Route::get('/therapists/therapy-kits/{id}', [TherapistController::class, 'therapyKits'])->name('therapists.therapy_kits');
+    Route::post('/therapists/therapy-kits/{id}', [TherapistController::class, 'therapyKitsStore'])->name('therapists.therapy_kits.store');
+
     Route::get('/therapists/postcodes/{id?}', [TherapistController::class, 'postcodes'])->name('therapists.postcodes');
     Route::post('/therapists/postcodes/{id?}', [TherapistController::class, 'postcodesStore'])->name('therapists.postcodesStore');
 
@@ -84,6 +88,12 @@ Route::middleware([AdminMiddleware::class])->group(function () {
     Route::get('/treatments/edit/{id}', [TreatmentController::class, 'createEdit'])->name('treatments.edit');
     Route::post('/treatments/store', [TreatmentController::class, 'store'])->name('treatments.store');
     Route::get('/treatments/destroy/{id}', [TreatmentController::class, 'destroy'])->name('treatments.destroy');
+
+    Route::get('/therapy-kits', [TherapyKitController::class, 'index'])->name('therapy_kits.index');
+    Route::get('/therapy-kits/create', [TherapyKitController::class, 'createEdit'])->name('therapy_kits.create');
+    Route::get('/therapy-kits/edit/{id}', [TherapyKitController::class, 'createEdit'])->name('therapy_kits.edit');
+    Route::post('/therapy-kits/store', [TherapyKitController::class, 'store'])->name('therapy_kits.store');
+    Route::get('/therapy-kits/destroy/{id}', [TherapyKitController::class, 'destroy'])->name('therapy_kits.destroy');
 
     Route::get('/treatment_category', [TreatmentCategoryController::class, 'index'])->name('treatment_categories.index');
     Route::get('/treatment_categories/create', [TreatmentCategoryController::class, 'createEdit'])->name('treatment_categories.create');

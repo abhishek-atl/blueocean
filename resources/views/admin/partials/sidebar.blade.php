@@ -38,6 +38,7 @@
                 <a href="#" class="@if(
                 !Request::routeIs('admin.therapists*') &&
                 !Request::routeIs('admin.therapist_applications*') &&
+                !Request::routeIs('admin.therapy_kits*') &&
                 !Request::routeIs('admin.treatment*')) 
                 collapsed @endif" data-bs-toggle="collapse" data-bs-target="#menu_therapists" aria-controls="ddmenu_2" aria-expanded="false" aria-label="Toggle navigation">
                     <i class="fa fa-user-nurse me-2"></i> <span class="text">Therapists</span>
@@ -45,6 +46,7 @@
                 <ul id="menu_therapists" class="collapse @if(
                     Request::routeIs('admin.therapists*') ||
                     Request::routeIs('admin.therapist_applications*') ||
+                    Request::routeIs('admin.therapy_kits*') ||
                     Request::routeIs('admin.treatment*'))
                     show @endif dropdown-nav">
 
@@ -61,6 +63,11 @@
                     <li>
                         <a href="{{ route('admin.treatments.index') }}" @if(Request::routeIs('admin.treatments*')) class="active" @endif>
                             Treatments
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('admin.therapy_kits.index') }}" @if(Request::routeIs('admin.therapy_kits*')) class="active" @endif>
+                            Therapy Kits
                         </a>
                     </li>
                     <li>

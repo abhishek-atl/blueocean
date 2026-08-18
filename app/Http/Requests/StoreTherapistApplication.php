@@ -26,6 +26,8 @@ class StoreTherapistApplication extends FormRequest
             'last_name' => ['required', 'string', 'max:100'],
             'email' => ['required', 'email', 'max:255'],
             'mobile' => ['required', 'string', 'regex:/^[+0-9\s\-\(\)]+$/', 'max:20'],
+            'therapy_kits' => ['nullable', 'array'],
+            'therapy_kits.*' => ['integer', 'distinct', 'exists:therapy_kit,id,active,1'],
         ];
     }
 

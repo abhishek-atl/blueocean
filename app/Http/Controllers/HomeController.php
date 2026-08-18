@@ -8,6 +8,7 @@ use App\Models\FAQ;
 use App\Models\Review;
 use App\Models\Setting;
 use App\Models\TherapistApplication;
+use App\Models\TherapyKit;
 use Illuminate\Http\Request;
 
 use App\Models\Treatment;
@@ -158,7 +159,15 @@ class HomeController extends Controller
 
     public function joinUs(Request $request)
     {
-        return view('frontend.modules.therapists.join_us');
+        $therapyKits = TherapyKit::query()
+            ->where('active', true)
+            ->orderBy('type')
+            ->orderBy('name')
+            ->get();
+
+        return view('frontend.modules.therapists.join_us', [
+            'therapyKits' => $therapyKits,
+        ]);
     }
 
     public function joinUsPost(StoreTherapistApplication $request)
@@ -169,11 +178,18 @@ class HomeController extends Controller
         $application->last_name = $request->input('last_name');
         $application->email = $request->input('email');
         $application->mobile = $request->input('mobile');
+        $application->therapy_kit_ids = array_map('intval', $request->validated('therapy_kits', []));
         $application->ip_address = $request->ip();
         $application->user_agent = $request->userAgent();
         $application->save();
 
         $params = $request->only(['first_name', 'last_name', 'email', 'mobile']);
+        $params['therapy_kits'] = TherapyKit::query()
+            ->whereIn('id', $application->therapy_kit_ids ?? [])
+            ->orderBy('type')
+            ->orderBy('name')
+            ->pluck('name')
+            ->all();
         $params['ip'] = $request->ip();
         $params['user_agent'] = $request->userAgent();
 

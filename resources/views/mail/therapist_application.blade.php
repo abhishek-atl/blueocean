@@ -31,6 +31,10 @@
                 <td align="left">{{ $application['mobile'] }}</td>
             </tr>
             <tr>
+                <td align="left">Therapy kit:</td>
+                <td align="left">{{ !empty($application['therapy_kits']) ? implode(', ', $application['therapy_kits']) : 'None selected' }}</td>
+            </tr>
+            <tr>
                 <td align="left">IP:</td>
                 <td align="left">{{ $application['ip'] }}</td>
             </tr>

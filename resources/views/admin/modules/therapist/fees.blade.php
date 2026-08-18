@@ -41,6 +41,9 @@
             <a class="nav-link" href="{{ route('admin.therapists.treatments', ['id' => $user->id]) }}">Treatments</a>
         </li>
         <li class="nav-item">
+            <a class="nav-link" href="{{ route('admin.therapists.therapy_kits', ['id' => $user->id]) }}">Therapy Kit</a>
+        </li>
+        <li class="nav-item">
             <a class="nav-link" href="{{ route('admin.therapists.postcodes', ['id' => $user->id]) }}">Postcodes</a>
         </li>
         <li class="nav-item">

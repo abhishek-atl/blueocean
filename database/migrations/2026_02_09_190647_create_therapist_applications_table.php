@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('last_name');
             $table->string('email');
             $table->string('mobile')->nullable();
+            $table->json('therapy_kit_ids')->nullable()->after('mobile');
             $table->boolean('approved')->default(false);
             $table->string('ip_address')->nullable();
             $table->string('user_agent')->nullable();

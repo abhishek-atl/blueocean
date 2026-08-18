@@ -89,6 +89,31 @@
                             </div>
                         </div>
 
+                        @if($therapyKits->isNotEmpty())
+                        <h2>Therapy kit</h2>
+                        <p>Select the products and equipment you can carry to appointments.</p>
+
+                        <div class="row g-3 mb-5">
+                            @foreach($therapyKits->groupBy('type') as $type => $kits)
+                            <div class="col-md-6">
+                                <h3 class="h5">{{ ucfirst($type) }}</h3>
+                                @foreach($kits as $therapyKit)
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="checkbox" name="therapy_kits[]" value="{{ $therapyKit->id }}" id="therapy-kit-{{ $therapyKit->id }}" @checked(in_array($therapyKit->id, old('therapy_kits', [])))>
+                                    <label class="form-check-label" for="therapy-kit-{{ $therapyKit->id }}">{{ $therapyKit->name }}</label>
+                                </div>
+                                @endforeach
+                            </div>
+                            @endforeach
+                            @error('therapy_kits')
+                            <span class="help-block error-help-block">{{ $message }}</span>
+                            @enderror
+                            @error('therapy_kits.*')
+                            <span class="help-block error-help-block">{{ $message }}</span>
+                            @enderror
+                        </div>
+                        @endif
+
                         <div class="row">
                             <div class="col-md-12">
                                 <button type="submit" class="btn btn-primary btnConfirm">Submit Application</button>

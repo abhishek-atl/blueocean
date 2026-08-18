@@ -10,5 +10,6 @@ class TherapistApplication extends Model
 
     protected $casts = [
         'approved' => 'boolean',
+        'therapy_kit_ids' => 'array',
     ];
 }
