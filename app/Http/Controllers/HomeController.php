@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreTherapistApplication;
 use App\Models\Banner;
 use App\Models\FAQ;
+use App\Models\Review;
 use App\Models\TherapistApplication;
 use App\Models\TherapistReview;
 use App\Models\TherapyKit;
@@ -59,13 +60,13 @@ class HomeController extends Controller
             ->orderBy('display_order')
             ->get();
 
-        $review = TherapistReview::where('active', true)
+        $review = Review::where('active', true)
             ->orderBy('created_at', 'desc')
             ->limit(6)
             ->get();
 
-        $evaluationTotal = TherapistReview::where('active', 1)->whereNotNull('avg_evaluation')->sum('avg_evaluation');
-        $totalReviews = TherapistReview::where('active', 1)->whereNotNull('avg_evaluation')->count();
+        $evaluationTotal = Review::where('active', 1)->whereNotNull('evaluation')->sum('evaluation');
+        $totalReviews = Review::where('active', 1)->whereNotNull('evaluation')->count();
         $averageRating = $totalReviews > 0 ? round($evaluationTotal / $totalReviews, 1) : 0;
 
         return view('frontend.modules.home.index', [
