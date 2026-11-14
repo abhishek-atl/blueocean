@@ -87,7 +87,7 @@ class TreatmentCategoryController extends Controller
     public function destroy($id)
     {
         $treatmentCategory = $this->databaseService->find(TreatmentCategory::class, $id);
-        $treatmentCategory->categories()->detach();
+        $treatmentCategory->treatments()->detach();
         $treatmentCategory->delete();
 
         return redirect()

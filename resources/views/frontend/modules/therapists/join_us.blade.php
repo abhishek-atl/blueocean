@@ -53,6 +53,15 @@
                     <form id="frmApplication" method="post" action="{{ route('join_us_post') }}" enctype="multipart/form-data">
                         @csrf
 
+                        @error('application')
+                        <div class="alert alert-danger" role="alert">{{ $message }}</div>
+                        @enderror
+
+                        <div style="display: none;" aria-hidden="true">
+                            <label for="application-website">Website</label>
+                            <input type="text" id="application-website" name="website" value="" tabindex="-1" autocomplete="off">
+                        </div>
+
                         <h2>Your details</h2>
 
                         <div class="row g-3 mb-5">

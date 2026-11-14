@@ -60,7 +60,7 @@ Route::get('/therapist/{slug}', [HomeController::class, 'therapistDetail'])->nam
 
 // Join Us
 Route::get('/join-us', [HomeController::class, 'joinUs'])->name('join_us');
-Route::post('/join-us', [HomeController::class, 'joinUsPost'])->name('join_us_post');
+Route::post('/join-us', [HomeController::class, 'joinUsPost'])->middleware('throttle:join-us')->name('join_us_post');
 
 Route::get('/reviews', [ReviewController::class, 'index'])->name('reviews');
 Route::get('/leave/review', [ReviewController::class, 'addReview'])->name('add_review');

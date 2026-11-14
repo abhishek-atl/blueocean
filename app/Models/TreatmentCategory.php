@@ -11,7 +11,7 @@ class TreatmentCategory extends Model
 
     public function treatments()
     {
-        return $this->hasMany(Treatment::class, 'category_id');
+        return $this->belongsToMany(Treatment::class, 'treatment_treatment_category', 'treatment_category_id', 'treatment_id');
     }
 
     protected function image(): Attribute
