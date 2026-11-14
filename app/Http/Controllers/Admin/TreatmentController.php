@@ -71,11 +71,19 @@ class TreatmentController extends Controller
 
         $params['slug'] = Str::of($request->name)->slug('-');
 
+
         if ($request->has('image')) {
-            $file = $request->file('image');
-            $uploadPath = config('custom.upload.treatment_path');
-            $path = $this->uploadService->upload($file, $uploadPath);
-            $params['image'] =  $path;
+            try {
+                $file = $request->file('image');
+                $uploadPath = config('custom.upload.treatment_path');
+                $path = $this->uploadService->upload($file, $uploadPath);
+                $params['image'] =  $path;
+            } catch (\Exception $e) {
+                return redirect()
+                    ->back()
+                    ->withInput()
+                    ->withErrors(['image' => $e->getMessage()]);
+            }
         }
 
         if (isset($params['id'])) {
