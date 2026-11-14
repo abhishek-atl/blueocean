@@ -24,7 +24,7 @@
         </ul>
     </div>
     <div class="col-md-6">
-        <img src="{{ asset('assets/img/how-it-works.png') }}" class="featurette-image img-fluid" alt="Massage at home" />
+        <img src="{{ $homeImages['block_1_image'] }}" class="featurette-image img-fluid" alt="Massage at home" />
     </div>
 </div>
 
@@ -44,7 +44,7 @@
         </ul>
     </div>
     <div class="col-md-6 order-md-1">
-        <img src="{{ asset('assets/img/why-blueocean.png') }}" class="featurette-image img-fluid" alt="Massage at home" />
+        <img src="{{ $homeImages['block_2_image'] }}" class="featurette-image img-fluid" alt="Massage at home" />
     </div>
 </div>
 
@@ -64,7 +64,7 @@
         </ul>
     </div>
     <div class="col-md-6">
-        <img src="{{ asset('assets/img/trusted-professionals.png') }}" class="featurette-image img-fluid" alt="Massage at home" />
+        <img src="{{ $homeImages['block_3_image'] }}" class="featurette-image img-fluid" alt="Massage at home" />
     </div>
 </div>
 

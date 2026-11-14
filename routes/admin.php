@@ -35,6 +35,9 @@ Route::get('login', [LoginController::class, 'showAdminLoginForm'])->name('login
 
 Route::middleware([AdminMiddleware::class])->group(function () {
 
+    Route::get('/home', [\App\Http\Controllers\Admin\HomeController::class, 'edit'])->middleware('can:Manage Content')->name('home.edit');
+    Route::post('/home', [\App\Http\Controllers\Admin\HomeController::class, 'update'])->middleware('can:Manage Content')->name('home.update');
+
     // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
 

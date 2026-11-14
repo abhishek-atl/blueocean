@@ -20,7 +20,7 @@ treatments with genuine care, from just £59
 
 @section('content')
 
-<section class="jumbotron">
+<section class="jumbotron" style="background-image: url('{{ $homeImages['header_image'] }}');">
     <div class="container">
         <div class="row">
             <div class="col-12">

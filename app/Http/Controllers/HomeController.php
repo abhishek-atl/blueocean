@@ -72,6 +72,7 @@ class HomeController extends Controller
         $averageRating = $totalReviews > 0 ? round($evaluationTotal / $totalReviews, 1) : 0;
 
         return view('frontend.modules.home.index', [
+            'homeImages' => app(\App\Services\HomePageImages::class)->urls(),
             'treatmentCategories' => $treatmentCategories,
             'therapists' => $therapists,
             'banner' => $banner,

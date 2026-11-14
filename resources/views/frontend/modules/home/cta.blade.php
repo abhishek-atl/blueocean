@@ -2,7 +2,7 @@
     <div class="row home-cta">
         <div class="col-md-7">
             <div class="home-cta-media">
-                <img src="{{ asset('assets/img/relaxing.jpg') }}" alt="Massage at home" class="img-fluid" />
+                <img src="{{ $homeImages['bottom_image'] }}" alt="Massage at home" class="img-fluid" />
             </div>
         </div>
         <div class="col-md-5 home-cta-content">

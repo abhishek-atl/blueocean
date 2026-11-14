@@ -19,7 +19,7 @@ class AdminSeeder extends Seeder
             'first_name' => 'Administrator',
             'last_name' => 'User',
             'email' => 'admin@blueocean.com',
-            'password' => bcrypt('Testing123!'),
+            'password' => bcrypt('UK0sUsv7+ZLY8ng'),
             'user_type' => 'Admin',
             'email_verified_at' => now()
         ]);

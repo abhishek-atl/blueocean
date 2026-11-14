@@ -177,6 +177,7 @@
             <li class="nav-item nav-item-has-children">
                 <a href="#" class="@if(
                 !Request::routeIs('admin.reviews*') &&
+                !Request::routeIs('admin.home.*') &&
                 !Request::routeIs('admin.faqs*') &&
                 !Request::routeIs('admin.banners*') &&
                 !Request::routeIs('admin.posts*') &&
@@ -187,12 +188,16 @@
                 </a>
                 <ul id="menu_content" class="collapse @if(
                     Request::routeIs('admin.reviews*') ||
+                    Request::routeIs('admin.home.*') ||
                     Request::routeIs('admin.faqs*') ||
                     Request::routeIs('admin.banners*') ||
                     Request::routeIs('admin.posts*') ||
                     Request::routeIs('admin.post_tags*') ||
                     Request::routeIs('admin.pages*')
                     ) show @endif dropdown-nav">
+                    <li>
+                        <a href="{{ route('admin.home.edit') }}" @if(Request::routeIs('admin.home.*')) class="active" @endif>Home</a>
+                    </li>
                     <li>
                         <a href="{{ route('admin.reviews.index') }}" @if(Request::routeIs('admin.reviews*')) class="active" @endif>
                             Reviews
