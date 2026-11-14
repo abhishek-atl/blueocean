@@ -75,7 +75,7 @@ Route::get('/legal/legal.html', [HomeController::class, 'terms_conditions'])->na
 
 // gift card
 Route::get('buy-gift-card', [GiftVoucherController::class, 'gifts'])->name('gifts');
-Route::post('buy-gift-card', [GiftVoucherController::class, 'giftsPost'])->name('giftsPost');
+Route::post('buy-gift-card', [GiftVoucherController::class, 'giftsPost'])->middleware('throttle:gifts')->name('giftsPost');
 
 Route::get('buy-gift-card/payment', [GiftVoucherController::class, 'giftsPayment'])->name('gifts_payment');
 Route::post('buy-gift-card/payment', [GiftVoucherController::class, 'giftsPaymentPost'])->name('gifts_payment_post');

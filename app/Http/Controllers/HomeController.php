@@ -10,8 +10,7 @@ use App\Models\TherapistApplication;
 use App\Models\TherapistReview;
 use App\Models\TherapyKit;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Validation\ValidationException;
+use App\Services\FormSpamProtection;
 
 use App\Models\Treatment;
 use App\Models\TreatmentCategory;
@@ -175,29 +174,10 @@ class HomeController extends Controller
 
     public function joinUsPost(StoreTherapistApplication $request)
     {
-        $lock = Cache::lock('join-us:' . hash('sha256', $request->validated('email')), 120);
-
-        if (! $lock->get()) {
-            throw ValidationException::withMessages([
-                'email' => 'An application for this email is already being processed. Please try again later.',
-            ]);
-        }
-
-        try {
-            if (TherapistApplication::query()
-                ->whereRaw('LOWER(email) = ?', [$request->validated('email')])
-                ->where('created_at', '>=', now()->subMinutes(30))
-                ->exists()
-            ) {
-                throw ValidationException::withMessages([
-                    'email' => 'We have already received an application for this email. Please wait 30 minutes before submitting again.',
-                ]);
-            }
-
-            return $this->submitTherapistApplication($request);
-        } finally {
-            $lock->release();
-        }
+        return app(FormSpamProtection::class)->submit(
+            'join-us', $request->validated('email'), 'email', TherapistApplication::query(),
+            fn () => $this->submitTherapistApplication($request)
+        );
     }
 
     private function submitTherapistApplication(StoreTherapistApplication $request)

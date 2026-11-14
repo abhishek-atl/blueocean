@@ -3,7 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Pagination\Paginator;
-use Illuminate\Cache\RateLimiting\Limit;
+use App\Services\FormSpamProtection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\RateLimiter;
@@ -24,9 +24,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        RateLimiter::for('join-us', function (Request $request) {
-            return Limit::perMinutes(10, 3)->by($request->ip());
-        });
+        foreach (['join-us', 'gifts'] as $form) {
+            RateLimiter::for($form, fn (Request $request) => app(FormSpamProtection::class)->limit($request));
+        }
 
         Paginator::useBootstrapFive();
         Gate::before(function ($user, $ability) {

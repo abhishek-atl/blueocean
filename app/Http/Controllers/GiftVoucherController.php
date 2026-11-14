@@ -9,6 +9,8 @@ use Illuminate\Support\Str;
 
 
 use App\Services\FormatService;
+use App\Services\FormSpamProtection;
+use App\Models\GiftCertificate;
 use App\Services\GiftCertificateService;
 use App\Services\MailService;
 use App\Services\PaymentService;
@@ -47,6 +49,14 @@ class GiftVoucherController extends Controller
     }
 
     public function giftsPost(StoreGiftCertificateRequestCustomer $request)
+    {
+        return app(FormSpamProtection::class)->submit(
+            'gifts', $request->validated('sender_email'), 'sender_email', GiftCertificate::query(),
+            fn () => $this->submitGiftCertificate($request)
+        );
+    }
+
+    private function submitGiftCertificate(StoreGiftCertificateRequestCustomer $request)
     {
         $params = $request->validated();
         $params['remaining_amount'] = $request->gift_amount;

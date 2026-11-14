@@ -56,6 +56,7 @@ for last-minute birthday gifts or any occasion. From just GBP20.
 
                     <form method="post" action="{{ route('giftsPost') }}" id="frmGift">
                         @csrf
+                        @include('frontend.partials.spam-protection')
 
 
                         <h2>Choose the gift value</h2>

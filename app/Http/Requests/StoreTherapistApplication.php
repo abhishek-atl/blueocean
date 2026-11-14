@@ -2,27 +2,8 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
-
-class StoreTherapistApplication extends FormRequest
+class StoreTherapistApplication extends SpamProtectedFormRequest
 {
-    protected function prepareForValidation(): void
-    {
-        if (is_string($this->input('email'))) {
-            $this->merge(['email' => strtolower(trim($this->input('email')))]);
-        }
-    }
-
-    public function withValidator($validator): void
-    {
-        // Keep this check server-side so browser validation does not reveal the trap.
-        $validator->after(function ($validator) {
-            if ($this->filled('website')) {
-                $validator->errors()->add('application', 'Unable to submit this application. Please try again.');
-            }
-        });
-    }
-
     /**
      * Determine if the user is authorized to make this request.
      */

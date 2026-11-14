@@ -2,10 +2,13 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
-
-class StoreGiftCertificateRequestCustomer extends FormRequest
+class StoreGiftCertificateRequestCustomer extends SpamProtectedFormRequest
 {
+    protected function spamEmailFields(): array
+    {
+        return ['sender_email', 'recipient_email'];
+    }
+
     /**
      * Determine if the user is authorized to make this request.
      *
