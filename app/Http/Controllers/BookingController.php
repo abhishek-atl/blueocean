@@ -12,7 +12,6 @@ use App\Models\TariffPlan;
 use App\Models\TherapyKit;
 use App\Models\Treatment;
 use App\Models\User;
-use App\Models\UserProfile;
 use App\Services\BookingMailService;
 use App\Services\BookingService;
 use App\Services\DatabaseService;
@@ -540,14 +539,14 @@ class BookingController extends Controller
             $user->ip_address = $request->ip();
             $user->save();
 
-            $userProfile = UserProfile::where('user_id', Auth::id())->first();
-            $userProfile->postcode = $request->postcode;
-            $userProfile->mobile = $request->mobile;
-            $userProfile->flat_no = $request->flat_no;
-            $userProfile->street_number = $request->street_number;
-            $userProfile->street_name = $request->street_name;
-            $userProfile->town = $request->town;
-            $userProfile->save();
+            $user->user_profile()->updateOrCreate([], [
+                'postcode' => $request->postcode,
+                'mobile' => $request->mobile,
+                'flat_no' => $request->flat_no,
+                'street_no' => $request->street_number,
+                'street_name' => $request->street_name,
+                'town' => $request->town,
+            ]);
         }
 
         session(['bookingId' => $booking->id]);
