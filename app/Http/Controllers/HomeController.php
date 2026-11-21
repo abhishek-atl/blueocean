@@ -40,7 +40,7 @@ class HomeController extends Controller
         $treatmentCategories = TreatmentCategory::query()
             ->where('active', true)
             ->orderBy('id', 'asc')
-            ->limit(3)
+            ->limit(5)
             ->get();
 
         $therapists = User::query()
