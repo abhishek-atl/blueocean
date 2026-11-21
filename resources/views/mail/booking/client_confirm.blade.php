@@ -45,8 +45,7 @@
                 <tr>
                     <td>Arriving:</td>
                     <td align="right">
-                        {{ Carbon\Carbon::createFromFormat('Y-m-d H:i:s',$booking->appointment_datetime)->format('l, d F Y') }} at
-                        {{ Carbon\Carbon::createFromFormat('Y-m-d H:i:s',$booking->appointment_datetime)->format('H:i') }}
+                        {{ $booking->appointment_start->format('l, d F Y \a\t H:i') }}
                     </td>
 
                 </tr>
